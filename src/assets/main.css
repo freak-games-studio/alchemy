@@ -3,3 +3,11 @@
 #app {
   width: inherit;
 }
+
+button {
+  color: #ffffff;
+  background: #222222;
+  border: none;
+  outline: none;
+  padding: 10px;
+}

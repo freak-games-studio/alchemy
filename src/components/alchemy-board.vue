@@ -71,8 +71,8 @@ function spawnInitialElements(): void {
 </script>
 
 <template>
-  <button v-on:click="board.$reset()">Reset</button>
-  <button v-on:click="spawnInitialElements()">Spawn</button>
+  <button v-on:click="board.$reset()">Restart</button>
+  <button v-on:click="spawnInitialElements()">Spawn basic elements</button>
   <div class="board">
     <alchemy-item
       v-for="boardElement of board.board"
