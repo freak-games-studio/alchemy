@@ -8,6 +8,6 @@ export interface BoardElement {
   class: string,
   text: string,
   description: string
-  recept?: [string, string][]
+  receipt?: [string, string][]
   position: Position
 }
