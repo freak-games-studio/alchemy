@@ -1,6 +1,5 @@
 @import './base.css';
 
 #app {
-  background-color: var(--vt-c-black);
   width: inherit;
 }
