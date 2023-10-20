@@ -37,7 +37,7 @@ watch(() => props.boardElement.position, () => {
   >
     <img
       class="alchemy-item__image"
-      v-bind:src="`/images/${props.boardElement.class}.webp`"
+      v-bind:src="`images/${props.boardElement.class}.webp`"
       v-bind:alt="props.boardElement.description"
     />
     <p class="alchemy-item__text">{{ props.boardElement.text }}</p>
