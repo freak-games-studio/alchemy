@@ -47,7 +47,6 @@ watch(() => props.alchemyElement.position, () => {
 <style scoped>
 .alchemy-item {
   transition: 0.3s;
-  user-select: none;
   touch-action: manipulation;
   position: fixed;
   inline-size: min-content;
@@ -62,7 +61,6 @@ watch(() => props.alchemyElement.position, () => {
 .alchemy-item__image {
   height: 64px;
   width: 64px;
-  user-select: none;
   pointer-events: none;
 }
 

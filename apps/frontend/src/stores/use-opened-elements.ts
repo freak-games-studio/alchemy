@@ -21,7 +21,7 @@ export const useOpenedElements = defineStore('opened-elements', () => {
   }
 
   watch(() => alchemyInfo.basicElements, () => {
-    if (!alchemyInfo.basicElements) return
+    if (!alchemyInfo.basicElements || alchemyInfo.basicElements.length > 0) return
     openedElements.value = alchemyInfo.basicElements.map((element) => {
       return {
         id: element.id,

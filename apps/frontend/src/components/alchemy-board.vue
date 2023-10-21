@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import AlchemyItem from './alchemy-item.vue'
+import AlchemyControls from './alchemy-controls.vue'
+import { useEventListener } from '@vueuse/core'
 import { useBoard } from '@/stores/use-board.js'
 import { useAlchemyInfo } from '@/stores/use-alchemy-info.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from '@/constants.js'
 import { getRandomPosition } from '@/utils.js'
+import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from '@/constants.js'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
 const board = useBoard()
@@ -88,11 +90,23 @@ function spawnElement(
     }
   })
 }
+
+useEventListener(document, 'dblclick', () => {
+  if (!alchemyInfo.basicElements) return
+  const elements = alchemyInfo.basicElements.map((element) => {
+    return {
+      ...element,
+      uuid: crypto.randomUUID(),
+      position: getRandomPosition()
+    }
+  })
+
+  board.board.push(...elements)
+})
 </script>
 
 <template>
-  <button v-on:click="board.$reset()">Restart</button>
-  <h1 class="counter">{{ alchemyInfo.availableRecipes }}</h1>
+  <alchemy-controls />
   <div class="board">
     <alchemy-item
       v-for="boardElement of board.board"
@@ -108,14 +122,5 @@ function spawnElement(
 <style scoped>
 .board {
   position: relative;
-}
-
-.counter {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  font-size: 16px;
-  user-select: none;
-  z-index: 99999;
 }
 </style>
