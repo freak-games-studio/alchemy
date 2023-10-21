@@ -23,16 +23,16 @@ function checkCollision(boardElement: BoardElement): void {
       boardElement.position.y < boardItem.position.y + elementHeight &&
       boardElement.position.y + elementHeight > boardItem.position.y
     ) {
-      const currentReceipt = [boardElement.class, boardItem.class]
+      const currentRecept = [boardElement.class, boardItem.class]
 
       for (const element of elements.elements) {
-        if (!element.receipt) continue
+        if (!element.recept) continue
 
-        for (const [element1, element2] of element.receipt) {
+        for (const [element1, element2] of element.recept) {
           if (
-            currentReceipt.indexOf(element1) !== -1 &&
-            currentReceipt.indexOf(element2) !== -1 &&
-            currentReceipt.indexOf(element1) !== currentReceipt.indexOf(element2)
+            currentRecept.indexOf(element1) !== -1 &&
+            currentRecept.indexOf(element2) !== -1 &&
+            currentRecept.indexOf(element1) !== currentRecept.indexOf(element2)
           ) {
             removeElement([boardItem, boardElement])
             spawnElement(boardItem, element)
