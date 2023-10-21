@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "lint": "prettier --write \"**/*.{js,ts,tsx,json}\""
+  },
+  "devDependencies": {
+    "@crashmax/tsconfig": "^2.0.1",
+    "tsx": "^3.14.0",
+    "typescript": "~5.2.0"
+  },
+  "dependencies": {
+    "@crashmax/prettier-config": "^4.1.0",
+    "@fastify/cors": "^8.4.0",
+    "@stenodb/fastify": "^4.0.1",
+    "@types/node": "18",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "fastify": "^4.24.3",
+    "reflect-metadata": "^0.1.13"
+  }
+}
