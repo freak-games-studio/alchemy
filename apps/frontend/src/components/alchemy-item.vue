@@ -44,14 +44,14 @@ watch(() => props.element.position, () => {
 .alchemy-item {
   cursor: pointer;
   transition: 0.3s;
-  touch-action: manipulation;
+  touch-action: none;
   position: fixed;
   inline-size: min-content;
   overflow-wrap: break-word;
   z-index: 999;
 }
 
-.alchemy-item:active {
+.alchemy-item:active, .alchemy-item:hover {
   transition: none;
   z-index: 9999;
 }
