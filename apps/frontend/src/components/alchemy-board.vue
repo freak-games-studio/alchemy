@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import AlchemyItem from './alchemy-item.vue'
 import AlchemyControls from './alchemy-controls.vue'
+import AlchemyElements from './alchemy-elements.vue'
 import { useEventListener } from '@vueuse/core'
 import { useBoard } from '@/stores/use-board.js'
+import { useModal } from '@/stores/use-modal.js'
 import { useAlchemyInfo } from '@/stores/use-alchemy-info.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import { getRandomPosition } from '@/utils.js'
@@ -12,6 +14,7 @@ import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js
 const board = useBoard()
 const alchemyInfo = useAlchemyInfo()
 const openedElements = useOpenedElements()
+const modal = useModal()
 
 function updatePosition(
   element: AlchemyElementOnBoard,
@@ -91,8 +94,12 @@ function spawnElement(
   })
 }
 
-useEventListener(document, 'dblclick', () => {
-  if (!alchemyInfo.basicElements) return
+useEventListener(document, 'dblclick', (event) => {
+  if (
+    !alchemyInfo.basicElements ||
+    (event.target as HTMLElement).closest('.alchemy-item')
+  ) return
+
   const elements = alchemyInfo.basicElements.map((element) => {
     return {
       ...element,
@@ -111,12 +118,16 @@ useEventListener(document, 'dblclick', () => {
     <alchemy-item
       v-for="boardElement of board.board"
       v-bind:key="boardElement.uuid"
-      v-bind:alchemy-element="boardElement"
-      v-on:update:position="updatePosition(boardElement, $event)"
+      v-bind:element="boardElement"
+      v-on:position="updatePosition(boardElement, $event)"
       v-on:update:clone-element="spawnElement(boardElement, $event, true)"
       v-on:update:remove-element="removeElement([$event, boardElement])"
     />
   </div>
+  <alchemy-elements
+    v-if="modal.isOpened"
+    v-on:create-element="board.board.push($event)"
+  />
 </template>
 
 <style scoped>
