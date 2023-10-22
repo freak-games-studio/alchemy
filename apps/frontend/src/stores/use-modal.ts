@@ -10,8 +10,6 @@ export const useModal = defineStore('modal', () => {
 
   return {
     isOpened,
-    open,
-    close,
     toggle
   }
 })
