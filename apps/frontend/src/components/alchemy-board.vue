@@ -38,7 +38,7 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
           if (!element) return
           removeElement([boardItem, boardElement])
           spawnElement(boardItem, element)
-          openedElements.addRecipe(element)
+          openedElements.addElement(element)
         })
     }
   }

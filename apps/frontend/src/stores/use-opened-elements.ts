@@ -14,7 +14,7 @@ export const useOpenedElements = defineStore('opened-elements', () => {
     openedElements.value = []
   }
 
-  function addRecipe(element: AlchemyElement): void {
+  function addElement(element: AlchemyElement): void {
     const isExist = openedElements.value.some((e) => e.id === element.id)
     if (isExist) return
     openedElements.value.push({ id: element.id, name: element.name })
@@ -33,6 +33,6 @@ export const useOpenedElements = defineStore('opened-elements', () => {
   return {
     openedElements,
     $reset,
-    addRecipe,
+    addElement
   }
 })
