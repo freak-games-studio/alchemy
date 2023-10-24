@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@crashmax/prettier-config": "^4.1.0",
+    "@fastify/cors": "^8.4.0",
     "@stenodb/fastify": "^4.0.1",
     "@types/node": "18",
     "class-transformer": "^0.5.1",

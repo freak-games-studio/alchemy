@@ -3,6 +3,7 @@ import 'reflect-metadata'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { FastifySteno } from '@stenodb/fastify'
+import FastifyCors from '@fastify/cors'
 import fastify from 'fastify'
 
 import {
@@ -13,6 +14,10 @@ import {
 import { alchemyRouter } from './router.js'
 
 const app = fastify()
+
+app.register(FastifyCors, {
+  origin: 'https://crashmax-dev.github.io',
+})
 
 app.register(FastifySteno, {
   path: resolve(dirname(fileURLToPath(import.meta.url)), '..', 'db'),
@@ -28,7 +33,7 @@ app.register((instance, _, done) => {
       alchemyRouter(instance, alchemyService)
       done()
     },
-    { prefix: '/' }
+    { prefix: '/api' }
   )
 
   done()
