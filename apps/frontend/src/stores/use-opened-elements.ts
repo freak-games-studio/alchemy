@@ -9,7 +9,7 @@ type OpenedAlchemyElements = Omit<AlchemyElement, 'uuid'>[]
 export const useOpenedElements = defineStore('opened-elements', () => {
   const game = useGame()
   const openedElements = vueuse.useStorage<OpenedAlchemyElements>(
-    'opened-elements', []
+    'opened-elements-v2', []
   )
 
   function $reset(): void {

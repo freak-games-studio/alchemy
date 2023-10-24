@@ -23,7 +23,7 @@ export const useBoard = defineStore('board', () => {
   })
 
   const game = useGame()
-  const board = vueuse.useStorage<AlchemyElementOnBoard[]>('alchemy-board', [])
+  const board = vueuse.useStorage<AlchemyElementOnBoard[]>('alchemy-board-v2', [])
 
   function $reset(): void {
     board.value = game.basicElements?.map((element) => {
