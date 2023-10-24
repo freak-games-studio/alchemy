@@ -1,22 +1,35 @@
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import * as vueuse from '@vueuse/core'
-import { useAlchemyInfo } from './use-alchemy-info.js'
+import { useGame } from './use-game.js'
 import type { AlchemyElementOnBoard } from '@/types.js'
-import { watch } from 'vue'
-import { INNER_HEIGHT, INNER_WIDTH } from '@/constants.js'
+import { useWindowSize } from '@vueuse/core'
+
+const threshold = 120
 
 export const useBoard = defineStore('board', () => {
-  const alchemyInfo = useAlchemyInfo()
+  const { width, height } = useWindowSize()
+
+  const boardSize = computed(() => {
+    return {
+      width: width.value - threshold,
+      height: height.value - threshold
+    }
+  })
+
+  const elementSize = ref({
+    width: 60,
+    height: 40
+  })
+
+  const game = useGame()
   const board = vueuse.useStorage<AlchemyElementOnBoard[]>('alchemy-board', [])
 
   function $reset(): void {
-    board.value = alchemyInfo.basicElements?.map((element) => {
+    board.value = game.basicElements?.map((element) => {
       return {
         ...element,
-        position: {
-          x: Math.floor(Math.random() * INNER_WIDTH),
-          y: Math.floor(Math.random() * INNER_HEIGHT),
-        }
+        position: game.getRandomPosition()
       }
     })
   }
@@ -25,15 +38,17 @@ export const useBoard = defineStore('board', () => {
     board.value.push(element)
   }
 
-  watch(() => alchemyInfo.basicElements, () => {
+  watch(() => game.basicElements, () => {
     if (board.value.length === 0) {
-      board.value = alchemyInfo.basicElements
+      board.value = game.basicElements
     }
   })
 
   return {
     board,
+    boardSize,
+    elementSize,
     $reset,
-    addElement
+    addElement,
   }
 })

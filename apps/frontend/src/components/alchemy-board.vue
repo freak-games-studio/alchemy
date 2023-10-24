@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import AlchemyItem from './alchemy-item.vue'
 import AlchemyControls from './alchemy-controls.vue'
-import AlchemyElements from './alchemy-elements.vue'
+import AlchemyMenu from './alchemy-menu.vue'
 import { useEventListener } from '@vueuse/core'
 import { useBoard } from '@/stores/use-board.js'
-import { useModal } from '@/stores/use-modal.js'
-import { useAlchemyInfo } from '@/stores/use-alchemy-info.js'
+import { useMenu } from '@/stores/use-menu.js'
+import { useGame } from '@/stores/use-game.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { getRandomPosition } from '@/utils.js'
-import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from '@/constants.js'
+import { API_URL } from '@/constants.js'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
+const game = useGame()
 const board = useBoard()
-const alchemyInfo = useAlchemyInfo()
+const menu = useMenu()
 const openedElements = useOpenedElements()
-const modal = useModal()
 
 function updatePosition(
   element: AlchemyElementOnBoard,
@@ -27,11 +26,12 @@ function updatePosition(
 function checkCollision(boardElement: AlchemyElementOnBoard): void {
   for (const boardItem of board.board) {
     if (boardItem === boardElement) continue
+    if (boardElement.ended || boardItem.ended) continue
     if (
-      boardElement.position.x < boardItem.position.x + ELEMENT_WIDTH &&
-      boardElement.position.x + ELEMENT_WIDTH > boardItem.position.x &&
-      boardElement.position.y < boardItem.position.y + ELEMENT_HEIGHT &&
-      boardElement.position.y + ELEMENT_HEIGHT > boardItem.position.y
+      boardElement.position.x < boardItem.position.x + board.elementSize.width &&
+      boardElement.position.x + board.elementSize.width > boardItem.position.x &&
+      boardElement.position.y < boardItem.position.y + board.elementSize.height &&
+      boardElement.position.y + board.elementSize.height > boardItem.position.y
     ) {
       checkRecipe([boardElement.id, boardItem.id])
         .then((element) => {
@@ -49,7 +49,7 @@ async function checkRecipe(
 ): Promise<AlchemyElementOnBoard | undefined> {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/check-recipe`,
+      `${API_URL}/api/check-recipe`,
       {
         method: 'POST',
         headers: {
@@ -64,7 +64,7 @@ async function checkRecipe(
     const data = await response.json() as AlchemyElement
     const element: AlchemyElementOnBoard = {
       ...data,
-      position: getRandomPosition()
+      position: game.getRandomPosition()
     }
 
     return element
@@ -95,16 +95,13 @@ function spawnElement(
 }
 
 useEventListener(document, 'dblclick', (event) => {
-  if (
-    !alchemyInfo.basicElements ||
-    (event.target as HTMLElement).closest('.alchemy-item')
-  ) return
+  if ((event.target as HTMLElement).closest('.alchemy-item')) return
 
-  const elements = alchemyInfo.basicElements.map((element) => {
+  const elements = game.basicElements!.map((element) => {
     return {
       ...element,
       uuid: crypto.randomUUID(),
-      position: getRandomPosition()
+      position: game.getRandomPosition()
     }
   })
 
@@ -124,8 +121,8 @@ useEventListener(document, 'dblclick', (event) => {
       v-on:update:remove-element="removeElement([$event, boardElement])"
     />
   </div>
-  <alchemy-elements
-    v-if="modal.isOpened"
+  <alchemy-menu
+    v-if="menu.isOpened"
     v-on:create-element="board.board.push($event)"
   />
 </template>

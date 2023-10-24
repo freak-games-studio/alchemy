@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useModal = defineStore('modal', () => {
+export const useMenu = defineStore('menu', () => {
   const isOpened = ref(false)
 
   function toggle(): void {

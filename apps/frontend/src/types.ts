@@ -7,6 +7,7 @@ export interface AlchemyElement {
   uuid: string
   id: string
   name: string
+  ended: boolean
 }
 
 export interface AlchemyElementOnBoard extends AlchemyElement {

@@ -8,6 +8,7 @@ export class AlchemyIngredient {
     public id: string,
     public name: string,
     public description: string,
+    public ended?: true,
     public recipes: [string, string][] = []
   ) {}
 }
@@ -42,8 +43,6 @@ export class AlchemyService {
       return alchemyIngredient.id === id
     })
   }
-
-  checkRecipes(recipes: string[]) {}
 }
 
 export const alchemyIngredientAdapter = new AsyncAdapter(

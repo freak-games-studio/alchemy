@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { useBoard } from '@/stores/use-board.js'
-import { useModal } from '@/stores/use-modal.js'
-import { useAlchemyInfo } from '@/stores/use-alchemy-info.js'
+import { useMenu } from '@/stores/use-menu.js'
+import { useGame } from '@/stores/use-game.js'
 
+const game = useGame()
 const board = useBoard()
-const alchemyInfo = useAlchemyInfo()
-const modal = useModal()
+const menu = useMenu()
 </script>
 
 <template>
-  <div class="controls">
-    <button class="button" v-on:dblclick.stop v-on:click="board.$reset()">Clear</button>
+  <div class="controls" v-on:dblclick.stop>
+    <button class="button" v-on:click="game.$reset()">New game</button>
+    <button class="button" v-on:click="board.$reset()">Clear board</button>
     <button
       class="button"
-      v-bind:class="{ active: modal.isOpened }"
-      v-on:dblclick.stop
-      v-on:click="modal.toggle()"
+      v-bind:class="{ active: menu.isOpened }"
+      v-on:click="menu.toggle()"
     >
-      Menu
+      Elements
     </button>
-    <div class="counter">{{ alchemyInfo.availableRecipes }}</div>
+    <div class="counter">{{ game.availableRecipes }}</div>
   </div>
 </template>
 

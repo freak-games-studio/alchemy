@@ -36,7 +36,7 @@ watch(() => props.element.position, () => {
     v-on:dblclick="emits('update:clone-element', element)"
     v-on:contextmenu.prevent="emits('update:remove-element', element)"
   >
-    <alchemy-image v-bind:id="element.id" v-bind:name="element.name" />
+    <alchemy-image v-bind:element="element" />
   </div>
 </template>
 

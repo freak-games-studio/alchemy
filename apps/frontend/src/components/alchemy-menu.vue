@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import AlchemyImage from './alchemy-image.vue'
+import { useGame } from '@/stores/use-game.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { getRandomPosition } from '@/utils.js'
 import type { AlchemyElement, AlchemyElementOnBoard } from '@/types.js'
 
 const emits = defineEmits<{
   'create-element': [AlchemyElementOnBoard]
 }>()
 
+const game = useGame()
 const openedElements = useOpenedElements()
 const searchInput = ref('')
 
 const filteredElements = computed(() => {
   return openedElements.openedElements.filter((element) => {
     return element.name.toLowerCase().includes(searchInput.value.toLowerCase())
-  })
+  }) as AlchemyElementOnBoard[]
 })
 
 function createElement(element: Omit<AlchemyElement, 'uuid'>) {
   emits('create-element', {
     ...element,
     uuid: crypto.randomUUID(),
-    position: getRandomPosition()
+    position: game.getRandomPosition()
   })
 }
 </script>
@@ -43,7 +44,7 @@ function createElement(element: Omit<AlchemyElement, 'uuid'>) {
         class="elements-item"
         v-on:mousedown.left="createElement(element)"
       >
-        <alchemy-image v-bind:id="element.id" v-bind:name="element.name" />
+        <alchemy-image v-bind:element="element" />
       </div>
     </div>
   </div>
@@ -54,9 +55,9 @@ function createElement(element: Omit<AlchemyElement, 'uuid'>) {
   position: absolute;
   overflow-x: auto;
   z-index: 9999;
-  max-height: 50%;
+  max-height: 40%;
   width: 100%;
-  top: 39px;
+  top: 38px;
 }
 
 .elements {

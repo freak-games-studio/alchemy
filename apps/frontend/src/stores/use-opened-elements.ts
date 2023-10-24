@@ -1,12 +1,14 @@
+import { watchEffect } from 'vue'
 import { defineStore } from 'pinia'
 import * as vueuse from '@vueuse/core'
-import { useAlchemyInfo } from './use-alchemy-info.js'
-import { watch } from 'vue'
+import { useGame } from './use-game.js'
 import type { AlchemyElement } from '@/types.js'
 
+type OpenedAlchemyElements = Omit<AlchemyElement, 'uuid'>[]
+
 export const useOpenedElements = defineStore('opened-elements', () => {
-  const alchemyInfo = useAlchemyInfo()
-  const openedElements = vueuse.useStorage<Omit<AlchemyElement, 'uuid'>[]>(
+  const game = useGame()
+  const openedElements = vueuse.useStorage<OpenedAlchemyElements>(
     'opened-elements', []
   )
 
@@ -15,17 +17,25 @@ export const useOpenedElements = defineStore('opened-elements', () => {
   }
 
   function addElement(element: AlchemyElement): void {
-    const isExist = openedElements.value.some((e) => e.id === element.id)
+    const isExist = openedElements.value
+      .some((openedElement) => openedElement.id === element.id)
+
     if (isExist) return
-    openedElements.value.push({ id: element.id, name: element.name })
+
+    openedElements.value.push({
+      id: element.id,
+      name: element.name,
+      ended: element.ended
+    })
   }
 
-  watch(() => alchemyInfo.basicElements, () => {
-    if (!alchemyInfo.basicElements || openedElements.value.length > 0) return
-    openedElements.value = alchemyInfo.basicElements.map((element) => {
+  watchEffect(() => {
+    if (!game.basicElements || openedElements.value.length > 0) return
+    openedElements.value = game.basicElements.map((element) => {
       return {
         id: element.id,
-        name: element.name
+        name: element.name,
+        ended: element.ended
       }
     })
   })

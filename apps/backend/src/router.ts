@@ -7,13 +7,14 @@ export function alchemyRouter(
   fastify: FastifyInstance,
   alchemyService: AlchemyService
 ): void {
-  fastify.get('/', async (request, reply) => {
+  fastify.get('/alchemy', async (request, reply) => {
     const elements = alchemyService.findAll()
     const basicElements = elements.slice(0, 4).map((element) => {
       return {
         uuid: crypto.randomUUID(),
         id: element.id,
-        name: element.name
+        name: element.name,
+        ended: element.ended ?? false
       }
     })
 
@@ -30,8 +31,7 @@ export function alchemyRouter(
   }>('/:id', async (request, reply) => {
     const item = alchemyService.findById(request.params.id)
     if (!item) {
-      reply.status(404)
-      reply.send({ error: 'Not found' })
+      reply.status(418).send({ error: 'Element not found' })
       return
     }
     item.recipes = []
@@ -63,8 +63,8 @@ export function alchemyRouter(
       }
     },
     async (request, reply) => {
-      const elements = alchemyService.findAll()
       const { recipe } = request.body
+      const elements = alchemyService.findAll()
 
       for (const element of elements) {
         if (element.recipes.length === 0) continue
@@ -78,14 +78,14 @@ export function alchemyRouter(
             return reply.send({
               uuid: crypto.randomUUID(),
               id: element.id,
-              name: element.name
+              name: element.name,
+              ended: element.ended ?? false
             })
           }
         }
       }
 
-      reply.status(404)
-      reply.send({ error: 'Not found' })
+      reply.status(418).send({ error: 'Craft not found' })
     }
   )
 }
