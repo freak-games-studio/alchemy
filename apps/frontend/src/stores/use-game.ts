@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useFetch } from '@vueuse/core'
-// import { useMenu } from './use-menu.js'
+import { useMenu } from './use-menu.js'
 import { useBoard } from './use-board.js'
 import { useOpenedElements } from './use-opened-elements.js'
 import { API_URL } from '@/constants.js'
@@ -13,7 +13,7 @@ interface AlchemyInfo {
 }
 
 export const useGame = defineStore('game', () => {
-  // const menu = useMenu()
+  const menu = useMenu()
   const board = useBoard()
   const { data } = useFetch(`${API_URL}/api/alchemy`).json<AlchemyInfo>()
   const openedElements = useOpenedElements()
@@ -32,14 +32,14 @@ export const useGame = defineStore('game', () => {
   })
 
   function getRandomPosition(): Position {
-    const sizes = {
-      width: board.boardSize.width,
-      height: board.boardSize.height
-    }
+    const x = Math.random() * board.boardSize.width
+    const y = menu.isOpened
+      ? (Math.random() * (board.boardSize.height / 2)) + board.boardSize.height / 2
+      : Math.random() * board.boardSize.height
 
     return {
-      x: Math.floor(Math.random() * sizes.width),
-      y: Math.floor(Math.random() * (sizes.height / 2) + sizes.height / 2)
+      x: Math.floor(x),
+      y: Math.floor(y)
     }
   }
 
