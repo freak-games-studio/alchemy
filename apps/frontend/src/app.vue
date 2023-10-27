@@ -5,7 +5,3 @@ import AlchemyBoard from '@/components/alchemy-board.vue'
 <template>
   <alchemy-board />
 </template>
-
-<style scoped>
-
-</style>

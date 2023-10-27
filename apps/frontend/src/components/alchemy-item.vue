@@ -2,6 +2,7 @@
 import AlchemyImage from './alchemy-image.vue'
 import { useDraggable } from '@vueuse/core'
 import { ref, watch } from 'vue'
+import { useSounds } from '@/stores/use-sounds'
 import type { AlchemyElementOnBoard, Position } from '@/types.js'
 
 const props = defineProps<{
@@ -14,10 +15,14 @@ const emits = defineEmits<{
   'update:remove-element': [AlchemyElementOnBoard]
 }>()
 
+const sounds = useSounds()
 const el = ref<HTMLElement | null>(null)
 
 const { position, style } = useDraggable(el, {
   initialValue: props.element.position,
+  onStart() {
+    sounds.takingAudio.play()
+  },
   onEnd(position) {
     emits('position', position)
   }
