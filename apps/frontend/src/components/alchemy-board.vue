@@ -37,7 +37,7 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
         .then((element) => {
           if (!element) return
           removeElement([boardItem, boardElement])
-          spawnElement(boardItem, element)
+          сreateElement(boardItem, element)
           openedElements.addElement(element)
         })
     }
@@ -79,7 +79,7 @@ function removeElement(boardElement: AlchemyElementOnBoard[]): void {
   })
 }
 
-function spawnElement(
+function сreateElement(
   boardElement: AlchemyElementOnBoard,
   newElement: AlchemyElement,
   isCopy = false
@@ -117,7 +117,7 @@ useEventListener(boardRef, 'dblclick', (event) => {
       v-bind:alchemy-element="boardElement"
       v-bind:board-bounding="boardBounding"
       v-on:position="updatePosition(boardElement, $event)"
-      v-on:update:clone-element="spawnElement(boardElement, $event, true)"
+      v-on:update:clone-element="сreateElement(boardElement, $event, true)"
       v-on:update:remove-element="removeElement([$event, boardElement])"
     />
   </div>
@@ -125,7 +125,6 @@ useEventListener(boardRef, 'dblclick', (event) => {
 
 <style scoped>
 .board {
-  position: relative;
   width: 65%;
 }
 
