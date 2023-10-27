@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import AlchemyItem from './alchemy-item.vue'
-import AlchemyControls from './alchemy-controls.vue'
-import AlchemyMenu from './alchemy-menu.vue'
-import { useEventListener } from '@vueuse/core'
+import AlchemyDraggableItem from './alchemy-draggable-item.vue'
+import { ref } from 'vue'
+import { useElementBounding, useEventListener } from '@vueuse/core'
 import { useBoard } from '@/stores/use-board.js'
-import { useMenu } from '@/stores/use-menu.js'
 import { useGame } from '@/stores/use-game.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import { API_URL } from '@/constants.js'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
 const game = useGame()
-const board = useBoard()
-const menu = useMenu()
 const openedElements = useOpenedElements()
+
+const board = useBoard()
+const boardRef = ref<HTMLDivElement>()
+const boardBounding = useElementBounding(boardRef)
 
 function updatePosition(
   element: AlchemyElementOnBoard,
@@ -94,7 +94,7 @@ function spawnElement(
   })
 }
 
-useEventListener(document, 'dblclick', (event) => {
+useEventListener(boardRef, 'dblclick', (event) => {
   if ((event.target as HTMLElement).closest('.alchemy-item')) return
 
   const elements = game.basicElements!.map((element) => {
@@ -110,25 +110,28 @@ useEventListener(document, 'dblclick', (event) => {
 </script>
 
 <template>
-  <alchemy-controls />
-  <div class="board">
-    <alchemy-item
+  <div ref="boardRef" class="board">
+    <alchemy-draggable-item
       v-for="boardElement of board.board"
       v-bind:key="boardElement.uuid"
-      v-bind:element="boardElement"
+      v-bind:alchemy-element="boardElement"
+      v-bind:board-bounding="boardBounding"
       v-on:position="updatePosition(boardElement, $event)"
       v-on:update:clone-element="spawnElement(boardElement, $event, true)"
       v-on:update:remove-element="removeElement([$event, boardElement])"
     />
   </div>
-  <alchemy-menu
-    v-if="menu.isOpened"
-    v-on:create-element="board.board.push($event)"
-  />
 </template>
 
 <style scoped>
 .board {
   position: relative;
+  width: 65%;
+}
+
+@media screen and (max-width: 768px) {
+  .board {
+    width: 60%;
+  }
 }
 </style>

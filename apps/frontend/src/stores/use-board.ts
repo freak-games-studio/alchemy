@@ -18,8 +18,8 @@ export const useBoard = defineStore('board', () => {
   })
 
   const elementSize = ref({
-    width: 60,
-    height: 40
+    width: 50,
+    height: 50
   })
 
   const game = useGame()

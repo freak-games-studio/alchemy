@@ -1,63 +1,53 @@
 <script setup lang="ts">
-import AlchemyImage from './alchemy-image.vue'
-import { useDraggable } from '@vueuse/core'
-import { ref, watch } from 'vue'
-import { useSounds } from '@/stores/use-sounds'
-import type { AlchemyElementOnBoard, Position } from '@/types.js'
+import { computed } from 'vue'
+import { useBoard } from '@/stores/use-board'
+import type { AlchemyElement } from '@/types.js'
 
-const props = defineProps<{
-  element: AlchemyElementOnBoard
+defineProps<{
+  element: AlchemyElement
 }>()
 
-const emits = defineEmits<{
-  'position': [Position],
-  'update:clone-element': [AlchemyElementOnBoard],
-  'update:remove-element': [AlchemyElementOnBoard]
-}>()
-
-const sounds = useSounds()
-const el = ref<HTMLElement | null>(null)
-
-const { position, style } = useDraggable(el, {
-  initialValue: props.element.position,
-  onStart() {
-    sounds.takingAudio.play()
-  },
-  onEnd(position) {
-    emits('position', position)
-  }
-})
-
-watch(() => props.element.position, () => {
-  position.value = props.element.position
-})
+const game = useBoard()
+const width = computed(() => `${game.elementSize.width}px`)
+const height = computed(() => `${game.elementSize.height}px`)
 </script>
 
 <template>
-  <div
-    ref="el"
-    class="alchemy-item"
-    v-bind:style="style"
-    v-on:dblclick="emits('update:clone-element', element)"
-    v-on:contextmenu.prevent="emits('update:remove-element', element)"
-  >
-    <alchemy-image v-bind:element="element" />
+  <div class="item">
+    <img class="image" v-bind:src="`images/${element.id}.webp`" />
+    <p v-bind:class="['text', { ended: element.ended }]">
+      {{ element.name }}
+    </p>
   </div>
 </template>
 
 <style scoped>
-.alchemy-item {
-  cursor: pointer;
-  transition: 0.3s;
-  touch-action: none;
-  position: fixed;
-  inline-size: min-content;
-  overflow-wrap: break-word;
-  z-index: 999;
+.item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(v-bind(height) * 2);
+  width: calc(v-bind(width) * 2);
+  pointer-events: none;
 }
 
-.alchemy-item:active, .alchemy-item:hover {
-  transition: none;
-  z-index: 9999;
+.image {
+  height: v-bind(height);
+  width: v-bind(width);
+}
+
+.text {
+  display: flex;
+  gap: 6px;
+  text-align: center;
+  word-break: break-word;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.ended::after {
+  content: '*';
+  color: tomato;
 }
 </style>
