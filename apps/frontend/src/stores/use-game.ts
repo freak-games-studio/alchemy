@@ -31,8 +31,8 @@ export const useGame = defineStore('game', () => {
 
   function getRandomPosition(): Position {
     return {
-      x: Math.floor(Math.random() * board.boardSize.width),
-      y: Math.floor(Math.random() * board.boardSize.height)
+      x: Math.floor(Math.random() * board.boardPosition.left),
+      y: Math.floor(Math.random() * board.boardPosition.top)
     }
   }
 

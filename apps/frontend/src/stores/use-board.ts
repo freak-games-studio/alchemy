@@ -5,9 +5,9 @@ import { useGame } from './use-game.js'
 import type { AlchemyElementOnBoard } from '@/types.js'
 
 export const useBoard = defineStore('board', () => {
-  const boardSize = ref({
-    width: 0,
-    height: 0
+  const boardPosition = ref({
+    left: 0,
+    top: 0
   })
 
   const elementSize = ref({
@@ -39,7 +39,7 @@ export const useBoard = defineStore('board', () => {
 
   return {
     board,
-    boardSize,
+    boardPosition,
     elementSize,
     $reset,
     addElement,

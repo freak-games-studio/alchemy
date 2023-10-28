@@ -16,8 +16,8 @@ const boardRef = ref<HTMLDivElement>()
 const boardBounding = useElementBounding(boardRef)
 
 watchEffect(() => {
-  board.boardSize.height = boardBounding.height.value
-  board.boardSize.width = boardBounding.width.value
+  board.boardPosition.left = boardBounding.left.value
+  board.boardPosition.top = boardBounding.top.value
 })
 
 function updatePosition(
