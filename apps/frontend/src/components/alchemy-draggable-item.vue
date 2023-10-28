@@ -26,24 +26,24 @@ const { x, y, position } = useDraggable(element, {
     sounds.takingAudio.play()
   },
   onEnd(position) {
-    emits('position', position)
+    emits('position', { x: xPos, y: yPos })
   }
 })
 
 const xPos = computed(() => {
-  return `${clamp(
+  return clamp(
     props.boardBounding.left.value,
     x.value,
     props.boardBounding.right.value - width.value
-  )}px`
+  )
 })
 
 const yPos = computed(() => {
-  return `${clamp(
+  return clamp(
     props.boardBounding.top.value,
     y.value,
     props.boardBounding.bottom.value - height.value
-  )}px`
+  )
 })
 
 watch(() => props.alchemyElement.position, () => {
@@ -55,7 +55,7 @@ watch(() => props.alchemyElement.position, () => {
   <div
     ref="element"
     class="alchemy-item"
-    v-bind:style="{ left: xPos, top: yPos }"
+    v-bind:style="{ left: `${xPos}px`, top: `${yPos}px` }"
     v-on:dblclick="emits('update:clone-element', alchemyElement)"
     v-on:contextmenu.prevent="emits('update:remove-element', alchemyElement)"
   >
