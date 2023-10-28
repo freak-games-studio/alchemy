@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AlchemyDraggableItem from './alchemy-draggable-item.vue'
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useElementBounding, useEventListener } from '@vueuse/core'
 import { useBoard } from '@/stores/use-board.js'
 import { useGame } from '@/stores/use-game.js'
@@ -15,7 +15,7 @@ const board = useBoard()
 const boardRef = ref<HTMLDivElement>()
 const boardBounding = useElementBounding(boardRef)
 
-watch(() => boardBounding, () => {
+watchEffect(() => {
   board.boardSize.height = boardBounding.height.value
   board.boardSize.width = boardBounding.width.value
 })
