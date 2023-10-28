@@ -25,8 +25,8 @@ const { x, y, position } = useDraggable(element, {
   onStart() {
     sounds.takingAudio.play()
   },
-  onEnd(position) {
-    emits('position', { x: xPos, y: yPos })
+  onEnd() {
+    emits('position', { x: xPos.value, y: yPos.value })
   }
 })
 
