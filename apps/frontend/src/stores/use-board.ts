@@ -1,20 +1,13 @@
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import * as vueuse from '@vueuse/core'
 import { useGame } from './use-game.js'
-import { useWindowSize } from '@vueuse/core'
 import type { AlchemyElementOnBoard } from '@/types.js'
 
-const threshold = 120
-
 export const useBoard = defineStore('board', () => {
-  const { width, height } = useWindowSize()
-
-  const boardSize = computed(() => {
-    return {
-      width: width.value - threshold,
-      height: height.value - threshold
-    }
+  const boardSize = ref({
+    width: 0,
+    height: 0
   })
 
   const elementSize = ref({
