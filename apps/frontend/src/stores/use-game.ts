@@ -31,13 +31,13 @@ export const useGame = defineStore('game', () => {
 
   function getRandomPosition(): Position {
     return {
-      x: Math.floor(Math.random() * board.boardPosition.left),
-      y: Math.floor(Math.random() * board.boardPosition.top)
+      x: Math.floor(Math.random() * (board.boardSize.right - board.boardSize.left) + board.boardSize.left),
+      y: Math.floor(Math.random() * (board.boardSize.bottom - board.boardSize.top) + board.boardSize.top)
     }
   }
 
   function $reset() {
-    const isConfirm = confirm('Are you sure you want to start a new game?')
+    const isConfirm = confirm('Вы точно хотите начать новую игру?')
     if (!isConfirm) return
     board.$reset()
     openedElements.$reset()

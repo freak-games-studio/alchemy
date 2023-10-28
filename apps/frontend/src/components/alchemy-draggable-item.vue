@@ -20,28 +20,28 @@ const sounds = useSounds()
 const element = ref<HTMLElement | null>(null)
 const { width, height } = useElementBounding(element)
 
-const { x, y, position } = useDraggable(element, {
+const { position } = useDraggable(element, {
   initialValue: props.alchemyElement.position,
   onStart() {
     sounds.takingAudio.play()
   },
   onEnd() {
-    emits('position', { x: xPos.value, y: yPos.value })
+    emits('position', { x: xPosition.value, y: yPosition.value })
   }
 })
 
-const xPos = computed(() => {
+const xPosition = computed(() => {
   return clamp(
     props.boardBounding.left.value,
-    x.value,
+    position.value.x,
     props.boardBounding.right.value - width.value
   )
 })
 
-const yPos = computed(() => {
+const yPosition = computed(() => {
   return clamp(
     props.boardBounding.top.value,
-    y.value,
+    position.value.y,
     props.boardBounding.bottom.value - height.value
   )
 })
@@ -55,7 +55,7 @@ watch(() => props.alchemyElement.position, () => {
   <div
     ref="element"
     class="alchemy-item"
-    v-bind:style="{ left: `${xPos}px`, top: `${yPos}px` }"
+    v-bind:style="{ left: `${xPosition}px`, top: `${yPosition}px` }"
     v-on:dblclick="emits('update:clone-element', alchemyElement)"
     v-on:contextmenu.prevent="emits('update:remove-element', alchemyElement)"
   >

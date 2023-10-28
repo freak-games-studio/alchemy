@@ -5,15 +5,8 @@ import { useGame } from './use-game.js'
 import type { AlchemyElementOnBoard } from '@/types.js'
 
 export const useBoard = defineStore('board', () => {
-  const boardPosition = ref({
-    left: 0,
-    top: 0
-  })
-
-  const elementSize = ref({
-    width: 50,
-    height: 50
-  })
+  const boardSize = ref({ left: 0, right: 0, top: 0, bottom: 0 })
+  const elementSize = ref({ width: 50, height: 50 })
 
   const game = useGame()
   const board = vueuse.useStorage<AlchemyElementOnBoard[]>('alchemy-board-v2', [])
@@ -39,7 +32,7 @@ export const useBoard = defineStore('board', () => {
 
   return {
     board,
-    boardPosition,
+    boardSize,
     elementSize,
     $reset,
     addElement,
