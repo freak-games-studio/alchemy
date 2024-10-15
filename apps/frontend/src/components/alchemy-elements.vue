@@ -39,7 +39,7 @@ function createElement(element: Omit<AlchemyElement, 'uuid'>) {
       name="search"
       placeholder="Искать элемент"
     />
-    <div style="height: inherit;">
+    <div class="container-footer">
       <div class="elements-list">
         <div
           v-for="element in filteredElements"
@@ -61,8 +61,15 @@ function createElement(element: Omit<AlchemyElement, 'uuid'>) {
 <style scoped>
 .container {
   background-color: var(--vt-c-black);
-  height: inherit;
   width: 35%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-footer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .elements-list {
@@ -71,7 +78,7 @@ function createElement(element: Omit<AlchemyElement, 'uuid'>) {
   justify-content: center;
   align-content: flex-start;
   align-items: center;
-  height: 90%;
+  height: 100%;
   gap: 1rem;
   overflow-x: auto;
 }
