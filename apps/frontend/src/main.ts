@@ -1,8 +1,12 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './app.vue'
-import './main.css'
+import { splashScreen } from './splash-screen'
+import './styles/main.scss'
 
-createApp(App)
-  .use(createPinia())
-  .mount('#app')
+splashScreen.init()
+splashScreen.onInit(() => {
+  createApp(App)
+    .use(createPinia())
+    .mount('#app')
+})
