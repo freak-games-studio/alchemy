@@ -93,7 +93,7 @@ function replaceSvgUrl(): Plugin {
     const regexp = new RegExp(url, 'g')
     const base64 = btoa(url)
     const variableName = url.split('/').at(-1)
-    const code = `const __${variableName}__ = atob('${base64}')`
+    const code = `const __${variableName}__ = atob('${base64}');`
     return {
       variableName,
       regexp,
@@ -119,7 +119,7 @@ function replaceSvgUrl(): Plugin {
               .replaceAll(replacer.regexp, `"+__${replacer.variableName}__+"`)
           }
 
-          file.code = replacers.map((replacer) => replacer.code).join(';') + replacedFile
+          file.code = replacers.map((replacer) => replacer.code).join('') + replacedFile
         }
       }
     }
