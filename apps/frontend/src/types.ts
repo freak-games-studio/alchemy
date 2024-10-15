@@ -4,10 +4,10 @@ export interface Position {
 }
 
 export interface AlchemyElement {
-  uuid: string
+  uuid?: string
   id: string
   name: string
-  ended: boolean
+  ended?: boolean
 }
 
 export interface AlchemyElementOnBoard extends AlchemyElement {

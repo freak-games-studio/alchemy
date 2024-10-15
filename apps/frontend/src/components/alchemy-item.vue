@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useBoard } from '@/stores/use-board'
+import { sprites } from '@/assets/sprites'
 import type { AlchemyElement } from '@/types.js'
 
 defineProps<{
@@ -10,11 +11,12 @@ defineProps<{
 const game = useBoard()
 const width = computed(() => `${game.elementSize.width}px`)
 const height = computed(() => `${game.elementSize.height}px`)
+
 </script>
 
 <template>
   <div class="item">
-    <img class="image" v-bind:src="`images/${element.id}.webp`" />
+    <img class="image" v-bind:src="sprites[element.id]" />
     <p v-bind:class="['text', { ended: element.ended }]">
       {{ element.name }}
     </p>

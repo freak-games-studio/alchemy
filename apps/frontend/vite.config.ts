@@ -1,7 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { viteSingleFile } from 'vite-plugin-singlefile'
 
 import { HttpProxy } from 'vite'
 
@@ -51,7 +52,6 @@ const configurationByType: Record<ProxyLogType, (proxy: HttpProxy.Server) => voi
   },
 }
 
-// https://vitejs.dev/config/
 export default defineConfig({
   server: {
     port: 3001,
@@ -64,13 +64,64 @@ export default defineConfig({
       }
     }
   },
-  base: './',
   plugins: [
     vue(),
+    viteSingleFile(),
+    replaceSvgUrl(),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  build: {
+    target: 'esnext',
+    minify: true,
+    modulePreload: false
+  },
 })
+
+function replaceSvgUrl(): Plugin {
+  const urls = [
+    'https://vuejs.org/error',
+    'http://www.w3.org/2000/svg',
+    'http://www.w3.org/1998/Math/MathML',
+    'http://www.w3.org/1999/xlink',
+  ]
+
+  function createUrlReplacer(url: string) {
+    const regexp = new RegExp(url, 'g')
+    const base64 = btoa(url)
+    const variableName = url.split('/').at(-1)
+    const code = `const __${variableName}__ = atob('${base64}')`
+    return {
+      variableName,
+      regexp,
+      code
+    }
+  }
+
+  return {
+    name: 'vite:replace-svg-url',
+    apply: 'build',
+    generateBundle(_, bundle) {
+      for (const bundleIndex in bundle) {
+        const file = bundle[bundleIndex]
+        if (file.type === 'chunk') {
+          const replacers = []
+          for (const url of urls) {
+            replacers.push(createUrlReplacer(url))
+          }
+
+          let replacedFile = file.code
+          for (const replacer of replacers) {
+            replacedFile = replacedFile
+              .replaceAll(replacer.regexp, `"+__${replacer.variableName}__+"`)
+          }
+
+          file.code = replacers.map((replacer) => replacer.code).join(';') + replacedFile
+        }
+      }
+    }
+  }
+}

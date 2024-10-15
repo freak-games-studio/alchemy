@@ -9,7 +9,6 @@ import type { AlchemyElement, AlchemyElementOnBoard } from '@/types.js'
 const game = useGame()
 const board = useBoard()
 const openedElements = useOpenedElements()
-
 const searchInput = ref('')
 
 const filteredElements = computed(() => {
@@ -21,7 +20,7 @@ const filteredElements = computed(() => {
   }) as AlchemyElementOnBoard[]
 })
 
-function createElement(element: Omit<AlchemyElement, 'uuid'>) {
+function createElement(element: AlchemyElement) {
   board.board.push({
     ...element,
     uuid: crypto.randomUUID(),
@@ -111,7 +110,7 @@ function createElement(element: Omit<AlchemyElement, 'uuid'>) {
 }
 
 .button {
-  padding: 1rem;
+  padding: 12px;
   cursor: pointer;
   color: var(--vt-c-text-dark-2);
   background-color: var(--vt-c-black);

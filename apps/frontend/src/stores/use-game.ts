@@ -1,33 +1,19 @@
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useFetch } from '@vueuse/core'
 import { useBoard } from './use-board.js'
 import { useOpenedElements } from './use-opened-elements.js'
-import { API_URL } from '@/constants.js'
-import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
-
-interface AlchemyInfo {
-  recipes: number
-  basicElements: AlchemyElement[]
-}
+import recipes from '@/assets/recipes.json'
+import type { AlchemyElementOnBoard, Position } from '@/types.js'
 
 export const useGame = defineStore('game', () => {
   const board = useBoard()
-  const { data } = useFetch(`${API_URL}/api/alchemy`).json<AlchemyInfo>()
   const openedElements = useOpenedElements()
 
   const availableRecipes = computed(() => {
-    return `${openedElements.openedElements.length} / ${data.value?.recipes ?? 0}`
+    return `${openedElements.openedElements.length} / ${recipes.length}`
   })
 
-  const basicElements = computed((): AlchemyElementOnBoard[] | undefined => {
-    return data.value?.basicElements.map((element) => {
-      return {
-        ...element,
-        position: getRandomPosition()
-      }
-    })
-  })
+  const basicElements = ref<AlchemyElementOnBoard[]>([])
 
   function getRandomPosition(): Position {
     return {
@@ -42,6 +28,20 @@ export const useGame = defineStore('game', () => {
     board.$reset()
     openedElements.$reset()
   }
+
+  onMounted(() => {
+    document.addEventListener('DOMContentLoaded', () => {
+      basicElements.value = recipes.slice(0, 4).map((element) => {
+        return {
+          uuid: crypto.randomUUID(),
+          id: element.id,
+          name: element.name,
+          ended: element.ended ?? false,
+          position: getRandomPosition()
+        }
+      })
+    })
+  })
 
   return {
     availableRecipes,

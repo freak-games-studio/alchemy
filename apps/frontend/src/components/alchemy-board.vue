@@ -6,6 +6,7 @@ import { useBoard } from '@/stores/use-board.js'
 import { useGame } from '@/stores/use-game.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import { API_URL } from '@/constants.js'
+import recipes from '@/assets/recipes.json'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
 const game = useGame()
@@ -54,29 +55,25 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
 async function checkRecipe(
   recipe: [string, string]
 ): Promise<AlchemyElementOnBoard | undefined> {
-  try {
-    const response = await fetch(
-      `${API_URL}/api/check-recipe`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ recipe })
+  for (const element of recipes) {
+    if (element.recipes.length === 0) continue
+    for (const elementRecipe of element.recipes) {
+      if (
+        (elementRecipe[0] === recipe[0] &&
+          elementRecipe[1] === recipe[1]) ||
+        (elementRecipe[0] === recipe[1] && elementRecipe[1] === recipe[0])
+      ) {
+        const openedRecipe: AlchemyElementOnBoard = {
+          uuid: crypto.randomUUID(),
+          id: element.id,
+          name: element.name,
+          ended: element.ended ?? false,
+          position: game.getRandomPosition()
+        }
+
+        return openedRecipe
       }
-    )
-
-    if (!response.ok) return
-
-    const data = await response.json() as AlchemyElement
-    const element: AlchemyElementOnBoard = {
-      ...data,
-      position: game.getRandomPosition()
     }
-
-    return element
-  } catch (err) {
-    console.log(err)
   }
 }
 
@@ -104,7 +101,7 @@ function сreateElement(
 useEventListener(boardRef, 'dblclick', (event) => {
   if ((event.target as HTMLElement).closest('.alchemy-item')) return
 
-  const elements = game.basicElements!.map((element) => {
+  const elements = game.basicElements.map((element) => {
     return {
       ...element,
       uuid: crypto.randomUUID(),

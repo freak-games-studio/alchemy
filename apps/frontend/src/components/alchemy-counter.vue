@@ -14,8 +14,8 @@ const game = useGame()
   top: 0;
   right: 5px;
   padding: 5px;
-  font-size: 16px;
   line-height: 1.8;
   z-index: 3;
+  font-size: 18px;
 }
 </style>

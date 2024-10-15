@@ -11,7 +11,7 @@ export const useOpenedElements = defineStore('opened-elements', () => {
   const game = useGame()
   const sounds = useSounds()
   const openedElements = vueuse.useStorage<OpenedAlchemyElements>(
-    'opened-elements-v2', []
+    'alchemy-opened-elements', []
   )
 
   function $reset(): void {
