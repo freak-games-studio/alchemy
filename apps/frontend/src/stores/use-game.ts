@@ -1,4 +1,4 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useBoard } from './use-board.js'
 import { useOpenedElements } from './use-opened-elements.js'
@@ -29,19 +29,17 @@ export const useGame = defineStore('game', () => {
     openedElements.$reset()
   }
 
-  onMounted(() => {
-    document.addEventListener('DOMContentLoaded', () => {
-      basicElements.value = recipes.slice(0, 4).map((element) => {
-        return {
-          uuid: crypto.randomUUID(),
-          id: element.id,
-          name: element.name,
-          ended: element.ended ?? false,
-          position: getRandomPosition()
-        }
-      })
+  watch(board.boardSize, () => {
+    basicElements.value = recipes.slice(0, 4).map((element) => {
+      return {
+        uuid: crypto.randomUUID(),
+        id: element.id,
+        name: element.name,
+        ended: element.ended ?? false,
+        position: getRandomPosition()
+      }
     })
-  })
+  }, { deep: true, once: true })
 
   return {
     availableRecipes,
