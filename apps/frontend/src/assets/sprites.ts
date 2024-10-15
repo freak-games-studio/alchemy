@@ -168,6 +168,7 @@ import forest from './sprites/forest.webp'
 import fossil from './sprites/fossil.webp'
 import france from './sprites/france.webp'
 import frankenstein from './sprites/frankenstein.webp'
+import freak_games from './sprites/freak_games.webp'
 import french_fries from './sprites/french_fries.webp'
 import frog from './sprites/frog.webp'
 import fruit from './sprites/fruit.webp'
@@ -658,6 +659,7 @@ export const sprites: Record<string, string> = {
   fossil,
   france,
   frankenstein,
+  freak_games,
   french_fries,
   frog,
   fruit,

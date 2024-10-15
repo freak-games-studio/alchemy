@@ -1515,6 +1515,13 @@
     "recipes": [["human", "wool"]]
   },
   {
+    "id": "freak_games",
+    "name": "Freak Games",
+    "description": "Причудливые игры.",
+    "recipes": [["monkey", "hamster"]],
+    "ended": true
+  },
+  {
     "id": "dung",
     "name": "Навоз",
     "description": "Органическое удобрение, состоящее из экскрементов сельскохозяйственных животных. Обладает характерным запахом и консистенцией.",

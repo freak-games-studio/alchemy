@@ -5,13 +5,14 @@ import { useElementBounding, useEventListener } from '@vueuse/core'
 import { useBoard } from '@/stores/use-board.js'
 import { useGame } from '@/stores/use-game.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { API_URL } from '@/constants.js'
 import recipes from '@/assets/recipes.json'
+import { useSounds } from '@/stores/use-sounds'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
 const game = useGame()
 const openedElements = useOpenedElements()
 
+const sounds = useSounds()
 const board = useBoard()
 const boardRef = ref<HTMLDivElement>()
 const boardBounding = useElementBounding(boardRef)
@@ -41,20 +42,23 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
       boardElement.position.y < boardItem.position.y + board.elementSize.height &&
       boardElement.position.y + board.elementSize.height > boardItem.position.y
     ) {
-      checkRecipe([boardElement.id, boardItem.id])
-        .then((element) => {
-          if (!element) return
-          removeElement([boardItem, boardElement])
-          сreateElement(boardItem, element)
-          openedElements.addElement(element)
-        })
+      const element = checkRecipe([boardElement.id, boardItem.id])
+      if (!element) return
+
+      if (element.id === 'freak_games') {
+        sounds.freakGamesAudio.play()
+      }
+
+      removeElement([boardItem, boardElement])
+      createElement(boardItem, element)
+      openedElements.addElement(element)
     }
   }
 }
 
-async function checkRecipe(
+function checkRecipe(
   recipe: [string, string]
-): Promise<AlchemyElementOnBoard | undefined> {
+): AlchemyElementOnBoard | undefined {
   for (const element of recipes) {
     if (element.recipes.length === 0) continue
     for (const elementRecipe of element.recipes) {
@@ -83,7 +87,7 @@ function removeElement(boardElement: AlchemyElementOnBoard[]): void {
   })
 }
 
-function сreateElement(
+function createElement(
   boardElement: AlchemyElementOnBoard,
   newElement: AlchemyElement,
   isCopy = false
@@ -121,7 +125,7 @@ useEventListener(boardRef, 'dblclick', (event) => {
       v-bind:alchemy-element="boardElement"
       v-bind:board-bounding="boardBounding"
       v-on:position="updatePosition(boardElement, $event)"
-      v-on:update:clone-element="сreateElement(boardElement, $event, true)"
+      v-on:update:clone-element="createElement(boardElement, $event, true)"
       v-on:update:remove-element="removeElement([$event, boardElement])"
     />
   </div>

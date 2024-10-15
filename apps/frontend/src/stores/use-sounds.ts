@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia'
 import { sounds } from '@/assets/sounds'
+import freakGames from '@/assets/freak-games.mp3'
 
 export const useSounds = defineStore('sounds', () => {
+  const freakGamesAudio = new Audio(freakGames)
+  freakGamesAudio.volume = 1
+
   const createAudio = new Audio(sounds.create)
   createAudio.volume = 0.5
 
@@ -12,6 +16,7 @@ export const useSounds = defineStore('sounds', () => {
   takingAudio.volume = 0.7
 
   return {
+    freakGamesAudio,
     createAudio,
     createNewAudio,
     takingAudio
