@@ -50,8 +50,8 @@ function createElement(element: AlchemyElement) {
         </div>
       </div>
       <div class="controls">
-        <div class="button border-right" v-on:click="board.$reset()">Очистить поле</div>
-        <div class="button" v-on:click="game.$reset()">Новая игра</div>
+        <div class="button border-right" v-on:click="game.$reset()">Новая игра</div>
+        <div class="button" v-on:click="board.$reset()">Очистить поле</div>
       </div>
     </div>
   </div>
