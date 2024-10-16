@@ -38,21 +38,19 @@ function createElement(element: AlchemyElement) {
       name="search"
       placeholder="Искать элемент"
     />
-    <div class="container-footer">
-      <div class="elements-list">
-        <div
-          v-for="element in filteredElements"
-          v-bind:key="element.id"
-          class="element"
-          v-on:click="createElement(element)"
-        >
-          <alchemy-item v-bind:element="element" />
-        </div>
+    <div class="elements-list">
+      <div
+        v-for="element in filteredElements"
+        v-bind:key="element.id"
+        class="element"
+        v-on:click="createElement(element)"
+      >
+        <alchemy-item v-bind:element="element" />
       </div>
-      <div class="controls">
-        <div class="button border-right" v-on:click="game.$reset()">Новая игра</div>
-        <div class="button" v-on:click="board.$reset()">Очистить поле</div>
-      </div>
+    </div>
+    <div class="controls">
+      <div class="button border-right" v-on:click="game.$reset()">Новая игра</div>
+      <div class="button" v-on:click="board.$reset()">Очистить поле</div>
     </div>
   </div>
 </template>
@@ -61,12 +59,6 @@ function createElement(element: AlchemyElement) {
 .container {
   background-color: var(--vt-c-black);
   width: 35%;
-  display: flex;
-  flex-direction: column;
-}
-
-.container-footer {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
