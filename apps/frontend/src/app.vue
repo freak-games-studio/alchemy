@@ -5,17 +5,7 @@ import AlchemyCounter from '@/components/alchemy-counter.vue'
 </script>
 
 <template>
-  <div class="app">
-    <alchemy-counter />
-    <alchemy-elements />
-    <alchemy-board />
-  </div>
+  <alchemy-counter />
+  <alchemy-elements />
+  <alchemy-board />
 </template>
-
-<style scoped>
-.app {
-  display: flex;
-  height: inherit;
-  width: inherit;
-}
-</style>

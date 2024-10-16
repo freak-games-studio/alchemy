@@ -4,6 +4,6 @@ import '@/styles/splash-screen.scss'
 splashScreen.init()
 splashScreen.onInit(() => {
   const app = document.querySelector<HTMLElement>('#app')
-  if (app) app.style.display = 'block'
+  if (app) app.classList.remove('hidden')
   import('./main')
 })

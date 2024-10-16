@@ -137,8 +137,8 @@ import eclipse from './sprites/eclipse.webp'
 import edison from './sprites/edison.webp'
 import egg from './sprites/egg.webp'
 import egypt from './sprites/egypt.webp'
-import electricity from './sprites/electricity.webp'
 import electric_stingray from './sprites/electric_stingray.webp'
+import electricity from './sprites/electricity.webp'
 import email from './sprites/email.webp'
 import energy from './sprites/energy.webp'
 import ent from './sprites/ent.webp'
@@ -150,9 +150,9 @@ import feather from './sprites/feather.webp'
 import fern from './sprites/fern.webp'
 import finland from './sprites/finland.webp'
 import fire from './sprites/fire.webp'
+import fire_extinguisher from './sprites/fire_extinguisher.webp'
 import firefighter from './sprites/firefighter.webp'
 import firefly from './sprites/firefly.webp'
-import fire_extinguisher from './sprites/fire_extinguisher.webp'
 import fish from './sprites/fish.webp'
 import fisherman from './sprites/fisherman.webp'
 import flashlight from './sprites/flashlight.webp'
@@ -217,10 +217,10 @@ import hunter from './sprites/hunter.webp'
 import hut from './sprites/hut.webp'
 import hydrogen from './sprites/hydrogen.webp'
 import ice from './sprites/ice.webp'
+import ice_skate from './sprites/ice_skate.webp'
 import iceberg from './sprites/iceberg.webp'
 import icecream from './sprites/icecream.webp'
 import iceland from './sprites/iceland.webp'
-import ice_skate from './sprites/ice_skate.webp'
 import idea from './sprites/idea.webp'
 import igloo from './sprites/igloo.webp'
 import india from './sprites/india.webp'
@@ -279,8 +279,8 @@ import moon_rover from './sprites/moon_rover.webp'
 import mosquito from './sprites/mosquito.webp'
 import moss from './sprites/moss.webp'
 import motor from './sprites/motor.webp'
-import motorcycle from './sprites/motorcycle.webp'
 import motor_boat from './sprites/motor_boat.webp'
+import motorcycle from './sprites/motorcycle.webp'
 import mountain from './sprites/mountain.webp'
 import mouse from './sprites/mouse.webp'
 import mud from './sprites/mud.webp'
@@ -291,8 +291,8 @@ import needle from './sprites/needle.webp'
 import nessie from './sprites/nessie.webp'
 import nest from './sprites/nest.webp'
 import neuron from './sprites/neuron.webp'
-import newspaper from './sprites/newspaper.webp'
 import new_year from './sprites/new_year.webp'
+import newspaper from './sprites/newspaper.webp'
 import nicola_tesla from './sprites/nicola_tesla.webp'
 import ninja from './sprites/ninja.webp'
 import nuclear_bomb from './sprites/nuclear_bomb.webp'
@@ -419,9 +419,9 @@ import statue from './sprites/statue.webp'
 import statue_of_liberty from './sprites/statue_of_liberty.webp'
 import steak from './sprites/steak.webp'
 import steam from './sprites/steam.webp'
-import steamship from './sprites/steamship.webp'
 import steam_boiler from './sprites/steam_boiler.webp'
 import steam_engine from './sprites/steam_engine.webp'
+import steamship from './sprites/steamship.webp'
 import stone from './sprites/stone.webp'
 import storm from './sprites/storm.webp'
 import sugar from './sprites/sugar.webp'
@@ -467,9 +467,9 @@ import vulture from './sprites/vulture.webp'
 import warrior from './sprites/warrior.webp'
 import watch from './sprites/watch.webp'
 import water from './sprites/water.webp'
-import watermelon from './sprites/watermelon.webp'
 import water_lily from './sprites/water_lily.webp'
 import water_strider from './sprites/water_strider.webp'
+import watermelon from './sprites/watermelon.webp'
 import wax from './sprites/wax.webp'
 import weapon from './sprites/weapon.webp'
 import werewolf from './sprites/werewolf.webp'
@@ -628,8 +628,8 @@ export const sprites: Record<string, string> = {
   edison,
   egg,
   egypt,
-  electricity,
   electric_stingray,
+  electricity,
   email,
   energy,
   ent,
@@ -641,9 +641,9 @@ export const sprites: Record<string, string> = {
   fern,
   finland,
   fire,
+  fire_extinguisher,
   firefighter,
   firefly,
-  fire_extinguisher,
   fish,
   fisherman,
   flashlight,
@@ -708,10 +708,10 @@ export const sprites: Record<string, string> = {
   hut,
   hydrogen,
   ice,
+  ice_skate,
   iceberg,
   icecream,
   iceland,
-  ice_skate,
   idea,
   igloo,
   india,
@@ -770,8 +770,8 @@ export const sprites: Record<string, string> = {
   mosquito,
   moss,
   motor,
-  motorcycle,
   motor_boat,
+  motorcycle,
   mountain,
   mouse,
   mud,
@@ -782,8 +782,8 @@ export const sprites: Record<string, string> = {
   nessie,
   nest,
   neuron,
-  newspaper,
   new_year,
+  newspaper,
   nicola_tesla,
   ninja,
   nuclear_bomb,
@@ -910,9 +910,9 @@ export const sprites: Record<string, string> = {
   statue_of_liberty,
   steak,
   steam,
-  steamship,
   steam_boiler,
   steam_engine,
+  steamship,
   stone,
   storm,
   sugar,
@@ -958,9 +958,9 @@ export const sprites: Record<string, string> = {
   warrior,
   watch,
   water,
-  watermelon,
   water_lily,
   water_strider,
+  watermelon,
   wax,
   weapon,
   werewolf,

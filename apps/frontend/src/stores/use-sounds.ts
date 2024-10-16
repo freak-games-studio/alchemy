@@ -7,13 +7,13 @@ export const useSounds = defineStore('sounds', () => {
   freakGamesAudio.volume = 1
 
   const createAudio = new Audio(sounds.create)
-  createAudio.volume = 0.5
+  createAudio.volume = 0.4
 
   const createNewAudio = new Audio(sounds.create_new)
-  createNewAudio.volume = 0.5
+  createNewAudio.volume = 0.4
 
   const takingAudio = new Audio(sounds.taking)
-  takingAudio.volume = 0.7
+  takingAudio.volume = 0.6
 
   return {
     freakGamesAudio,
