@@ -75,8 +75,13 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    minify: true,
-    modulePreload: false
+    minify: 'terser',
+    modulePreload: false,
+    terserOptions: {
+      format: {
+        comments: false
+      }
+    }
   },
 })
 
