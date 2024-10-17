@@ -1,8 +1,9 @@
-import { watchEffect } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { defineStore } from 'pinia'
 import * as vueuse from '@vueuse/core'
 import { useGame } from './use-game.js'
 import { useSounds } from './use-sounds.js'
+import recipes from '@/assets/recipes.json'
 import type { AlchemyElement } from '@/types.js'
 
 type OpenedAlchemyElements = Omit<AlchemyElement, 'uuid'>[]
@@ -14,8 +15,18 @@ export const useOpenedElements = defineStore('opened-elements', () => {
     'alchemy-opened-elements', []
   )
 
+  const elementsCounter = computed(() => {
+    return `${openedElements.value.length} / ${recipes.length}`
+  })
+
   function $reset(): void {
     openedElements.value = []
+  }
+
+  function isCreatedElement(elementId: string) {
+    return openedElements.value.find((openedElement) => {
+      return openedElement.id === elementId
+    })
   }
 
   function addElement(element: AlchemyElement): void {
@@ -48,7 +59,9 @@ export const useOpenedElements = defineStore('opened-elements', () => {
 
   return {
     openedElements,
+    elementsCounter,
     $reset,
-    addElement
+    addElement,
+    isCreatedElement
   }
 })

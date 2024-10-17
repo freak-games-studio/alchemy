@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue'
+import { onWatcherCleanup, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useBoard } from './use-board.js'
 import { useOpenedElements } from './use-opened-elements.js'
@@ -8,11 +8,6 @@ import type { AlchemyElementOnBoard, Position } from '@/types.js'
 export const useGame = defineStore('game', () => {
   const board = useBoard()
   const openedElements = useOpenedElements()
-
-  const availableRecipes = computed(() => {
-    return `${openedElements.openedElements.length} / ${recipes.length}`
-  })
-
   const basicElements = ref<AlchemyElementOnBoard[]>([])
 
   function getRandomPosition(): Position {
@@ -29,7 +24,8 @@ export const useGame = defineStore('game', () => {
     openedElements.$reset()
   }
 
-  watch(board.boardSize, () => {
+  watch(() => board.boardSize, (board) => {
+    if (board.bottom === 0) return;
     basicElements.value = recipes.slice(0, 4).map((element) => {
       return {
         uuid: crypto.randomUUID(),
@@ -39,10 +35,9 @@ export const useGame = defineStore('game', () => {
         position: getRandomPosition()
       }
     })
-  }, { deep: true, once: true })
+  })
 
   return {
-    availableRecipes,
     basicElements,
     getRandomPosition,
     $reset

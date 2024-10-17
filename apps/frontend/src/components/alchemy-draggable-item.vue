@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AlchemyItem from './alchemy-item.vue'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { clamp, useDraggable, useElementBounding } from '@vueuse/core'
 import { useSounds } from '@/stores/use-sounds'
 import type { AlchemyElementOnBoard, Position } from '@/types.js'

@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { useGame } from '@/stores/use-game.js'
+import { storeToRefs } from 'pinia'
+import { useOpenedElements } from '@/stores/use-opened-elements'
 
-const game = useGame()
+const { elementsCounter } = storeToRefs(useOpenedElements())
 </script>
 
 <template>
-  <div class="counter">{{ game.availableRecipes }}</div>
+  <div class="counter">{{ elementsCounter }}</div>
 </template>
 
 <style scoped>
 .counter {
   position: absolute;
-  top: 0;
-  right: 5px;
-  padding: 5px;
-  line-height: 1.8;
+  top: 4px;
+  right: 10px;
   z-index: 3;
   font-size: 18px;
   pointer-events: none;

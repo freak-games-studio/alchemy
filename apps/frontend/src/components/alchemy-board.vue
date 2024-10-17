@@ -100,8 +100,8 @@ function createElement(
     ...newElement,
     uuid: crypto.randomUUID(),
     position: {
-      x: isCopy ? boardElement.position.x + 15 : boardElement.position.x,
-      y: isCopy ? boardElement.position.y + 15 : boardElement.position.y
+      x: isCopy ? boardElement.position.x + 30 : boardElement.position.x,
+      y: isCopy ? boardElement.position.y + 30 : boardElement.position.y
     }
   })
 }

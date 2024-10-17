@@ -4,12 +4,14 @@ import AlchemyItem from './alchemy-item.vue'
 import { useGame } from '@/stores/use-game.js'
 import { useBoard } from '@/stores/use-board.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { useDrawer } from '@/stores/use-drawer'
+import { useElementAbout } from '@/stores/use-element-about'
+import { useGuide } from '@/stores/use-guide'
 import type { AlchemyElement } from '@/types.js'
 
+const guide = useGuide()
 const game = useGame()
 const board = useBoard()
-const drawer = useDrawer()
+const elementAbout = useElementAbout()
 const openedElements = useOpenedElements()
 const searchInput = ref('')
 
@@ -38,7 +40,7 @@ function createElement(element: AlchemyElement) {
       class="search-input"
       type="text"
       name="search"
-      placeholder="Искать элемент"
+      placeholder="Искать элемент..."
     />
     <div class="elements-list">
       <div
@@ -46,14 +48,34 @@ function createElement(element: AlchemyElement) {
         :key="element.id"
         class="element"
         @click="createElement(element)"
-        @contextmenu.prevent="drawer.openDrawer(element)"
+        @contextmenu.prevent="() => {
+          guide.closeGuide()
+          elementAbout.openElementAbout(element)
+        }"
       >
         <AlchemyItem :element="element" />
       </div>
     </div>
     <div class="controls">
-      <div class="button border-right" @click="game.$reset()">Новая игра</div>
-      <div class="button" @click="board.$reset()">Очистить поле</div>
+      <div
+        class="button border-right"
+        @click="game.$reset()"
+      >
+        Новая игра
+      </div>
+      <div
+        class="button border-right"
+        id="toggle-guide"
+        @click="guide.toggleGuide()"
+      >
+        Помощь
+      </div>
+      <div
+        class="button"
+        @click="board.$reset()"
+      >
+        Очистить поле
+      </div>
     </div>
   </div>
 </template>
@@ -95,9 +117,10 @@ function createElement(element: AlchemyElement) {
   border: none;
   outline: none;
   border-bottom: 1px solid var(--vt-c-divider-dark-2);
-  font-size: inherit;
+  font-size: 18px;
   text-align: center;
   color: var(--vt-c-text-dark-2);
+  height: 52px;
 }
 
 .controls {
@@ -114,6 +137,9 @@ function createElement(element: AlchemyElement) {
   text-align: center;
   width: 50%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .border-right {

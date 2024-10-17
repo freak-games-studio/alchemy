@@ -1,7 +1,12 @@
 <template>
   <Teleport to="body">
     <Transition name="overlay-slide" :data-placement="placement">
-      <div v-if="isOpen" ref="contentElement" class="drawer-content" :style="drawerStyles">
+      <div
+        v-if="isOpen"
+        ref="contentElement"
+        class="drawer-content"
+        :style="drawerStyles"
+      >
         <slot :toggle-drawer="toggleDrawer" />
       </div>
     </Transition>
@@ -10,7 +15,7 @@
 
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
-import { computed, provide, ref, shallowRef, watch } from 'vue'
+import { computed, provide, ref, shallowRef, useAttrs, watch } from 'vue'
 
 import { drawerInjectionKey } from './drawer-injection-key'
 
@@ -20,9 +25,11 @@ const props = withDefaults(defineProps<{
   minWidth: string
   maxWidth?: string
   placement?: DrawerPlacement
+  ignoreElement?: string[]
 }>(), {
   maxWidth: 'auto',
   placement: 'right',
+  ignoreElement: () => []
 })
 
 const drawerStyles = computed(() => {
@@ -41,7 +48,9 @@ watch(openModel, (value) => {
 })
 
 const contentElement = shallowRef<HTMLElement>()
-onClickOutside(contentElement, () => (openModel.value = false))
+onClickOutside(contentElement, () => (openModel.value = false), {
+  ignore: props.ignoreElement
+})
 
 function toggleDrawer() {
   openModel.value = !openModel.value
@@ -75,6 +84,7 @@ provide(drawerInjectionKey, {
     transform: translateX(0%) translateY(0px) translateZ(0px);
     background-color: var(--vt-c-black);
     z-index: 900;
+    border-left: 1px solid var(--vt-c-divider-dark-2);
   }
 }
 

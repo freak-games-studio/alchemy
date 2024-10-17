@@ -25,19 +25,15 @@ const { toggleDrawer } = inject(drawerInjectionKey)!
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  padding: 16px 24px;
+  padding: 0 24px;
   border-bottom: 1px solid var(--vt-c-divider-dark-2);
+  height: 52px;
+  flex-shrink: 0;
 
   &__close {
     width: 24px;
     height: 24px;
     cursor: pointer;
   }
-}
-
-.h6 {
-  font-size: 20px;
-  line-height: 32px;
-  font-weight: 600;
 }
 </style>
