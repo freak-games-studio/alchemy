@@ -114,10 +114,12 @@ import continent from './sprites/continent.webp'
 import cookie from './sprites/cookie.webp'
 import coral from './sprites/coral.webp'
 import corpse from './sprites/corpse.webp'
+import cotton_candy from './sprites/cotton_candy.webp'
 import country from './sprites/country.webp'
 import crab from './sprites/crab.webp'
 import crematorium from './sprites/crematorium.webp'
 import crocodile from './sprites/crocodile.webp'
+import crystal_ball from './sprites/crystal_ball.webp'
 import curd from './sprites/curd.webp'
 import cyborg from './sprites/cyborg.webp'
 import dark_cloud from './sprites/dark_cloud.webp'
@@ -179,6 +181,7 @@ import fog from './sprites/fog.webp'
 import foil from './sprites/foil.webp'
 import fondue from './sprites/fondue.webp'
 import forest from './sprites/forest.webp'
+import fortune_cookie from './sprites/fortune_cookie.webp'
 import fossil from './sprites/fossil.webp'
 import france from './sprites/france.webp'
 import frankenstein from './sprites/frankenstein.webp'
@@ -293,6 +296,7 @@ import mite from './sprites/mite.webp'
 import mold from './sprites/mold.webp'
 import mole from './sprites/mole.webp'
 import money from './sprites/money.webp'
+import money_box from './sprites/money_box.webp'
 import monkey from './sprites/monkey.webp'
 import moon from './sprites/moon.webp'
 import moon_rover from './sprites/moon_rover.webp'
@@ -648,10 +652,12 @@ export const sprites: Record<string, string> = {
   cookie,
   coral,
   corpse,
+  cotton_candy,
   country,
   crab,
   crematorium,
   crocodile,
+  crystal_ball,
   curd,
   cyborg,
   dark_cloud,
@@ -713,6 +719,7 @@ export const sprites: Record<string, string> = {
   foil,
   fondue,
   forest,
+  fortune_cookie,
   fossil,
   france,
   frankenstein,
@@ -827,6 +834,7 @@ export const sprites: Record<string, string> = {
   mold,
   mole,
   money,
+  money_box,
   monkey,
   moon,
   moon_rover,
