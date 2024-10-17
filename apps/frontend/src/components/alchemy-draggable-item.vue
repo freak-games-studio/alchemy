@@ -12,8 +12,8 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   'position': [Position],
-  'update:clone-element': [AlchemyElementOnBoard],
-  'update:remove-element': [AlchemyElementOnBoard]
+  'clone-element': [AlchemyElementOnBoard],
+  'remove-element': [AlchemyElementOnBoard]
 }>()
 
 const sounds = useSounds()
@@ -55,11 +55,11 @@ watch(() => props.alchemyElement.position, () => {
   <div
     ref="element"
     class="alchemy-item"
-    v-bind:style="{ left: `${xPosition}px`, top: `${yPosition}px` }"
-    v-on:dblclick="emits('update:clone-element', alchemyElement)"
-    v-on:contextmenu.prevent="emits('update:remove-element', alchemyElement)"
+    :style="{ left: `${xPosition}px`, top: `${yPosition}px` }"
+    @dblclick="emits('clone-element', alchemyElement)"
+    @contextmenu.prevent="emits('remove-element', alchemyElement)"
   >
-    <alchemy-item v-bind:element="alchemyElement" />
+    <AlchemyItem v-bind:element="alchemyElement" />
   </div>
 </template>
 
@@ -71,6 +71,7 @@ watch(() => props.alchemyElement.position, () => {
   inline-size: min-content;
   overflow-wrap: break-word;
   z-index: 1;
+  isolation: isolate;
 }
 
 .alchemy-item:active, .alchemy-item:hover {

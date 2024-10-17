@@ -1,4 +1,4 @@
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useBoard } from './use-board.js'
 import { useOpenedElements } from './use-opened-elements.js'

@@ -11,13 +11,12 @@ defineProps<{
 const game = useBoard()
 const width = computed(() => `${game.elementSize.width}px`)
 const height = computed(() => `${game.elementSize.height}px`)
-
 </script>
 
 <template>
   <div class="item">
-    <img class="image" v-bind:src="sprites[element.id]" />
-    <p v-bind:class="['text', { ended: element.ended }]">
+    <img class="image" :src="sprites[element.id]" />
+    <p :class="['text', { ended: element.ended }]">
       {{ element.name }}
     </p>
   </div>
@@ -32,6 +31,7 @@ const height = computed(() => `${game.elementSize.height}px`)
   height: calc(v-bind(height) * 2);
   width: calc(v-bind(width) * 2);
   pointer-events: none;
+  gap: 4px;
 }
 
 .image {
@@ -44,8 +44,7 @@ const height = computed(() => `${game.elementSize.height}px`)
   gap: 6px;
   text-align: center;
   word-break: break-word;
-  margin-left: 4px;
-  margin-right: 4px;
+  margin: 0 4px;
 }
 
 .ended::after {

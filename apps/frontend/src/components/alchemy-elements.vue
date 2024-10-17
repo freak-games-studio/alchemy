@@ -4,10 +4,12 @@ import AlchemyItem from './alchemy-item.vue'
 import { useGame } from '@/stores/use-game.js'
 import { useBoard } from '@/stores/use-board.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import type { AlchemyElement, AlchemyElementOnBoard } from '@/types.js'
+import { useDrawer } from '@/stores/use-drawer'
+import type { AlchemyElement } from '@/types.js'
 
 const game = useGame()
 const board = useBoard()
+const drawer = useDrawer()
 const openedElements = useOpenedElements()
 const searchInput = ref('')
 
@@ -17,7 +19,7 @@ const filteredElements = computed(() => {
     const id = element.id.includes(value)
     const name = element.name.toLowerCase().includes(value)
     return id || name
-  }) as AlchemyElementOnBoard[]
+  })
 })
 
 function createElement(element: AlchemyElement) {
@@ -41,16 +43,17 @@ function createElement(element: AlchemyElement) {
     <div class="elements-list">
       <div
         v-for="element in filteredElements"
-        v-bind:key="element.id"
+        :key="element.id"
         class="element"
-        v-on:click="createElement(element)"
+        @click="createElement(element)"
+        @contextmenu.prevent="drawer.openDrawer(element)"
       >
-        <alchemy-item v-bind:element="element" />
+        <AlchemyItem :element="element" />
       </div>
     </div>
     <div class="controls">
-      <div class="button border-right" v-on:click="game.$reset()">Новая игра</div>
-      <div class="button" v-on:click="board.$reset()">Очистить поле</div>
+      <div class="button border-right" @click="game.$reset()">Новая игра</div>
+      <div class="button" @click="board.$reset()">Очистить поле</div>
     </div>
   </div>
 </template>
@@ -72,6 +75,7 @@ function createElement(element: AlchemyElement) {
   height: 100%;
   gap: 1rem;
   overflow-x: auto;
+  padding: 1rem 0;
 }
 
 @media screen and (max-width: 768px) {

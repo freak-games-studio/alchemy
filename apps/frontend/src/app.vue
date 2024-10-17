@@ -2,10 +2,12 @@
 import AlchemyBoard from '@/components/alchemy-board.vue'
 import AlchemyElements from '@/components/alchemy-elements.vue'
 import AlchemyCounter from '@/components/alchemy-counter.vue'
+import AlchemyGuide from './components/alchemy-guide.vue'
 </script>
 
 <template>
-  <alchemy-counter />
-  <alchemy-elements />
-  <alchemy-board />
+  <AlchemyCounter />
+  <AlchemyElements />
+  <AlchemyBoard />
+  <AlchemyGuide />
 </template>

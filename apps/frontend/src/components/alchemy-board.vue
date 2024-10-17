@@ -8,20 +8,23 @@ import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import recipes from '@/assets/recipes.json'
 import { useSounds } from '@/stores/use-sounds'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
+import { storeToRefs } from 'pinia'
 
 const game = useGame()
 const openedElements = useOpenedElements()
 
 const sounds = useSounds()
-const board = useBoard()
+const { board, boardSize, elementSize } = storeToRefs(useBoard())
 const boardRef = ref<HTMLDivElement>()
 const boardBounding = useElementBounding(boardRef)
 
 watchEffect(() => {
-  board.boardSize.left = boardBounding.left.value
-  board.boardSize.right = boardBounding.right.value
-  board.boardSize.top = boardBounding.top.value
-  board.boardSize.bottom = boardBounding.bottom.value
+  boardSize.value = {
+    bottom: boardBounding.bottom.value,
+    left: boardBounding.left.value,
+    right: boardBounding.right.value,
+    top: boardBounding.top.value
+  }
 })
 
 function updatePosition(
@@ -33,14 +36,14 @@ function updatePosition(
 }
 
 function checkCollision(boardElement: AlchemyElementOnBoard): void {
-  for (const boardItem of board.board) {
+  for (const boardItem of board.value) {
     if (boardItem === boardElement) continue
     if (boardElement.ended || boardItem.ended) continue
     if (
-      boardElement.position.x < boardItem.position.x + board.elementSize.width &&
-      boardElement.position.x + board.elementSize.width > boardItem.position.x &&
-      boardElement.position.y < boardItem.position.y + board.elementSize.height &&
-      boardElement.position.y + board.elementSize.height > boardItem.position.y
+      boardElement.position.x < boardItem.position.x + elementSize.value.width &&
+      boardElement.position.x + elementSize.value.width > boardItem.position.x &&
+      boardElement.position.y < boardItem.position.y + elementSize.value.height &&
+      boardElement.position.y + elementSize.value.height > boardItem.position.y
     ) {
       const element = checkRecipe([boardElement.id, boardItem.id])
       if (!element) return
@@ -49,7 +52,8 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
         sounds.freakGamesAudio.play()
       }
 
-      removeElement([boardItem, boardElement])
+      removeElement(boardItem)
+      removeElement(boardElement)
       createElement(boardItem, element)
       openedElements.addElement(element)
     }
@@ -81,10 +85,10 @@ function checkRecipe(
   }
 }
 
-function removeElement(boardElement: AlchemyElementOnBoard[]): void {
-  board.board = board.board.filter(boardItem => {
-    return boardElement.every(boardItem1 => boardItem1 !== boardItem)
-  })
+function removeElement(boardElement: AlchemyElementOnBoard): void {
+  const elementIndex = board.value.findIndex((boardItem) => boardItem.uuid === boardElement.uuid)
+  if (elementIndex === -1) return
+  board.value.splice(elementIndex, 1)
 }
 
 function createElement(
@@ -92,7 +96,7 @@ function createElement(
   newElement: AlchemyElement,
   isCopy = false
 ): void {
-  board.board.push({
+  board.value.push({
     ...newElement,
     uuid: crypto.randomUUID(),
     position: {
@@ -113,20 +117,20 @@ useEventListener(boardRef, 'dblclick', (event) => {
     }
   })
 
-  board.board.push(...elements)
+  board.value.push(...elements)
 })
 </script>
 
 <template>
   <div ref="boardRef" class="board">
-    <alchemy-draggable-item
-      v-for="boardElement of board.board"
-      v-bind:key="boardElement.uuid"
-      v-bind:alchemy-element="boardElement"
-      v-bind:board-bounding="boardBounding"
-      v-on:position="updatePosition(boardElement, $event)"
-      v-on:update:clone-element="createElement(boardElement, $event, true)"
-      v-on:update:remove-element="removeElement([$event, boardElement])"
+    <AlchemyDraggableItem
+      v-for="boardElement of board"
+      :key="boardElement.uuid"
+      :alchemy-element="boardElement"
+      :board-bounding="boardBounding"
+      @position="updatePosition(boardElement, $event)"
+      @clone-element="createElement(boardElement, $event, true)"
+      @remove-element="removeElement(boardElement)"
     />
   </div>
 </template>

@@ -17,5 +17,6 @@ const game = useGame()
   line-height: 1.8;
   z-index: 3;
   font-size: 18px;
+  pointer-events: none;
 }
 </style>
