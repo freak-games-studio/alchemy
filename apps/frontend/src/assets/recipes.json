@@ -46,7 +46,7 @@
     "description": "Одно из основных свойств материи — мера её движения, а также способность производить работу.",
     "recipes": [
       ["air", "fire"],
-      ["sun", "solar_battery"]
+      ["sun", "solar_panel"]
     ]
   },
   {
@@ -248,7 +248,10 @@
     "id": "butterfly",
     "name": "Бабочка",
     "description": "Насекомое с двумя парами покрытых пыльцой крыльев разнообразной окраски.",
-    "recipes": [["worm", "air"]]
+    "recipes": [
+      ["worm", "air"],
+      ["caterpillar", "time"]
+    ]
   },
   {
     "id": "omlet",
@@ -327,8 +330,8 @@
       ["tree", "fire"],
       ["grove", "fire"],
       ["forest", "fire"],
-      ["wood", "fire"],
-      ["woodboard", "fire"]
+      ["woodboard", "fire"],
+      ["bonfire", "time"]
     ]
   },
   {
@@ -486,7 +489,10 @@
     "id": "parrot",
     "name": "Попугай",
     "description": "Птица тропических стран с ярким и пёстрым оперением.",
-    "recipes": [["bird", "rainbow"]]
+    "recipes": [
+      ["bird", "rainbow"],
+      ["bird", "pirate"]
+    ]
   },
   {
     "id": "hummingbird",
@@ -527,7 +533,8 @@
     "description": "Живущее в воде и дышащее жабрами позвоночное животное с конечностями в виде плавников, с холодной кровью и с кожей, покрытой чешуёю.",
     "recipes": [
       ["plankton", "bacteria"],
-      ["lake", "life"]
+      ["lake", "life"],
+      ["caviar", "time"]
     ]
   },
   {
@@ -761,15 +768,15 @@
     "description": "Общественное существо, обладающее разумом и сознанием, субъект общественно-исторической деятельности и культуры, относящийся к виду Человек разумный. По научным данным, возник на Земле в результате эволюционного процесса — антропогенеза, детали которого продолжают изучаться.",
     "recipes": [
       ["beast", "life"],
-      ["golem", "life"]
+      ["golem", "life"],
+      ["baby", "time"]
     ]
   },
   {
     "id": "spaceman",
     "name": "Космонавт",
     "description": "Тот, кто совершает полёты в космическое пространство.",
-    "recipes": [["space", "human"]],
-    "ended": true
+    "recipes": [["space", "human"]]
   },
   {
     "id": "tools",
@@ -787,8 +794,7 @@
     "id": "pilot",
     "name": "Пилот",
     "description": "Человек, управляющий летательным аппаратом. Это может быть как профессией, специальностью, так и увлечением. Пилотов также называют авиаторами, лётчиками.",
-    "recipes": [["human", "airplane"]],
-    "ended": true
+    "recipes": [["human", "airplane"]]
   },
   {
     "id": "scientist",
@@ -950,7 +956,8 @@
       ["sake", "country"],
       ["shuriken", "country"],
       ["karaoke", "country"],
-      ["ninja", "country"]
+      ["ninja", "country"],
+      ["fugu", "country"]
     ]
   },
   {
@@ -1185,7 +1192,36 @@
     "id": "statue",
     "name": "Статуя",
     "description": "Один из основных видов объёмной скульптуры большого размера, изображающей стоящую фигуру человека.",
-    "recipes": [["tools", "stone"]]
+    "recipes": [
+      ["tools", "stone"],
+      ["medusa_gorgona", "mirror"],
+      ["medusa_gorgona", "human"],
+      ["medusa_gorgona", "oldman"],
+      ["medusa_gorgona", "pilot"],
+      ["medusa_gorgona", "farmer"],
+      ["medusa_gorgona", "doctor"],
+      ["medusa_gorgona", "warrior"],
+      ["medusa_gorgona", "hunter"],
+      ["medusa_gorgona", "sick"],
+      ["medusa_gorgona", "drunkard"],
+      ["medusa_gorgona", "eskimo"],
+      ["medusa_gorgona", "fisherman"],
+      ["medusa_gorgona", "scientist"],
+      ["medusa_gorgona", "firefighter"],
+      ["medusa_gorgona", "atrist"],
+      ["medusa_gorgona", "sailor"],
+      ["medusa_gorgona", "postman"],
+      ["medusa_gorgona", "ninja"],
+      ["medusa_gorgona", "spaceman"],
+      ["medusa_gorgona", "hacker"],
+      ["medusa_gorgona", "pirate"],
+      ["medusa_gorgona", "astronomer"],
+      ["medusa_gorgona", "soldier"],
+      ["medusa_gorgona", "assassin"],
+      ["medusa_gorgona", "beekeeper"],
+      ["medusa_gorgona", "archaeologist"],
+      ["medusa_gorgona", "injun"]
+    ]
   },
   {
     "id": "mountain",
@@ -1306,7 +1342,7 @@
     "description": "Мистический архетипический персонаж современной массовой культуры. Под зомби понимается оживлённый фантастическим образом труп.",
     "recipes": [
       ["corpse", "life"],
-      ["zombie", "human"]
+      ["zombie", "human", true]
     ],
     "ended": true
   },
@@ -1391,8 +1427,8 @@
     "description": "Средиземноморское государство в Южной Европе с длинной береговой линией, которое оказало огромное влияние на западную культуру и кухню. На территории столицы страны, Рима, находится государство Ватикан, а также всемирно известные музеи и древние руины.",
     "recipes": [
       ["pizza", "country"],
-      ["gorgonzola", "county"],
-      ["pasta", "county"]
+      ["gorgonzola", "country"],
+      ["pasta", "country"]
     ]
   },
   {
@@ -1513,13 +1549,6 @@
     "name": "Обезьяна",
     "description": "Млекопитающее, наиболее близкое к человеку по строению тела.",
     "recipes": [["human", "wool"]]
-  },
-  {
-    "id": "freak_games",
-    "name": "Freak Games",
-    "description": "Причудливые игры.",
-    "recipes": [["monkey", "hamster"]],
-    "ended": true
   },
   {
     "id": "dung",
@@ -1697,7 +1726,8 @@
     "description": "Бумажные банкноты, использующиеся при покупке или продаже товаров.",
     "recipes": [
       ["coin", "paper"],
-      ["gold", "paper"]
+      ["gold", "paper"],
+      ["baby", "leaf"]
     ]
   },
   {
@@ -1723,7 +1753,10 @@
     "id": "planet",
     "name": "Планета",
     "description": "Небесное тело, вращающееся вокруг Солнца и получающее от него свет и тепло.",
-    "recipes": [["continent", "continent"]]
+    "recipes": [
+      ["continent", "continent"],
+      ["continent", "ocean"]
+    ]
   },
   {
     "id": "petri_dish",
@@ -1844,8 +1877,7 @@
     "id": "fugu",
     "name": "Фугу",
     "description": "Блюдо японской кухни из некоторых видов ядовитых рыб семейства иглобрюхих (Tetraodontidae) рода Takifugu (также называемых рыба фугу), содержащих яд тетродотоксин. В Японии фугу считается деликатесом и пользуется большой популярностью.",
-    "recipes": [["poison", "fish"]],
-    "ended": true
+    "recipes": [["poison", "fish"]]
   },
   {
     "id": "vampire",
@@ -1853,7 +1885,7 @@
     "description": "В низшей мифологии народов Европы живой, полумертвец либо мертвец, ведущий ночной образ жизни, сосущий кровь у людей, насылающий кошмары.",
     "recipes": [
       ["blood", "human"],
-      ["vampire", "human"]
+      ["vampire", "human", true]
     ]
   },
   {
@@ -1984,8 +2016,7 @@
     "recipes": [
       ["car", "robot"],
       ["car", "life"]
-    ],
-    "ended": true
+    ]
   },
   {
     "id": "internet",
@@ -2074,7 +2105,7 @@
     "id": "santa_claus",
     "name": "Дед Мороз",
     "description": "Главный сказочный персонаж на празднике Нового года, советский вариант рождественского дарителя.",
-    "recipes": [["oldman", "new_year"]],
+    "recipes": [["oldman", "new-year"]],
     "ended": true
   },
   {
@@ -2109,7 +2140,7 @@
     "description": "Человек, поражённый какой-либо болезнью.",
     "recipes": [
       ["human", "flu"],
-      ["human", "sick"]
+      ["human", "sick", true]
     ]
   },
   {
@@ -2130,7 +2161,10 @@
     "id": "horse",
     "name": "Лошадь",
     "description": "Крупное непарнокопытное млекопитающее, одомашненное и широко использующееся человеком для передвижения верхом, перевозки тяжестей.",
-    "recipes": [["beast", "cart"]]
+    "recipes": [
+      ["beast", "cart"],
+      ["livestock", "cart"]
+    ]
   },
   {
     "id": "grove",
@@ -2181,22 +2215,19 @@
     "id": "drunkard",
     "name": "Пьяница",
     "description": "Человек, которому свойственно употребление спиртных напитков в значительных количествах.",
-    "recipes": [["human", "vodka"]],
-    "ended": true
+    "recipes": [["human", "vodka"]]
   },
   {
     "id": "nuclear_bomb",
     "name": "Ядерная бомба",
     "description": "Взрывное устройство, в котором источником энергии является деление атомных ядер.",
-    "recipes": [["bomb", "scientist"]],
-    "ended": true
+    "recipes": [["bomb", "scientist"]]
   },
   {
     "id": "eskimo",
     "name": "Эскимос",
     "description": "Эскимосы представляют собой коренную народность, проживающую на крайнем севере.",
-    "recipes": [["igloo", "human"]],
-    "ended": true
+    "recipes": [["igloo", "human"]]
   },
   {
     "id": "mendeleev",
@@ -2252,7 +2283,7 @@
   },
   {
     "id": "cacao_beans",
-    "name": "<nobr>Какао&ndash;бобы</nobr>",
+    "name": "Какао&ndash;бобы",
     "description": "Миндалевидные семена, содержащиеся в плоде шоколадного дерева. Источник какао-порошка и какао-масла, из которого изготавливают шоколад. Плод какао содержит, помимо мякоти, от 30 до 50 достаточно крупных семян светлой, расположенных пятью рядами.",
     "recipes": [["seeds", "mexico"]]
   },
@@ -2275,7 +2306,9 @@
     "description": "Срезанные или сорванные цветущие растения, красиво подобранные вместе, обычно для подарка или для помещения их в вазу с целью украшения помещения.",
     "recipes": [
       ["flower", "flower"],
-      ["rose", "rose"]
+      ["rose", "rose"],
+      ["flower", "paper"],
+      ["rose", "paper"]
     ],
     "ended": true
   },
@@ -2283,7 +2316,7 @@
     "id": "chocolate",
     "name": "Шоколад",
     "description": "Кондитерское изделие на основе масла какао, являющегося продуктом переработки какао-бобов — семян шоколадного дерева, богатых теобромином и кофеином.",
-    "recipes": [["cacao_beans", "sugar"]]
+    "recipes": [["cacao-beans", "sugar"]]
   },
   {
     "id": "duck",
@@ -2351,8 +2384,7 @@
     "id": "fisherman",
     "name": "Рыболов",
     "description": "Человек, который занимается рыбной ловлей как промыслом.",
-    "recipes": [["hunter", "fish"]],
-    "ended": true
+    "recipes": [["hunter", "fish"]]
   },
   {
     "id": "clothes",
@@ -2478,8 +2510,7 @@
     "id": "locomotive",
     "name": "Паровоз",
     "description": "Автономный локомотив железнодорожного транспорта с паросиловой установкой, использующий в качестве двигателя паровые машины.",
-    "recipes": [["cart", "steam_engine"]],
-    "ended": true
+    "recipes": [["cart", "steam_engine"]]
   },
   {
     "id": "skeleton",
@@ -2555,8 +2586,7 @@
     "recipes": [
       ["metal", "glass"],
       ["foil", "glass"]
-    ],
-    "ended": true
+    ]
   },
   {
     "id": "bonsai",
@@ -2575,7 +2605,10 @@
     "id": "palm",
     "name": "Пальма",
     "description": "Дерево южных стран, обычно с прямым неветвистым стволом и с очень крупными вечнозелёными перистыми или веерообразными листьями.",
-    "recipes": [["tree", "beach"]],
+    "recipes": [
+      ["tree", "beach"],
+      ["tree", "island"]
+    ],
     "ended": true
   },
   {
@@ -2615,8 +2648,7 @@
     "id": "hamster",
     "name": "Хомяк",
     "description": "Маленькие грызуны с плотным телосложением, короткими лапками, маленькими ушками и короткими хвостиками.",
-    "recipes": [["wheel", "mouse"]],
-    "ended": true
+    "recipes": [["wheel", "mouse"]]
   },
   {
     "id": "leaf",
@@ -2644,8 +2676,10 @@
     "id": "caviar",
     "name": "Икра",
     "description": "Скопление зерновидных яичек, откладываемых рыбами, амфибиями, моллюсками и другими водными животными.",
-    "recipes": [["fish", "fish"]],
-    "ended": true
+    "recipes": [
+      ["fish", "fish"],
+      ["fish", "egg"]
+    ]
   },
   {
     "id": "pegasus",
@@ -2732,8 +2766,7 @@
     "id": "firefighter",
     "name": "Пожарный",
     "description": "Работник подразделения профессиональной пожарной охраны, штатная единица расчёта пожарного автомобиля.",
-    "recipes": [["hero", "fire"]],
-    "ended": true
+    "recipes": [["hero", "fire"]]
   },
   {
     "id": "foam",
@@ -2764,8 +2797,7 @@
     "recipes": [
       ["human", "energy"],
       ["oldman", "energy"]
-    ],
-    "ended": true
+    ]
   },
   {
     "id": "ring",
@@ -2784,8 +2816,7 @@
     "recipes": [
       ["tools", "rain"],
       ["textile", "rain"]
-    ],
-    "ended": true
+    ]
   },
   {
     "id": "poison_weapon",
@@ -2899,8 +2930,7 @@
       ["ground", "ocean"],
       ["ground", "sea"],
       ["ground", "lake"]
-    ],
-    "ended": true
+    ]
   },
   {
     "id": "brain",
@@ -2912,7 +2942,10 @@
     "id": "hay",
     "name": "Сено",
     "description": "Высушенные стебли и листья травянистых растений, скошенных в зелёном виде, до достижения ими полной естественной зрелости. Применяются в качестве продукта питания для сельскохозяйственных животных.",
-    "recipes": [["grass", "sun"]]
+    "recipes": [
+      ["grass", "sun"],
+      ["grass", "farmer"]
+    ]
   },
   {
     "id": "sailor",
@@ -3019,15 +3052,13 @@
     "recipes": [
       ["mail", "human"],
       ["letter", "human"]
-    ],
-    "ended": true
+    ]
   },
   {
     "id": "leather",
     "name": "Кожа",
     "description": "Прочный, гибкий и долговечный материал, получаемый путём выделки шкур в условиях традиционного хозяйства или промышленного предприятия.",
-    "recipes": [["pelt", "tools"]],
-    "ended": true
+    "recipes": [["pelt", "tools"]]
   },
   {
     "id": "ice_skate",
@@ -3053,7 +3084,10 @@
     "id": "cake",
     "name": "Торт",
     "description": "Кондитерское изделие, состоящий из нескольких коржей, пропитанных кремом или джемом. Сверху торт обычно украшают кремом, глазурью или фруктами.",
-    "recipes": [["bread", "sugar"]],
+    "recipes": [
+      ["bread", "sugar"],
+      ["dough", "candle"]
+    ],
     "ended": true
   },
   {
@@ -3069,8 +3103,7 @@
     "id": "solar_panel",
     "name": "Солнечная панель",
     "description": "Объединение фотоэлектрических преобразователей — полупроводниковых устройств, прямо преобразующих солнечную энергию в постоянный электрический ток.",
-    "recipes": [["sun", "silicon"]],
-    "ended": true
+    "recipes": [["sun", "silicon"]]
   },
   {
     "id": "tea",
@@ -3082,8 +3115,7 @@
     "id": "soldier",
     "name": "Солдат",
     "description": "Рядовой военнослужащий.",
-    "recipes": [["warrior", "gun"]],
-    "ended": true
+    "recipes": [["warrior", "gun"]]
   },
   {
     "id": "newspaper",
@@ -3299,8 +3331,7 @@
     "id": "wine",
     "name": "Вино",
     "description": "Алкогольный напиток, получаемый в результате полного или частичного брожения винограда или плодово ягодного сока.",
-    "recipes": [["berry", "alcohol"]],
-    "ended": true
+    "recipes": [["berry", "alcohol"]]
   },
   {
     "id": "beekeeper",
@@ -3383,8 +3414,7 @@
     "recipes": [
       ["pirate", "internet"],
       ["pirate", "computer"]
-    ],
-    "ended": true
+    ]
   },
   {
     "id": "radio",
@@ -3433,8 +3463,7 @@
     "id": "ceramics",
     "name": "Керамика",
     "description": "Материалы, изготавливаемые из глин или их смесей с минеральными добавками под воздействием высокой температуры с последующим охлаждением; а также изделия из таких материалов. В узком смысле слово «керамика» обозначает глину, прошедшую обжиг.",
-    "recipes": [["potter_wheel", "clay"]],
-    "ended": true
+    "recipes": [["potter_wheel", "clay"]]
   },
   {
     "id": "postmark",
@@ -3515,7 +3544,10 @@
     "id": "water_strider",
     "name": "Водомерка",
     "description": "Небольшое насекомое отряда клопов с тонким телом и длинными ногами, способное быстро передвигаться по воде.",
-    "recipes": [["water", "beetle"]],
+    "recipes": [
+      ["water", "beetle"],
+      ["lake", "beetle"]
+    ],
     "ended": true
   },
   {
@@ -3582,8 +3614,7 @@
     "id": "beaver",
     "name": "Бобр",
     "description": "Животное из отряда грызунов с ценным мехом.",
-    "recipes": [["beast", "wood"]],
-    "ended": true
+    "recipes": [["beast", "wood"]]
   },
   {
     "id": "alarm_clock",
@@ -3599,8 +3630,7 @@
     "id": "methane",
     "name": "Метан",
     "description": "Простейший по составу предельный углеводород, при нормальных условиях бесцветный газ без вкуса и запаха. Малорастворим в воде, почти в два раза легче воздуха.",
-    "recipes": [["swamp", "air"]],
-    "ended": true
+    "recipes": [["swamp", "air"]]
   },
   {
     "id": "colorado_beetle",
@@ -3613,14 +3643,425 @@
     "id": "candle",
     "name": "Свеча",
     "description": "Палочка из жирового вещества с фитилём внутри, служащая примитивным источником освещения. Первые свечи современной конструкции появились в Средневековье и изготавливались из жира (чаще всего) или из воска.",
-    "recipes": [["wax", "fire"]],
-    "ended": true
+    "recipes": [["wax", "fire"]]
   },
   {
     "id": "dolphin",
     "name": "Дельфин",
     "description": "Водные млекопитающие инфраотряда китообразных, принадлежащие либо к семейству дельфиновых. Мозг дельфина не уступает мозгу человека: складок, бугорков и извилин в нем даже больше. Общее число нервных клеток у дельфина выше, чем у человека.",
     "recipes": [["fish", "brain"]],
+    "ended": true
+  },
+  {
+    "id": "explosion",
+    "name": "Взрыв",
+    "description": "Сопровождающееся сильным звуком воспламенение чего-либо вследствие мгновенного химического разложения вещества и образования сильно нагретых газов.",
+    "recipes": [
+      ["oxygen", "methane"],
+      ["air", "methane"],
+      ["gunpowder", "fire"],
+      ["bomb", "fire"],
+      ["nuclear_bomb", "ground"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "flute",
+    "name": "Флейта",
+    "description": "Деревянный духовой музыкальный инструмент высокого тона в виде прямой трубки с отверстиями и клапанами.",
+    "recipes": [
+      ["bamboo", "sound"],
+      ["bamboo", "music"],
+      ["cane", "sound"],
+      ["cane", "music"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "vinegar",
+    "name": "Уксус",
+    "description": "Кислота, образующаяся в процессе брожения виноградного или яблочного сока.",
+    "recipes": [
+      ["wine", "oxygen"],
+      ["wine", "air"],
+      ["juice", "oxygen"],
+      ["juice", "air"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "baby",
+    "name": "Ребенок",
+    "description": "Человек в период детства.",
+    "recipes": [["human", "human"]]
+  },
+  {
+    "id": "archipelago",
+    "name": "Архипелаг",
+    "description": "Группа островов, расположенных близко друг к другу. Как правило, острова в архипелаге имеют одно и то же происхождение и сходное геологическое строение.",
+    "recipes": [["island", "island"]],
+    "ended": true
+  },
+  {
+    "id": "quicksand",
+    "name": "Зыбучий песок",
+    "description": "Пески, перенасыщенные воздухом или влагой восходящих источников, и способные вследствие этого засасывать вглубь попадающие на них предметы",
+    "recipes": [["sand", "air"]],
+    "ended": true
+  },
+  {
+    "id": "cookie",
+    "name": "Печенье",
+    "description": "Кондитерское изделие из кусочков сладкого теста.",
+    "recipes": [["dough", "sugar"]]
+  },
+  {
+    "id": "projector",
+    "name": "Проектор",
+    "description": "Аппарат для передачи изображений на экран.",
+    "recipes": [["light", "picture"]],
+    "ended": true
+  },
+  {
+    "id": "crystal_ball",
+    "name": "Магический шар",
+    "description": "Известный по многим легендам европейского Средневековья предмет, представляющий собой кристаллический или стеклянный шар, который якобы обладает магическими свойствами.",
+    "recipes": [["glass", "wizard"]],
+    "ended": true
+  },
+  {
+    "id": "cotton_candy",
+    "name": "Сахарная вата",
+    "description": "Рыхлый по консистенции кулинарный продукт, сладость, напоминающий по виду вату. Приготавливается из растопленного сахара, выливаемого сквозь сито на быстро вращающийся холодный металлический барабан или конус.",
+    "recipes": [["sugar", "cloud"]],
+    "ended": true
+  },
+  {
+    "id": "horoscope",
+    "name": "Гороскоп",
+    "description": "Упорядоченное отображение взаимного расположения планет на звёздном небе в определенный промежуток времени по знакам зодиака. Используется в астрологии с целью предсказания судьбы.",
+    "recipes": [
+      ["human", "constellation"],
+      ["life", "constellation"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "toy",
+    "name": "Игрушка",
+    "description": "Предмет, предназначенный для взаимодействия с предметом в целях игры и познавания мира.",
+    "recipes": [
+      ["baby", "bear"],
+      ["baby", "locomotive"],
+      ["baby", "dinosaur"],
+      ["baby", "transformer"],
+      ["baby", "robot"],
+      ["baby", "car"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "fortune_cookie",
+    "name": "Печенье с предсказаниями",
+    "description": "Ванильные печеньица, в каждое из которых запечена бумажка с мудрыми изречениями, афоризмами или пророчествами.",
+    "recipes": [
+      ["cookie", "paper"],
+      ["cookie", "letter"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "seahorse",
+    "name": "Морской конек",
+    "description": "Небольшая морская рыбка семейства игловых с головой, похожей на конскую.",
+    "recipes": [
+      ["sea", "horse"],
+      ["ocean", "horse"],
+      ["fish", "horse"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "platypus",
+    "name": "Утконос",
+    "description": "Водоплавающее млекопитающее отряда однопроходных, обитающее в Австралии.",
+    "recipes": [["duck", "beaver"]],
+    "ended": true
+  },
+  {
+    "id": "snowboard",
+    "name": "Сноуборд",
+    "description": "Спортивный снаряд, предназначенный для скоростного спуска с заснеженных склонов и гор.",
+    "recipes": [["woodboard", "snow"]],
+    "ended": true
+  },
+  {
+    "id": "sled",
+    "name": "Сани",
+    "description": "Зимняя повозка на двух полозьях.",
+    "recipes": [["cart", "snow"]],
+    "ended": true
+  },
+  {
+    "id": "printer",
+    "name": "Принтер",
+    "description": "Печатающее устройство, подключаемое к компьютеру.",
+    "recipes": [["computer", "paper"]],
+    "ended": true
+  },
+  {
+    "id": "money_box",
+    "name": "Копилка",
+    "description": "Ёмкость или специальное приспособление для хранения и накопления монет.",
+    "recipes": [
+      ["pig", "money"],
+      ["pig", "coin"],
+      ["pig", "ceramics"],
+      ["money", "ceramics"],
+      ["coin", "ceramics"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "matrix",
+    "name": "Матрица",
+    "description": "Матрица повсюду. Она окружает нас. Даже сейчас, она с нами рядом. Ты видишь ее, когда смотришь в окно или включаешь телевизор. Ты ощущаешь ее, когда работаешь, идешь в церковь, когда платишь налоги. Целый мирок надвинутый на глаза, чтобы спрятать правду.",
+    "recipes": [["life", "computer"]],
+    "ended": true
+  },
+  {
+    "id": "sheet_music",
+    "name": "Партитура",
+    "description": "Совокупное изображение голосов оркестрового или хорового сочинения так, чтобы на каждом листе нотной бумаги были выписаны все голоса один под другим, и каждый такт одного голоса приходился под тем же тактом в другого, показывая, таким образом, как взаимное сочетание голосов, так и все содержание сочинения.",
+    "recipes": [["music", "paper"]],
+    "ended": true
+  },
+  {
+    "id": "doughnut",
+    "name": "Пончик",
+    "description": "Круглое или кольцеобразное, жаренное во фритюре хлебобулочное изделие, с начинкой или без неё.",
+    "recipes": [["dough", "oil"]],
+    "ended": true
+  },
+  {
+    "id": "waterfall",
+    "name": "Водопад",
+    "description": "Стремительно падающий с высоты поток воды.",
+    "recipes": [["river", "mountain"]],
+    "ended": true
+  },
+  {
+    "id": "mayonnaise",
+    "name": "Майонез",
+    "description": "Соус из растительного масла, яичного желтка и различных приправ.",
+    "recipes": [["egg", "oil"]],
+    "ended": true
+  },
+  {
+    "id": "drum",
+    "name": "Барабан",
+    "description": "Ударный музыкальный инструмент в виде цилиндра, верх и низ которого обтянуты кожей.",
+    "recipes": [["wood", "leather"]],
+    "ended": true
+  },
+  {
+    "id": "caterpillar",
+    "name": "Гусеница",
+    "description": "Личинка бабочки, обычно червеобразная с несколькими парами ног.",
+    "recipes": [
+      ["worm", "grass"],
+      ["worm", "leaf"]
+    ]
+  },
+  {
+    "id": "xray",
+    "name": "Рентген",
+    "description": "Исследование внутренней структуры объектов, которые проецируются при помощи рентгеновских лучей на специальную плёнку или бумагу.",
+    "recipes": [["light", "bone"]],
+    "ended": true
+  },
+  {
+    "id": "pluto",
+    "name": "Плутон",
+    "description": "Крупнейшая известная карликовая планета Солнечной системы, транснептуновый объект и десятое по массе небесное тело, обращающееся вокруг Солнца — после восьми планет и Эриды. Плутон состоит в основном из камня и льда.",
+    "recipes": [["planet", "ice"]],
+    "ended": true
+  },
+  {
+    "id": "sharpener",
+    "name": "Точилка",
+    "description": "Приспособление, облегчающее затачивание карандашей.",
+    "recipes": [["blade", "pencil"]],
+    "ended": true
+  },
+  {
+    "id": "bonfire",
+    "name": "Костёр",
+    "description": "Огонь, разведённый на открытом воздухе. Представляет собой горящие материалы: дрова, хворост и другие, сложенные особым образом. Может носить ритуальное значение.",
+    "recipes": [["wood", "fire"]]
+  },
+  {
+    "id": "satellite",
+    "name": "Спутник",
+    "description": "Объект, обычно космический корабль, выведенный на орбиту вокруг небесного тела. Спутники имеют множество применений, включая ретрансляцию связи, прогнозирование погоды, навигацию, радиовещание, научные исследования и наблюдение Земли.",
+    "recipes": [["space", "antenna"]],
+    "ended": true
+  },
+  {
+    "id": "archaeologist",
+    "name": "Археолог",
+    "description": "Археологи занимаются поиском артефактов с помощью раскопок на суше, под водой, реконструируют предметы прошлого с использованием материалов и технологий, типичных для исследуемой эпохи. Значительную часть рабочего времени они проводят в экспедициях, занимаясь исследованиями и раскопками.",
+    "recipes": [["fossil", "human"]]
+  },
+  {
+    "id": "story",
+    "name": "История",
+    "description": "Рассказ о прошлых событиях, повествование о том, что узнано, исследовано.",
+    "recipes": [["bonfire", "human"]],
+    "ended": true
+  },
+  {
+    "id": "catnip",
+    "name": "Кошачья мята",
+    "description": "Многолетняя трава, запах которой вызывает у домашних кошек специфическую реакцию, несколько похожую на чувство эйфории.",
+    "recipes": [["cat", "grass"]],
+    "ended": true
+  },
+  {
+    "id": "stamp",
+    "name": "Печать",
+    "description": "След или чернильный рисунок, который остается после соприкосновения штампа с бумагой.",
+    "recipes": [["circle", "ink"]]
+  },
+  {
+    "id": "document",
+    "name": "Документ",
+    "description": "Деловая бумага, подтверждающая какой-нибудь факт или право на что-нибудь.",
+    "recipes": [["stamp", "paper"]],
+    "ended": true
+  },
+  {
+    "id": "easter_eggs",
+    "name": "Пасхальные яйца",
+    "description": "Специально расписанные яйца, которые дарят друг другу на Пасху.",
+    "recipes": [["paint", "egg"]],
+    "ended": true
+  },
+  {
+    "id": "stove",
+    "name": "Печь",
+    "description": "Духовая печь для приготовления пищи, отопления жилых помещений и некоторых других задач. Печь выкладывается из кирпича или глины.",
+    "recipes": [
+      ["bonfire", "brick"],
+      ["fire", "brick"]
+    ]
+  },
+  {
+    "id": "jellyfish",
+    "name": "Медуза",
+    "description": "Морское животное со студенистым телом, снабжённым щупальцами. По форме напоминает колокол или зонтик.",
+    "recipes": [["umbrella", "plankton"]]
+  },
+  {
+    "id": "museum",
+    "name": "Музей",
+    "description": "Здание где хранятся, изучаются и выставляются для показа ценные произведения искусства, предметы и документы, имеющие культурное, научное, историческое значение.",
+    "recipes": [
+      ["dinosaur", "building"],
+      ["fossil", "building"],
+      ["picture", "building"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "injun",
+    "name": "Индеец",
+    "description": "Коренной житель Америки.",
+    "recipes": [["hunter", "feather"]]
+  },
+  {
+    "id": "tank",
+    "name": "Танк",
+    "description": "Бронированная самоходная машина на гусеничном ходу с мощным вооружением.",
+    "recipes": [["tractor", "gun"]],
+    "ended": true
+  },
+  {
+    "id": "crematorium",
+    "name": "Крематорий",
+    "description": "Печь для кремации умерших.",
+    "recipes": [
+      ["stove", "corpse"],
+      ["stove", "coffin"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "pandemic",
+    "name": "Пандемия",
+    "description": "Необычайно сильная эпидемия, распространившаяся на территории ряда стран, континентов; высшая степень развития эпидемического процесса.",
+    "recipes": [
+      ["planet", "flu"],
+      ["planet", "sick"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "medusa_gorgona",
+    "name": "Медуза Горгона",
+    "description": "Наиболее известная из трёх сестёр горгон, чудовище с женским лицом и змеями вместо волос. Взгляд на её лицо обращал человека в камень.",
+    "recipes": [
+      ["jellyfish", "snake"],
+      ["medusa_gorgona", "human"],
+      ["medusa_gorgona", "oldman"],
+      ["medusa_gorgona", "pilot"],
+      ["medusa_gorgona", "farmer"],
+      ["medusa_gorgona", "doctor"],
+      ["medusa_gorgona", "warrior"],
+      ["medusa_gorgona", "hunter"],
+      ["medusa_gorgona", "sick"],
+      ["medusa_gorgona", "drunkard"],
+      ["medusa_gorgona", "eskimo"],
+      ["medusa_gorgona", "fisherman"],
+      ["medusa_gorgona", "scientist"],
+      ["medusa_gorgona", "firefighter"],
+      ["medusa_gorgona", "atrist"],
+      ["medusa_gorgona", "sailor"],
+      ["medusa_gorgona", "postman"],
+      ["medusa_gorgona", "ninja"],
+      ["medusa_gorgona", "spaceman"],
+      ["medusa_gorgona", "hacker"],
+      ["medusa_gorgona", "pirate"],
+      ["medusa_gorgona", "astronomer"],
+      ["medusa_gorgona", "soldier"],
+      ["medusa_gorgona", "assassin"],
+      ["medusa_gorgona", "beekeeper"],
+      ["medusa_gorgona", "archaeologist"],
+      ["medusa_gorgona", "injun"]
+    ]
+  },
+  {
+    "id": "romania",
+    "name": "Румыния",
+    "description": "Страна на юго-востоке Европы, на территории которой находится знаменитая историческая область Трансильвания, окруженная Карпатскими горами.",
+    "recipes": [["vampire", "country"]],
+    "ended": true
+  },
+  {
+    "id": "radiation",
+    "name": "Радиация",
+    "description": "Ионизирующее излучение, которое образуется при распаде радиоактивных частиц.",
+    "recipes": [
+      ["nuclear_bomb", "ground"],
+      ["nuclear_bomb", "country"]
+    ],
+    "ended": true
+  },
+  {
+    "id": "freak_games",
+    "name": "Freak Games",
+    "description": "Причудливые игры.",
+    "recipes": [["monkey", "hamster"]],
     "ended": true
   }
 ]

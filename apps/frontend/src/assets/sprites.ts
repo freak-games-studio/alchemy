@@ -11,11 +11,14 @@ import antenna from './sprites/antenna.webp'
 import apple from './sprites/apple.webp'
 import aquarium from './sprites/aquarium.webp'
 import arable from './sprites/arable.webp'
+import archaeologist from './sprites/archaeologist.webp'
+import archipelago from './sprites/archipelago.webp'
 import artist from './sprites/artist.webp'
 import ash from './sprites/ash.webp'
 import ashtray from './sprites/ashtray.webp'
 import assassin from './sprites/assassin.webp'
 import astronomer from './sprites/astronomer.webp'
+import baby from './sprites/baby.webp'
 import bacteria from './sprites/bacteria.webp'
 import bamboo from './sprites/bamboo.webp'
 import banana from './sprites/banana.webp'
@@ -44,6 +47,7 @@ import boat from './sprites/boat.webp'
 import bomb from './sprites/bomb.webp'
 import bomber from './sprites/bomber.webp'
 import bone from './sprites/bone.webp'
+import bonfire from './sprites/bonfire.webp'
 import bonsai from './sprites/bonsai.webp'
 import book from './sprites/book.webp'
 import bouquet from './sprites/bouquet.webp'
@@ -73,6 +77,8 @@ import cardboard from './sprites/cardboard.webp'
 import cart from './sprites/cart.webp'
 import casino from './sprites/casino.webp'
 import cat from './sprites/cat.webp'
+import caterpillar from './sprites/caterpillar.webp'
+import catnip from './sprites/catnip.webp'
 import caviar from './sprites/caviar.webp'
 import cement from './sprites/cement.webp'
 import ceramics from './sprites/ceramics.webp'
@@ -105,10 +111,12 @@ import concrete from './sprites/concrete.webp'
 import confetti from './sprites/confetti.webp'
 import constellation from './sprites/constellation.webp'
 import continent from './sprites/continent.webp'
+import cookie from './sprites/cookie.webp'
 import coral from './sprites/coral.webp'
 import corpse from './sprites/corpse.webp'
 import country from './sprites/country.webp'
 import crab from './sprites/crab.webp'
+import crematorium from './sprites/crematorium.webp'
 import crocodile from './sprites/crocodile.webp'
 import curd from './sprites/curd.webp'
 import cyborg from './sprites/cyborg.webp'
@@ -121,10 +129,13 @@ import dinosaur from './sprites/dinosaur.webp'
 import distaff from './sprites/distaff.webp'
 import divider from './sprites/divider.webp'
 import doctor from './sprites/doctor.webp'
+import document from './sprites/document.webp'
 import dolphin from './sprites/dolphin.webp'
 import dough from './sprites/dough.webp'
+import doughnut from './sprites/doughnut.webp'
 import dragon from './sprites/dragon.webp'
 import dream from './sprites/dream.webp'
+import drum from './sprites/drum.webp'
 import drunkard from './sprites/drunkard.webp'
 import duck from './sprites/duck.webp'
 import dumpling from './sprites/dumpling.webp'
@@ -133,6 +144,7 @@ import dung from './sprites/dung.webp'
 import dust from './sprites/dust.webp'
 import eagle from './sprites/eagle.webp'
 import earthquake from './sprites/earthquake.webp'
+import easter_eggs from './sprites/easter_eggs.webp'
 import eclipse from './sprites/eclipse.webp'
 import edison from './sprites/edison.webp'
 import egg from './sprites/egg.webp'
@@ -143,6 +155,7 @@ import email from './sprites/email.webp'
 import energy from './sprites/energy.webp'
 import ent from './sprites/ent.webp'
 import eskimo from './sprites/eskimo.webp'
+import explosion from './sprites/explosion.webp'
 import faberge from './sprites/faberge.webp'
 import farmer from './sprites/farmer.webp'
 import fat from './sprites/fat.webp'
@@ -159,6 +172,7 @@ import flashlight from './sprites/flashlight.webp'
 import flour from './sprites/flour.webp'
 import flower from './sprites/flower.webp'
 import flu from './sprites/flu.webp'
+import flute from './sprites/flute.webp'
 import fly from './sprites/fly.webp'
 import foam from './sprites/foam.webp'
 import fog from './sprites/fog.webp'
@@ -206,6 +220,7 @@ import hevea from './sprites/hevea.webp'
 import hive from './sprites/hive.webp'
 import honey from './sprites/honey.webp'
 import honeycombs from './sprites/honeycombs.webp'
+import horoscope from './sprites/horoscope.webp'
 import horse from './sprites/horse.webp'
 import horseshoe from './sprites/horseshoe.webp'
 import hospital from './sprites/hospital.webp'
@@ -224,6 +239,7 @@ import iceland from './sprites/iceland.webp'
 import idea from './sprites/idea.webp'
 import igloo from './sprites/igloo.webp'
 import india from './sprites/india.webp'
+import injun from './sprites/injun.webp'
 import ink from './sprites/ink.webp'
 import internet from './sprites/internet.webp'
 import iodine from './sprites/iodine.webp'
@@ -231,6 +247,7 @@ import isaak_newton from './sprites/isaak_newton.webp'
 import island from './sprites/island.webp'
 import italy from './sprites/italy.webp'
 import japan from './sprites/japan.webp'
+import jellyfish from './sprites/jellyfish.webp'
 import juice from './sprites/juice.webp'
 import karaoke from './sprites/karaoke.webp'
 import kerogen from './sprites/kerogen.webp'
@@ -260,7 +277,10 @@ import magnet from './sprites/magnet.webp'
 import mail from './sprites/mail.webp'
 import map from './sprites/map.webp'
 import mars from './sprites/mars.webp'
+import matrix from './sprites/matrix.webp'
+import mayonnaise from './sprites/mayonnaise.webp'
 import meat from './sprites/meat.webp'
+import medusa_gorgona from './sprites/medusa_gorgona.webp'
 import mendeleev from './sprites/mendeleev.webp'
 import mermaid from './sprites/mermaid.webp'
 import metal from './sprites/metal.webp'
@@ -285,6 +305,7 @@ import mountain from './sprites/mountain.webp'
 import mouse from './sprites/mouse.webp'
 import mud from './sprites/mud.webp'
 import mummy from './sprites/mummy.webp'
+import museum from './sprites/museum.webp'
 import mushroom from './sprites/mushroom.webp'
 import music from './sprites/music.webp'
 import needle from './sprites/needle.webp'
@@ -313,6 +334,7 @@ import paint from './sprites/paint.webp'
 import pajamas from './sprites/pajamas.webp'
 import palm from './sprites/palm.webp'
 import panda from './sprites/panda.webp'
+import pandemic from './sprites/pandemic.webp'
 import paper from './sprites/paper.webp'
 import parrot from './sprites/parrot.webp'
 import pasta from './sprites/pasta.webp'
@@ -341,6 +363,8 @@ import pirate from './sprites/pirate.webp'
 import pizza from './sprites/pizza.webp'
 import planet from './sprites/planet.webp'
 import plankton from './sprites/plankton.webp'
+import platypus from './sprites/platypus.webp'
+import pluto from './sprites/pluto.webp'
 import poison from './sprites/poison.webp'
 import poison_weapon from './sprites/poison_weapon.webp'
 import postman from './sprites/postman.webp'
@@ -348,8 +372,12 @@ import postmark from './sprites/postmark.webp'
 import potatoes from './sprites/potatoes.webp'
 import potter_wheel from './sprites/potter_wheel.webp'
 import pressure from './sprites/pressure.webp'
+import printer from './sprites/printer.webp'
+import projector from './sprites/projector.webp'
 import pterodactyl from './sprites/pterodactyl.webp'
 import pyramid from './sprites/pyramid.webp'
+import quicksand from './sprites/quicksand.webp'
+import radiation from './sprites/radiation.webp'
 import radio from './sprites/radio.webp'
 import radio_wave from './sprites/radio_wave.webp'
 import rain from './sprites/rain.webp'
@@ -358,6 +386,7 @@ import rice from './sprites/rice.webp'
 import ring from './sprites/ring.webp'
 import river from './sprites/river.webp'
 import robot from './sprites/robot.webp'
+import romania from './sprites/romania.webp'
 import rose from './sprites/rose.webp'
 import rubber from './sprites/rubber.webp'
 import ruler from './sprites/ruler.webp'
@@ -374,6 +403,7 @@ import sand from './sprites/sand.webp'
 import sand_storm from './sprites/sand_storm.webp'
 import santa_claus from './sprites/santa_claus.webp'
 import sarcophagus from './sprites/sarcophagus.webp'
+import satellite from './sprites/satellite.webp'
 import saturn from './sprites/saturn.webp'
 import sauna from './sprites/sauna.webp'
 import scarab from './sprites/scarab.webp'
@@ -384,10 +414,13 @@ import scorpion from './sprites/scorpion.webp'
 import scotland from './sprites/scotland.webp'
 import sea from './sprites/sea.webp'
 import seagull from './sprites/seagull.webp'
+import seahorse from './sprites/seahorse.webp'
 import seaweed from './sprites/seaweed.webp'
 import seeds from './sprites/seeds.webp'
 import sewing_machine from './sprites/sewing_machine.webp'
 import shark from './sprites/shark.webp'
+import sharpener from './sprites/sharpener.webp'
+import sheet_music from './sprites/sheet_music.webp'
 import shell from './sprites/shell.webp'
 import ship from './sprites/ship.webp'
 import shisha from './sprites/shisha.webp'
@@ -398,10 +431,12 @@ import silk from './sprites/silk.webp'
 import skeleton from './sprites/skeleton.webp'
 import sky from './sprites/sky.webp'
 import skyscraper from './sprites/skyscraper.webp'
+import sled from './sprites/sled.webp'
 import smog from './sprites/smog.webp'
 import snail from './sprites/snail.webp'
 import snake from './sprites/snake.webp'
 import snow from './sprites/snow.webp'
+import snowboard from './sprites/snowboard.webp'
 import snowdrop from './sprites/snowdrop.webp'
 import snowman from './sprites/snowman.webp'
 import soap from './sprites/soap.webp'
@@ -413,6 +448,7 @@ import soured_milk from './sprites/soured_milk.webp'
 import space from './sprites/space.webp'
 import spaceman from './sprites/spaceman.webp'
 import stained_glass from './sprites/stained_glass.webp'
+import stamp from './sprites/stamp.webp'
 import star from './sprites/star.webp'
 import starfish from './sprites/starfish.webp'
 import statue from './sprites/statue.webp'
@@ -424,6 +460,8 @@ import steam_engine from './sprites/steam_engine.webp'
 import steamship from './sprites/steamship.webp'
 import stone from './sprites/stone.webp'
 import storm from './sprites/storm.webp'
+import story from './sprites/story.webp'
+import stove from './sprites/stove.webp'
 import sugar from './sprites/sugar.webp'
 import sulfur from './sprites/sulfur.webp'
 import sun from './sprites/sun.webp'
@@ -433,6 +471,7 @@ import swamp from './sprites/swamp.webp'
 import switzerland from './sprites/switzerland.webp'
 import syringe from './sprites/syringe.webp'
 import table_of_mendeleev from './sprites/table_of_mendeleev.webp'
+import tank from './sprites/tank.webp'
 import tattoo from './sprites/tattoo.webp'
 import taxi from './sprites/taxi.webp'
 import tea from './sprites/tea.webp'
@@ -446,6 +485,7 @@ import time from './sprites/time.webp'
 import titanic from './sprites/titanic.webp'
 import tobacco from './sprites/tobacco.webp'
 import tools from './sprites/tools.webp'
+import toy from './sprites/toy.webp'
 import tractor from './sprites/tractor.webp'
 import transformer from './sprites/transformer.webp'
 import transistor from './sprites/transistor.webp'
@@ -460,6 +500,7 @@ import umbrella from './sprites/umbrella.webp'
 import usa from './sprites/usa.webp'
 import vampire from './sprites/vampire.webp'
 import van_gogh from './sprites/van_gogh.webp'
+import vinegar from './sprites/vinegar.webp'
 import vobla from './sprites/vobla.webp'
 import vodka from './sprites/vodka.webp'
 import volcano from './sprites/volcano.webp'
@@ -469,6 +510,7 @@ import watch from './sprites/watch.webp'
 import water from './sprites/water.webp'
 import water_lily from './sprites/water_lily.webp'
 import water_strider from './sprites/water_strider.webp'
+import waterfall from './sprites/waterfall.webp'
 import watermelon from './sprites/watermelon.webp'
 import wax from './sprites/wax.webp'
 import weapon from './sprites/weapon.webp'
@@ -485,6 +527,7 @@ import woodboard from './sprites/woodboard.webp'
 import woodpecker from './sprites/woodpecker.webp'
 import wool from './sprites/wool.webp'
 import worm from './sprites/worm.webp'
+import xray from './sprites/xray.webp'
 import yarn from './sprites/yarn.webp'
 import zombie from './sprites/zombie.webp'
 
@@ -502,11 +545,14 @@ export const sprites: Record<string, string> = {
   apple,
   aquarium,
   arable,
+  archaeologist,
+  archipelago,
   artist,
   ash,
   ashtray,
   assassin,
   astronomer,
+  baby,
   bacteria,
   bamboo,
   banana,
@@ -535,6 +581,7 @@ export const sprites: Record<string, string> = {
   bomb,
   bomber,
   bone,
+  bonfire,
   bonsai,
   book,
   bouquet,
@@ -564,6 +611,8 @@ export const sprites: Record<string, string> = {
   cart,
   casino,
   cat,
+  caterpillar,
+  catnip,
   caviar,
   cement,
   ceramics,
@@ -596,10 +645,12 @@ export const sprites: Record<string, string> = {
   confetti,
   constellation,
   continent,
+  cookie,
   coral,
   corpse,
   country,
   crab,
+  crematorium,
   crocodile,
   curd,
   cyborg,
@@ -612,10 +663,13 @@ export const sprites: Record<string, string> = {
   distaff,
   divider,
   doctor,
+  document,
   dolphin,
   dough,
+  doughnut,
   dragon,
   dream,
+  drum,
   drunkard,
   duck,
   dumpling,
@@ -624,6 +678,7 @@ export const sprites: Record<string, string> = {
   dust,
   eagle,
   earthquake,
+  easter_eggs,
   eclipse,
   edison,
   egg,
@@ -634,6 +689,7 @@ export const sprites: Record<string, string> = {
   energy,
   ent,
   eskimo,
+  explosion,
   faberge,
   farmer,
   fat,
@@ -650,6 +706,7 @@ export const sprites: Record<string, string> = {
   flour,
   flower,
   flu,
+  flute,
   fly,
   foam,
   fog,
@@ -697,6 +754,7 @@ export const sprites: Record<string, string> = {
   hive,
   honey,
   honeycombs,
+  horoscope,
   horse,
   horseshoe,
   hospital,
@@ -715,6 +773,7 @@ export const sprites: Record<string, string> = {
   idea,
   igloo,
   india,
+  injun,
   ink,
   internet,
   iodine,
@@ -722,6 +781,7 @@ export const sprites: Record<string, string> = {
   island,
   italy,
   japan,
+  jellyfish,
   juice,
   karaoke,
   kerogen,
@@ -751,7 +811,10 @@ export const sprites: Record<string, string> = {
   mail,
   map,
   mars,
+  matrix,
+  mayonnaise,
   meat,
+  medusa_gorgona,
   mendeleev,
   mermaid,
   metal,
@@ -776,6 +839,7 @@ export const sprites: Record<string, string> = {
   mouse,
   mud,
   mummy,
+  museum,
   mushroom,
   music,
   needle,
@@ -804,6 +868,7 @@ export const sprites: Record<string, string> = {
   pajamas,
   palm,
   panda,
+  pandemic,
   paper,
   parrot,
   pasta,
@@ -832,6 +897,8 @@ export const sprites: Record<string, string> = {
   pizza,
   planet,
   plankton,
+  platypus,
+  pluto,
   poison,
   poison_weapon,
   postman,
@@ -839,8 +906,12 @@ export const sprites: Record<string, string> = {
   potatoes,
   potter_wheel,
   pressure,
+  printer,
+  projector,
   pterodactyl,
   pyramid,
+  quicksand,
+  radiation,
   radio,
   radio_wave,
   rain,
@@ -849,6 +920,7 @@ export const sprites: Record<string, string> = {
   ring,
   river,
   robot,
+  romania,
   rose,
   rubber,
   ruler,
@@ -865,6 +937,7 @@ export const sprites: Record<string, string> = {
   sand_storm,
   santa_claus,
   sarcophagus,
+  satellite,
   saturn,
   sauna,
   scarab,
@@ -875,10 +948,13 @@ export const sprites: Record<string, string> = {
   scotland,
   sea,
   seagull,
+  seahorse,
   seaweed,
   seeds,
   sewing_machine,
   shark,
+  sharpener,
+  sheet_music,
   shell,
   ship,
   shisha,
@@ -889,10 +965,12 @@ export const sprites: Record<string, string> = {
   skeleton,
   sky,
   skyscraper,
+  sled,
   smog,
   snail,
   snake,
   snow,
+  snowboard,
   snowdrop,
   snowman,
   soap,
@@ -904,6 +982,7 @@ export const sprites: Record<string, string> = {
   space,
   spaceman,
   stained_glass,
+  stamp,
   star,
   starfish,
   statue,
@@ -915,6 +994,8 @@ export const sprites: Record<string, string> = {
   steamship,
   stone,
   storm,
+  story,
+  stove,
   sugar,
   sulfur,
   sun,
@@ -924,6 +1005,7 @@ export const sprites: Record<string, string> = {
   switzerland,
   syringe,
   table_of_mendeleev,
+  tank,
   tattoo,
   taxi,
   tea,
@@ -937,6 +1019,7 @@ export const sprites: Record<string, string> = {
   titanic,
   tobacco,
   tools,
+  toy,
   tractor,
   transformer,
   transistor,
@@ -951,6 +1034,7 @@ export const sprites: Record<string, string> = {
   usa,
   vampire,
   van_gogh,
+  vinegar,
   vobla,
   vodka,
   volcano,
@@ -960,6 +1044,7 @@ export const sprites: Record<string, string> = {
   water,
   water_lily,
   water_strider,
+  waterfall,
   watermelon,
   wax,
   weapon,
@@ -976,6 +1061,7 @@ export const sprites: Record<string, string> = {
   woodpecker,
   wool,
   worm,
+  xray,
   yarn,
   zombie
 }
