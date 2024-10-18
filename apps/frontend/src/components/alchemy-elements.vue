@@ -98,6 +98,7 @@ function createElement(element: AlchemyElement) {
   gap: 1rem;
   overflow-x: auto;
   padding: 1rem 0;
+  overscroll-behavior: contain;
 }
 
 @media screen and (max-width: 768px) {
