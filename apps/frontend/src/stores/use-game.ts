@@ -1,19 +1,23 @@
 import recipes from '@/assets/recipes.json'
-import { defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
 import { useBoard } from './use-board.js'
 import { useOpenedElements } from './use-opened-elements.js'
+import { useSettings } from './use-settings.js'
 import type { AlchemyElementOnBoard, Position } from '@/types.js'
 
 export const useGame = defineStore('game', () => {
   const board = useBoard()
   const openedElements = useOpenedElements()
   const basicElements = ref<AlchemyElementOnBoard[]>([])
+  const { settings } = storeToRefs(useSettings())
 
   function getRandomPosition(): Position {
+    const x = Math.random() * (board.boardSize.right - board.boardSize.left - settings.value.elementSize) + board.boardSize.left
+    const y = Math.random() * (board.boardSize.bottom - board.boardSize.top - settings.value.elementSize) + board.boardSize.top
     return {
-      x: Math.floor(Math.random() * (board.boardSize.right - board.elementSize.height)),
-      y: Math.floor(Math.random() * (board.boardSize.bottom - board.elementSize.width)),
+      x,
+      y,
     }
   }
 
@@ -43,3 +47,7 @@ export const useGame = defineStore('game', () => {
     $reset,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useGame, import.meta.hot))
+}

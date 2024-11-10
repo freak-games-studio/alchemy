@@ -43,8 +43,8 @@ const height = computed(() => `${game.elementSize.height}px`)
   display: flex;
   gap: 6px;
   text-align: center;
-  word-break: break-word;
   margin: 0 4px;
+  font-size: v-bind('game.elementSize.fontSize');
 }
 
 .ended::after {

@@ -4,9 +4,8 @@ import { useBoard } from '@/stores/use-board.js'
 import { useGame } from '@/stores/use-game.js'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import { useSounds } from '@/stores/use-sounds'
-import { useElementBounding, useEventListener } from '@vueuse/core'
+import { useEventListener } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { ref, watchEffect } from 'vue'
 import AlchemyDraggableItem from './alchemy-draggable-item.vue'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
@@ -14,18 +13,7 @@ const game = useGame()
 const openedElements = useOpenedElements()
 
 const sounds = useSounds()
-const { board, boardSize, elementSize } = storeToRefs(useBoard())
-const boardRef = ref<HTMLDivElement>()
-const boardBounding = useElementBounding(boardRef)
-
-watchEffect(() => {
-  boardSize.value = {
-    bottom: boardBounding.bottom.value,
-    left: boardBounding.left.value,
-    right: boardBounding.right.value,
-    top: boardBounding.top.value,
-  }
-})
+const { board, boardRef, elementSize } = storeToRefs(useBoard())
 
 function updatePosition(
   element: AlchemyElementOnBoard,
@@ -50,7 +38,7 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
 
       elements.forEach((element, index) => {
         if (element.id === 'freak_games') {
-          sounds.freakGamesAudio.play()
+          sounds.playSound('freakGames')
         }
 
         removeElement(boardItem)
@@ -130,7 +118,6 @@ useEventListener(boardRef, 'dblclick', (event) => {
       v-for="boardElement of board"
       :key="boardElement.uuid"
       :alchemy-element="boardElement"
-      :board-bounding="boardBounding"
       @position="updatePosition(boardElement, $event)"
       @clone-element="createElement(boardElement, $event, true)"
       @remove-element="removeElement(boardElement)"

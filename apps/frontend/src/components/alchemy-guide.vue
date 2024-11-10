@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import { useGame } from '@/stores/use-game'
 import { useGuide } from '@/stores/use-guide'
+import { useSettings } from '@/stores/use-settings'
 import Drawer from '@/ui/drawer/drawer.vue'
 import DrawerBody from '@/ui/drawer/drawer-body.vue'
 import DrawerHeader from '@/ui/drawer/drawer-header.vue'
 import { storeToRefs } from 'pinia'
 
 const { isOpen } = storeToRefs(useGuide())
+const { settings } = storeToRefs(useSettings())
+const { $reset: resetGame } = useGame()
 </script>
 
 <template>
@@ -15,10 +19,49 @@ const { isOpen } = storeToRefs(useGuide())
     :ignore-element="['#toggle-guide']"
   >
     <DrawerHeader>
-      Помощь
+      Об игре
     </DrawerHeader>
     <DrawerBody>
       <div class="guide">
+        <h1>Настройки</h1>
+        <div>
+          <h3 class="title">
+            Громкость звука
+          </h3>
+          <input
+            v-model.number="settings.volume"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+          >
+
+          <h3 class="title">
+            Размер элементов
+          </h3>
+          <input
+            v-model.number="settings.elementSize"
+            type="range"
+            min="25"
+            max="100"
+            step="1"
+          >
+          <h3 class="title">
+            <label>
+              <input v-model="settings.hideEndedElements" type="checkbox">
+              Скрыть завершенные элементы
+            </label>
+          </h3>
+
+          <div>
+            <button class="new-game" @click="resetGame">
+              Начать новую игру
+            </button>
+          </div>
+        </div>
+
+        <h1>Инструкция</h1>
+
         <div>
           <h2 class="title">
             Создание элементов
@@ -82,5 +125,16 @@ const { isOpen } = storeToRefs(useGuide())
 
 .description + .description {
   margin-top: 12px;
+}
+
+.new-game {
+  cursor: pointer;
+  border: none;
+  background-color: var(--vt-c-danger);
+  color: var(--vt-c-text-dark-1);
+  padding: 12px;
+  border-radius: 12px;
+  margin-top: 1rem;
+  font-size: medium;
 }
 </style>

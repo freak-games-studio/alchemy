@@ -508,6 +508,7 @@ import vinegar from './sprites/vinegar.webp'
 import vobla from './sprites/vobla.webp'
 import vodka from './sprites/vodka.webp'
 import volcano from './sprites/volcano.webp'
+import vscode from './sprites/vscode.webp'
 import vulture from './sprites/vulture.webp'
 import warrior from './sprites/warrior.webp'
 import watch from './sprites/watch.webp'
@@ -1046,6 +1047,7 @@ export const sprites: Record<string, string> = {
   vobla,
   vodka,
   volcano,
+  vscode,
   vulture,
   warrior,
   watch,

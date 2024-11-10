@@ -1,12 +1,31 @@
 import * as vueuse from '@vueuse/core'
-import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { useElementBounding } from '@vueuse/core'
+import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
+import { computed, ref, watch } from 'vue'
 import { useGame } from './use-game.js'
+import { useSettings } from './use-settings.js'
 import type { AlchemyElementOnBoard } from '@/types.js'
 
 export const useBoard = defineStore('board', () => {
-  const boardSize = ref({ left: 0, right: 0, top: 0, bottom: 0 })
-  const elementSize = ref({ width: 50, height: 50 })
+  const { settings } = storeToRefs(useSettings())
+  const boardRef = ref<HTMLDivElement>()
+  const boardBounding = useElementBounding(boardRef)
+  const boardSize = computed(() => {
+    return {
+      bottom: boardBounding.bottom.value ?? 0,
+      left: boardBounding.left.value ?? 0,
+      right: boardBounding.right.value ?? 0,
+      top: boardBounding.top.value ?? 0,
+    }
+  })
+
+  const elementSize = computed(() => {
+    return {
+      width: settings.value.elementSize,
+      height: settings.value.elementSize,
+      fontSize: `${settings.value.elementSize / 2.5}px`,
+    }
+  })
 
   const game = useGame()
   const board = vueuse.useStorage<AlchemyElementOnBoard[]>('alchemy-board', [])
@@ -31,6 +50,7 @@ export const useBoard = defineStore('board', () => {
   })
 
   return {
+    boardRef,
     board,
     boardSize,
     elementSize,
@@ -38,3 +58,7 @@ export const useBoard = defineStore('board', () => {
     addElement,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useBoard, import.meta.hot))
+}

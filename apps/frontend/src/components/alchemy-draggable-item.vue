@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { useBoard } from '@/stores/use-board'
 import { useSounds } from '@/stores/use-sounds'
 import { clamp, useDraggable, useElementBounding } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import AlchemyItem from './alchemy-item.vue'
 import type { AlchemyElementOnBoard, Position } from '@/types.js'
 
 const props = defineProps<{
   alchemyElement: AlchemyElementOnBoard
-  boardBounding: ReturnType<typeof useElementBounding>
 }>()
 
 const emits = defineEmits<{
@@ -16,6 +17,7 @@ const emits = defineEmits<{
   'remove-element': [AlchemyElementOnBoard]
 }>()
 
+const { boardSize } = storeToRefs(useBoard())
 const sounds = useSounds()
 const element = ref<HTMLElement | null>(null)
 const { width, height } = useElementBounding(element)
@@ -23,7 +25,7 @@ const { width, height } = useElementBounding(element)
 const { position } = useDraggable(element, {
   initialValue: props.alchemyElement.position,
   onStart() {
-    sounds.takingAudio.play()
+    sounds.playSound('taking')
   },
   onEnd() {
     // eslint-disable-next-line ts/no-use-before-define
@@ -33,17 +35,17 @@ const { position } = useDraggable(element, {
 
 const xPosition = computed(() => {
   return clamp(
-    props.boardBounding.left.value,
+    boardSize.value.left,
     position.value.x,
-    props.boardBounding.right.value - width.value,
+    boardSize.value.right - width.value,
   )
 })
 
 const yPosition = computed(() => {
   return clamp(
-    props.boardBounding.top.value,
+    boardSize.value.top,
     position.value.y,
-    props.boardBounding.bottom.value - height.value,
+    boardSize.value.bottom - height.value,
   )
 })
 

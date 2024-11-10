@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useGuide = defineStore('guide', () => {
@@ -18,3 +18,7 @@ export const useGuide = defineStore('guide', () => {
     toggleGuide,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useGuide, import.meta.hot))
+}

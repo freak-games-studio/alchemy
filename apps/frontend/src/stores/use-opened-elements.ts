@@ -1,6 +1,6 @@
 import recipes from '@/assets/recipes.json'
 import * as vueuse from '@vueuse/core'
-import { defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, watchEffect } from 'vue'
 import { useGame } from './use-game.js'
 import { useSounds } from './use-sounds.js'
@@ -35,11 +35,11 @@ export const useOpenedElements = defineStore('opened-elements', () => {
       .some((openedElement) => openedElement.id === element.id)
 
     if (isExist) {
-      sounds.createAudio.play()
+      sounds.playSound('create')
       return
     }
 
-    sounds.createNewAudio.play()
+    sounds.playSound('create_new')
     openedElements.value.push({
       id: element.id,
       name: element.name,
@@ -66,3 +66,7 @@ export const useOpenedElements = defineStore('opened-elements', () => {
     isCreatedElement,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useOpenedElements, import.meta.hot))
+}
