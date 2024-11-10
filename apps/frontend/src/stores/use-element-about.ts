@@ -1,7 +1,7 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import { useOpenedElements } from '@/stores/use-opened-elements'
 import recipes from '@/assets/recipes.json'
+import { useOpenedElements } from '@/stores/use-opened-elements'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+import { ref } from 'vue'
 import type { AlchemyElement } from '@/types'
 
 interface AlchemyRecipe {
@@ -41,13 +41,17 @@ export const useElementAbout = defineStore('element-about', () => {
       id: element.id,
       name: element.name,
       description: el.description,
-      recipes: openedRecipes
+      recipes: openedRecipes,
     }
   }
 
   return {
     isOpen,
     activeElement,
-    openElementAbout
+    openElementAbout,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useElementAbout, import.meta.hot))
+}

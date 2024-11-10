@@ -1,24 +1,34 @@
-import { defineStore } from 'pinia'
-import { sounds } from '@/assets/sounds'
-import freakGames from '@/assets/freak-games.mp3'
+import { SOUND_FILES } from '@/assets/sounds'
+import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
+import { useSettings } from './use-settings'
 
 export const useSounds = defineStore('sounds', () => {
-  const freakGamesAudio = new Audio(freakGames)
-  freakGamesAudio.volume = 1
+  const { settings } = storeToRefs(useSettings())
 
-  const createAudio = new Audio(sounds.create)
-  createAudio.volume = 0.4
+  const sounds = new Map<string, HTMLAudioElement>()
+  function playSound(sound: keyof typeof SOUND_FILES) {
+    const audio = sounds.get(sound)
+    if (!audio) return
+    audio.volume = settings.value.volume / 100
+    audio.currentTime = 0
+    audio.play()
+  }
 
-  const createNewAudio = new Audio(sounds.create_new)
-  createNewAudio.volume = 0.4
-
-  const takingAudio = new Audio(sounds.taking)
-  takingAudio.volume = 0.6
+  onMounted(() => {
+    for (const [key, value] of Object.entries(SOUND_FILES)) {
+      const audio = new Audio(value)
+      audio.preload = 'auto'
+      audio.load()
+      sounds.set(key, audio)
+    }
+  })
 
   return {
-    freakGamesAudio,
-    createAudio,
-    createNewAudio,
-    takingAudio
+    playSound,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useSounds, import.meta.hot))
+}

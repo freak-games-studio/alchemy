@@ -4063,5 +4063,12 @@
     "description": "Причудливые игры.",
     "recipes": [["monkey", "hamster"]],
     "ended": true
+  },
+  {
+    "id": "vscode",
+    "name": "Всщоде",
+    "description": "Приложение для разработки программного обеспечения.",
+    "recipes": [["salt", "salt"]],
+    "ended": true
   }
 ]

@@ -1,22 +1,26 @@
 <script setup lang="ts">
+import { useBoard } from '@/stores/use-board.js'
+import { useElementAbout } from '@/stores/use-element-about'
+import { useGame } from '@/stores/use-game.js'
+import { useGuide } from '@/stores/use-guide'
+import { useOpenedElements } from '@/stores/use-opened-elements.js'
+import { useSettings } from '@/stores/use-settings'
+import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import AlchemyItem from './alchemy-item.vue'
-import { useGame } from '@/stores/use-game.js'
-import { useBoard } from '@/stores/use-board.js'
-import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { useElementAbout } from '@/stores/use-element-about'
-import { useGuide } from '@/stores/use-guide'
 import type { AlchemyElement } from '@/types.js'
 
 const guide = useGuide()
 const game = useGame()
 const board = useBoard()
+const { settings } = storeToRefs(useSettings())
 const elementAbout = useElementAbout()
 const openedElements = useOpenedElements()
 const searchInput = ref('')
 
 const filteredElements = computed(() => {
   return openedElements.openedElements.filter((element) => {
+    if (settings.value.hideEndedElements && element.ended) return false
     const value = searchInput.value.toLowerCase()
     const id = element.id.includes(value)
     const name = element.name.toLowerCase().includes(value)
@@ -28,7 +32,7 @@ function createElement(element: AlchemyElement) {
   board.board.push({
     ...element,
     uuid: crypto.randomUUID(),
-    position: game.getRandomPosition()
+    position: game.getRandomPosition(),
   })
 }
 </script>
@@ -41,7 +45,7 @@ function createElement(element: AlchemyElement) {
       type="text"
       name="search"
       placeholder="Искать элемент..."
-    />
+    >
     <div class="elements-list">
       <div
         v-for="element in filteredElements"
@@ -58,17 +62,11 @@ function createElement(element: AlchemyElement) {
     </div>
     <div class="controls">
       <div
-        class="button border-right"
-        @click="game.$reset()"
-      >
-        Новая игра
-      </div>
-      <div
-        class="button border-right"
         id="toggle-guide"
+        class="button border-right"
         @click="guide.toggleGuide()"
       >
-        Помощь
+        Об игре
       </div>
       <div
         class="button"
@@ -96,8 +94,9 @@ function createElement(element: AlchemyElement) {
   align-items: center;
   height: 100%;
   gap: 1rem;
-  overflow-x: auto;
+  overflow-x: hidden;
   padding: 1rem 0;
+  overscroll-behavior: contain;
 }
 
 @media screen and (max-width: 768px) {
