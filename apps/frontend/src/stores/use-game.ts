@@ -4,7 +4,7 @@ import { ref, watch } from 'vue'
 import { useBoard } from './use-board.js'
 import { useOpenedElements } from './use-opened-elements.js'
 import { useSettings } from './use-settings.js'
-import type { AlchemyElementOnBoard, Position } from '@/types.js'
+import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
 export const useGame = defineStore('game', () => {
   const board = useBoard()
@@ -19,6 +19,14 @@ export const useGame = defineStore('game', () => {
       x,
       y,
     }
+  }
+
+  function createElement(element: AlchemyElement, position = getRandomPosition()) {
+    board.board.push({
+      ...element,
+      uuid: crypto.randomUUID(),
+      position,
+    })
   }
 
   function $reset() {
@@ -43,6 +51,7 @@ export const useGame = defineStore('game', () => {
 
   return {
     basicElements,
+    createElement,
     getRandomPosition,
     $reset,
   }

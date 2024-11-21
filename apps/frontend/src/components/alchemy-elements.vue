@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useBoard } from '@/stores/use-board.js'
 import { useElementAbout } from '@/stores/use-element-about'
-import { useGame } from '@/stores/use-game.js'
+import { useGame } from '@/stores/use-game'
 import { useGuide } from '@/stores/use-guide'
 import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import { useSettings } from '@/stores/use-settings'
@@ -28,12 +28,13 @@ const filteredElements = computed(() => {
   })
 })
 
-function createElement(element: AlchemyElement) {
-  board.board.push({
-    ...element,
-    uuid: crypto.randomUUID(),
-    position: game.getRandomPosition(),
-  })
+function dragStart(event: DragEvent, element: AlchemyElement) {
+  if (!event.dataTransfer) return
+  event.dataTransfer.setData('text/plain', JSON.stringify({
+    element,
+    x: event.offsetX,
+    y: event.offsetY,
+  }))
 }
 </script>
 
@@ -51,7 +52,9 @@ function createElement(element: AlchemyElement) {
         v-for="element in filteredElements"
         :key="element.id"
         class="element"
-        @click="createElement(element)"
+        draggable="true"
+        @click="game.createElement(element)"
+        @dragstart="dragStart($event, element)"
         @contextmenu.prevent="() => {
           guide.closeGuide()
           elementAbout.openElementAbout(element)
@@ -107,6 +110,8 @@ function createElement(element: AlchemyElement) {
 
 .element {
   cursor: pointer;
+  /* remove background on drag element */
+  transform: translate(0, 0);
 }
 
 .search-input {

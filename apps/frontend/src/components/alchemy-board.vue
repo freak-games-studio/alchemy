@@ -25,7 +25,7 @@ function updatePosition(
 
 function checkCollision(boardElement: AlchemyElementOnBoard): void {
   for (const boardItem of board.value) {
-    if (boardItem === boardElement) continue
+    if (boardItem.uuid === boardElement.uuid) continue
     if (boardElement.ended || boardItem.ended) continue
     if (
       boardElement.position.x < boardItem.position.x + elementSize.value.width
@@ -110,10 +110,42 @@ useEventListener(boardRef, 'dblclick', (event) => {
 
   board.value.push(...elements)
 })
+
+function onDrop(event: DragEvent) {
+  if (!event.dataTransfer) return
+  event.preventDefault()
+
+  const elementData = JSON.parse(event.dataTransfer.getData('text/plain')) as {
+    element: AlchemyElement
+    x: number
+    y: number
+  }
+  if (!elementData) return
+
+  const position = {
+    x: event.pageX - elementData.x,
+    y: event.pageY - elementData.y,
+  }
+
+  const newElement = {
+    ...elementData.element,
+    uuid: crypto.randomUUID(),
+    position,
+  }
+
+  board.value.push(newElement)
+  checkCollision(newElement)
+}
 </script>
 
 <template>
-  <div ref="boardRef" class="board">
+  <div
+    ref="boardRef"
+    class="board"
+    @drop="onDrop"
+    @dragover.prevent
+    @dragenter.prevent
+  >
     <AlchemyDraggableItem
       v-for="boardElement of board"
       :key="boardElement.uuid"
@@ -121,6 +153,8 @@ useEventListener(boardRef, 'dblclick', (event) => {
       @position="updatePosition(boardElement, $event)"
       @clone-element="createElement(boardElement, $event, true)"
       @remove-element="removeElement(boardElement)"
+      @dragover.prevent
+      @dragenter.prevent
     />
   </div>
 </template>
