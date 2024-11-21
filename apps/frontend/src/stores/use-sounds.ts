@@ -11,6 +11,7 @@ export const useSounds = defineStore('sounds', () => {
     const audio = sounds.get(sound)
     if (!audio) return
     audio.volume = settings.value.volume / 100
+    if (audio.volume === 0) return
     audio.currentTime = 0
     audio.play()
   }
