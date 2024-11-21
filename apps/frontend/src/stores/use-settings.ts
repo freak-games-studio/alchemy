@@ -3,7 +3,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 
 export const useSettings = defineStore('settings', () => {
   const settings = useLocalStorage('alchemy-settings', {
-    volume: 50,
+    volume: 30,
     elementSize: 50,
     hideEndedElements: false,
   })

@@ -46,6 +46,7 @@ function dragStart(event: DragEvent, element: AlchemyElement) {
       type="text"
       name="search"
       placeholder="Искать элемент..."
+      @dragover.prevent
     >
     <div class="elements-list">
       <div
@@ -68,6 +69,9 @@ function dragStart(event: DragEvent, element: AlchemyElement) {
         id="toggle-guide"
         class="button border-right"
         @click="guide.toggleGuide()"
+        @drop="game.activateCheatCode($event)"
+        @dragover.prevent
+        @dragenter.prevent
       >
         Об игре
       </div>

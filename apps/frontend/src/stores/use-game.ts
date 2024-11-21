@@ -29,6 +29,33 @@ export const useGame = defineStore('game', () => {
     })
   }
 
+  function activateCheatCode(event: DragEvent) {
+    if (!event.dataTransfer) return
+    event.preventDefault()
+
+    const elementData = JSON.parse(event.dataTransfer.getData('text/plain')) as {
+      element: AlchemyElement
+    }
+    if (!elementData) return
+    if (elementData.element.id !== 'vodka') return
+
+    const isConfirm = confirm('ТЫ ЧЕ ПЬЯНЫЙ!?')
+    if (!isConfirm) return
+
+    openedElements.openedElements = recipes.map((element) => {
+      const el: AlchemyElement = {
+        id: element.id,
+        name: element.name,
+      }
+
+      if (element.ended) {
+        el.ended = true
+      }
+
+      return el
+    })
+  }
+
   function $reset() {
     const isConfirm = confirm('Вы точно хотите начать новую игру?')
     if (!isConfirm) return
@@ -51,6 +78,7 @@ export const useGame = defineStore('game', () => {
 
   return {
     basicElements,
+    activateCheatCode,
     createElement,
     getRandomPosition,
     $reset,
