@@ -3870,7 +3870,8 @@
     "description": "Личинка бабочки, обычно червеобразная с несколькими парами ног.",
     "recipes": [
       ["worm", "grass"],
-      ["worm", "leaf"]
+      ["worm", "leaf"],
+      ["worm", "cigarette"]
     ]
   },
   {
@@ -4060,15 +4061,15 @@
   {
     "id": "freak_games",
     "name": "Freak Games",
-    "description": "Причудливые игры.",
+    "description": "Игры от фриков для фриков.",
     "recipes": [["hamster", "monkey"], ["vscode", "lexot"]],
     "ended": true
   },
   {
     "id": "vscode",
     "name": "Всщоде",
-    "description": "Приложение для разработки программного обеспечения.",
-    "recipes": [["salt", "salt"]]
+    "description": "Какой-то фрик.",
+    "recipes": [["dolphin", "salt"]]
   },
   {
     "id": "lexot",
