@@ -262,6 +262,7 @@ import leaf from './sprites/leaf.webp'
 import leather from './sprites/leather.webp'
 import leech from './sprites/leech.webp'
 import letter from './sprites/letter.webp'
+import lexot from './sprites/lexot.webp'
 import library from './sprites/library.webp'
 import lichen from './sprites/lichen.webp'
 import life from './sprites/life.webp'
@@ -801,6 +802,7 @@ export const sprites: Record<string, string> = {
   leather,
   leech,
   letter,
+  lexot,
   library,
   lichen,
   life,
@@ -1073,5 +1075,5 @@ export const sprites: Record<string, string> = {
   worm,
   xray,
   yarn,
-  zombie,
+  zombie
 }

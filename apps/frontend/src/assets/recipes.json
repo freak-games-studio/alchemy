@@ -4061,14 +4061,19 @@
     "id": "freak_games",
     "name": "Freak Games",
     "description": "Причудливые игры.",
-    "recipes": [["monkey", "hamster"]],
+    "recipes": [["hamster", "monkey"], ["vscode", "lexot"]],
     "ended": true
   },
   {
     "id": "vscode",
     "name": "Всщоде",
     "description": "Приложение для разработки программного обеспечения.",
-    "recipes": [["salt", "salt"]],
-    "ended": true
+    "recipes": [["salt", "salt"]]
+  },
+  {
+    "id": "lexot",
+    "name": "Лешот",
+    "description": "Человек, обладающий сверхчеловеческими способностями.",
+    "recipes": [["computer", "beer"]]
   }
 ]
