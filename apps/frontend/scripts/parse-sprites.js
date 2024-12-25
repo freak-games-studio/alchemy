@@ -17,7 +17,7 @@ const sprites = await fs.readdir(path.resolve(assetsFolder, 'sprites'), {
 const code = [
   ...sprites.map((sprite) => `import ${sprite.replace('.webp', '')} from './sprites/${sprite}'`),
   `\nexport const sprites: Record<string, string> = {
-  ${sprites.map((asset) => asset.replace('.webp', '')).join(',\n  ')}
+  ${sprites.map((asset) => asset.replace('.webp', '')).join(',\n  ')},
 }\n`,
 ].join('\n')
 

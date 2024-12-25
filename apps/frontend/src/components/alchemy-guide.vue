@@ -7,14 +7,15 @@ import DrawerBody from '@/ui/drawer/drawer-body.vue'
 import DrawerHeader from '@/ui/drawer/drawer-header.vue'
 import { storeToRefs } from 'pinia'
 
-const { isOpen } = storeToRefs(useGuide())
-const { settings } = storeToRefs(useSettings())
-const { $reset: resetGame } = useGame()
+const guideStore = useGuide()
+const gameStore = useGame()
+const settingsStore = useSettings()
+const { settings } = storeToRefs(settingsStore)
 </script>
 
 <template>
   <Drawer
-    v-model="isOpen"
+    v-model="guideStore.isOpen"
     min-width="65%"
     :ignore-element="['#toggle-guide']"
   >
@@ -53,8 +54,11 @@ const { $reset: resetGame } = useGame()
             </label>
           </h3>
 
-          <div>
-            <button class="new-game" @click="resetGame">
+          <div class="button-group">
+            <button class="button-group__item settings" @click="settingsStore.$reset">
+              Сбросить настройки
+            </button>
+            <button class="button-group__item game" @click="gameStore.$reset">
               Начать новую игру
             </button>
           </div>
@@ -67,13 +71,13 @@ const { $reset: resetGame } = useGame()
             Создание элементов
           </h2>
           <p class="description">
-            Создавайте новые элементы, комбинируя существующие друг с другом. У одного элемента может быть несколько рецептов. Один элемент может использоваться в создании нескольких элементов.
+            Создавайте новые элементы, <b class="marker">комбинируя элементы друг с другом.</b> У одного элемента может быть <b class="marker">несколько рецептов.</b> Один элемент может использоваться в создании нескольких элементов.
           </p>
           <p class="description">
-            Чтобы добавить уже созданный элемент на поле, найдите его в каталоге и нажмите по нему правой кнопкой мыши.
+            Чтобы добавить уже созданный элемент на поле, <b class="marker">нажмите на него правой кнопкой мыши или зажмите правую кнопку мыши и перетащите его на поле.</b>
           </p>
           <p class="description">
-            Кликните два раза по пустой области чтобы создать четыре базовых элемента.
+            <b class="marker">Двойное нажатие по пустой области на поле</b> создаст четыре базовых элемента.
           </p>
         </div>
 
@@ -82,10 +86,10 @@ const { $reset: resetGame } = useGame()
             Просмотр информации об элементе
           </h2>
           <p class="description">
-            Не забывайте читать описания элементов. В них может содержаться подсказка для создания другого элемента. Для этого найдите элемент в каталоге и нажмите по нему левой кнопкой мыши.
+            Не забывайте читать описания элементов. В них может содержаться подсказка для создания другого элемента. Для отрытия справки, <b class="marker">нажмите левой кнопкой мыши по элементу в каталоге.</b>
           </p>
           <p class="description">
-            Символ <b style="color: tomato;">*</b> около элемента означает, что данный элемент конечный и не может быть использован для создания другого элемента.
+            Символ <b class="marker" style="color: tomato;">*</b> около элемента означает, что <b class="marker">данный элемент конечный и не участвует в создании других элементов.</b>
           </p>
         </div>
 
@@ -103,7 +107,7 @@ const { $reset: resetGame } = useGame()
             Удаление элементов
           </h2>
           <p class="description">
-            Чтобы удалить элемент, кликните по нему правой кнопкой мыши или воспользуйтесь опцией "Очистить поле".
+            Чтобы удалить элемент, <b class="marker">кликните по нему правой кнопкой мыши или воспользуйтесь опцией "Очистить поле".</b>
           </p>
         </div>
       </div>
@@ -127,14 +131,31 @@ const { $reset: resetGame } = useGame()
   margin-top: 12px;
 }
 
-.new-game {
-  cursor: pointer;
-  border: none;
-  background-color: var(--vt-c-danger);
-  color: var(--vt-c-text-dark-1);
-  padding: 12px;
-  border-radius: 12px;
-  margin-top: 1rem;
-  font-size: medium;
+.marker {
+  font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+
+  &__item {
+    color: var(--vt-c-white);
+    cursor: pointer;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 1rem;
+    font-size: medium;
+    transition: background-color 0.2s ease-in-out;
+
+    &.settings {
+      background-color: var(--vt-c-success);
+    }
+
+    &.game {
+      background-color: var(--vt-c-danger);
+    }
+  }
 }
 </style>

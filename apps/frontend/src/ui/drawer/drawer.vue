@@ -14,9 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, onKeyStroke } from '@vueuse/core'
 import { computed, provide, ref, shallowRef, watch } from 'vue'
-
 import { drawerInjectionKey } from './drawer-injection-key'
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom'
@@ -42,6 +41,8 @@ const drawerStyles = computed(() => {
 
 const isOpen = ref(false)
 const openModel = defineModel<boolean>({ default: false })
+
+onKeyStroke('Escape', () => (openModel.value = false))
 
 watch(openModel, (value) => {
   isOpen.value = value
