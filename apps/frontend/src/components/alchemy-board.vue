@@ -28,25 +28,29 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
     if (boardItem.uuid === boardElement.uuid) continue
     if (boardElement.ended || boardItem.ended) continue
     if (
-      boardElement.position.x < boardItem.position.x + elementSize.value.width
-      && boardElement.position.x + elementSize.value.width > boardItem.position.x
-      && boardElement.position.y < boardItem.position.y + elementSize.value.height
-      && boardElement.position.y + elementSize.value.height > boardItem.position.y
+      boardElement.position.x >= boardItem.position.x + elementSize.value.width
+      || boardElement.position.x + elementSize.value.width <= boardItem.position.x
+      || boardElement.position.y >= boardItem.position.y + elementSize.value.height
+      || boardElement.position.y + elementSize.value.height <= boardItem.position.y
     ) {
-      const elements = checkRecipe([boardElement.id, boardItem.id])
-      if (!elements.length) return
-
-      elements.forEach((element, index) => {
-        if (element.id === 'freak_games') {
-          sounds.playSound('freakGames')
-        }
-
-        removeElement(boardItem)
-        removeElement(boardElement)
-        createElement(boardItem, element, index === 1)
-        openedElements.addElement(element)
-      })
+      continue
     }
+
+    const elements = checkRecipe([boardElement.id, boardItem.id])
+    if (!elements.length) break
+
+    elements.forEach((element, elementIndex) => {
+      if (element.id === 'freak_games') {
+        sounds.playSound('freakGames')
+      }
+
+      removeElement(boardItem)
+      removeElement(boardElement)
+      createElement(boardItem.position, element, elementIndex >= 1)
+      openedElements.addElement(element)
+    })
+
+    break
   }
 }
 
@@ -83,16 +87,16 @@ function removeElement(boardElement: AlchemyElementOnBoard): void {
 }
 
 function createElement(
-  boardElement: AlchemyElementOnBoard,
-  newElement: AlchemyElement,
+  position: Position,
+  element: AlchemyElement,
   isCopy = false,
 ): void {
   board.value.push({
-    ...newElement,
+    ...element,
     uuid: crypto.randomUUID(),
     position: {
-      x: isCopy ? boardElement.position.x + 30 : boardElement.position.x,
-      y: isCopy ? boardElement.position.y + 30 : boardElement.position.y,
+      x: isCopy ? position.x + 30 : position.x,
+      y: isCopy ? position.y + 30 : position.y,
     },
   })
 }
@@ -151,7 +155,7 @@ function onDrop(event: DragEvent) {
       :key="boardElement.uuid"
       :alchemy-element="boardElement"
       @position="updatePosition(boardElement, $event)"
-      @clone-element="createElement(boardElement, $event, true)"
+      @clone-element="createElement(boardElement.position, $event, true)"
       @remove-element="removeElement(boardElement)"
       @dragover.prevent
       @dragenter.prevent
