@@ -46,7 +46,11 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
 
       removeElement(boardItem)
       removeElement(boardElement)
-      createElement(boardItem.position, element, elementIndex >= 1)
+      createElement(
+        boardItem.position,
+        element,
+        elementIndex >= 1 ? elementIndex : 0,
+      )
       openedElements.addElement(element)
     })
 
@@ -89,14 +93,14 @@ function removeElement(boardElement: AlchemyElementOnBoard): void {
 function createElement(
   position: Position,
   element: AlchemyElement,
-  isCopy = false,
+  positionOffset = 0,
 ): void {
   board.value.push({
     ...element,
     uuid: crypto.randomUUID(),
     position: {
-      x: isCopy ? position.x + 30 : position.x,
-      y: isCopy ? position.y + 30 : position.y,
+      x: positionOffset ? position.x + (30 * positionOffset) : position.x,
+      y: positionOffset ? position.y + (30 * positionOffset) : position.y,
     },
   })
 }
@@ -155,7 +159,7 @@ function onDrop(event: DragEvent) {
       :key="boardElement.uuid"
       :alchemy-element="boardElement"
       @position="updatePosition(boardElement, $event)"
-      @clone-element="createElement(boardElement.position, $event, true)"
+      @clone-element="createElement(boardElement.position, $event, 1)"
       @remove-element="removeElement(boardElement)"
       @dragover.prevent
       @dragenter.prevent
