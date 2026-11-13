@@ -8,7 +8,6 @@
     "build": "pnpm type-check && vite build",
     "preview": "pnpm build && vite preview",
     "type-check": "vue-tsc --noEmit",
-    "parse-sprites": "node scripts/parse-sprites.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

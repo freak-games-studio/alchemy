@@ -2,7 +2,7 @@
   <div class="item">
     <img
       class="image"
-      :src="sprites[element.id]"
+      :src="spriteUrl(element.id)"
     >
     <p
       class="text"
@@ -16,8 +16,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { sprites } from '@/assets/sprites'
 import { useGame } from '@/game/injection'
+import { spriteUrl } from '@/assets/sprite'
 import type { AlchemyElement } from '@/game/element'
 
 defineProps<{

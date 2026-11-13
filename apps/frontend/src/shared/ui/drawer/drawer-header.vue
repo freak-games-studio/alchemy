@@ -5,7 +5,7 @@
     </span>
     <img
       class="drawer-header__close"
-      :src="XIcon"
+      src="/x.svg"
       @click="toggleDrawer"
     >
   </div>
@@ -14,7 +14,6 @@
 <script setup lang="ts">
 import { inject } from 'vue'
 
-import XIcon from '@/assets/x.svg'
 import { drawerInjectionKey } from './drawer-injection-key'
 
 const { toggleDrawer } = inject(drawerInjectionKey)!

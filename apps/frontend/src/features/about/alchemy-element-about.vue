@@ -13,7 +13,7 @@
             <h2>{{ activeElement.name }}</h2>
             <img
               class="image"
-              :src="sprites[activeElement.id]"
+              :src="spriteUrl(activeElement.id)"
             >
             <p class="description">
               {{ activeElement.description }}
@@ -53,8 +53,8 @@ import Drawer from '@/shared/ui/drawer/drawer.vue'
 import AlchemyItem from '@/shared/ui/alchemy-item.vue'
 import DrawerBody from '@/shared/ui/drawer/drawer-body.vue'
 import DrawerHeader from '@/shared/ui/drawer/drawer-header.vue'
-import { sprites } from '@/assets/sprites'
 import { useGame } from '@/game/injection'
+import { spriteUrl } from '@/assets/sprite'
 
 const game = useGame()
 const isOpen = game.session.about.isOpen
