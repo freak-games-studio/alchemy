@@ -1,6 +1,9 @@
 <template>
   <Teleport to="body">
-    <Transition name="overlay-slide" :data-placement="placement">
+    <Transition
+      name="overlay-slide"
+      :data-placement="placement"
+    >
       <div
         v-if="isOpen"
         ref="contentElement"
@@ -16,6 +19,7 @@
 <script setup lang="ts">
 import { onClickOutside, onKeyStroke } from '@vueuse/core'
 import { computed, provide, ref, shallowRef, watch } from 'vue'
+
 import { drawerInjectionKey } from './drawer-injection-key'
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom'
@@ -31,17 +35,19 @@ const props = withDefaults(defineProps<{
   ignoreElement: () => [],
 })
 
+const openModel = defineModel<boolean>({ default: false })
+
 const drawerStyles = computed(() => {
   return {
     minWidth: props.minWidth,
-    maxWidth: props.maxWidth === 'auto' ? props.minWidth : props.maxWidth,
+    maxWidth: props.maxWidth === 'auto'
+      ? props.minWidth
+      : props.maxWidth,
     [props.placement]: '0px',
   }
 })
 
 const isOpen = ref(false)
-const openModel = defineModel<boolean>({ default: false })
-
 onKeyStroke('Escape', () => (openModel.value = false))
 
 watch(openModel, (value) => {
@@ -66,26 +72,26 @@ provide(drawerInjectionKey, {
 <style scoped lang="scss">
 .drawer {
   &-overlay {
-    background-color: var(--vt-c-overlay);
-    width: 100%;
-    height: 100%;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 800;
+    background-color: var(--vt-c-overlay);
+    width: 100%;
+    height: 100%;
   }
 
   &-content {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     position: fixed;
     top: 0px;
     bottom: 0px;
+    flex-direction: column;
+    justify-content: space-between;
     transform: translateX(0%) translateY(0px) translateZ(0px);
-    background-color: var(--vt-c-black);
     z-index: 900;
     border-left: 1px solid var(--vt-c-divider-dark-2);
+    background-color: var(--vt-c-black);
   }
 }
 

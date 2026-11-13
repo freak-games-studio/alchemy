@@ -1,10 +1,12 @@
-import recipes from '@/assets/recipes.json'
-import * as vueuse from '@vueuse/core'
-import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, watchEffect } from 'vue'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import recipes from '@/assets/recipes.json'
 import { useGame } from './use-game.js'
 import { useSounds } from './use-sounds.js'
 import type { AlchemyElement } from '@/types.js'
+
+import * as vueuse from '@vueuse/core'
 
 type OpenedAlchemyElements = Omit<AlchemyElement, 'uuid'>[]
 
@@ -32,7 +34,7 @@ export const useOpenedElements = defineStore('opened-elements', () => {
 
   function addElement(element: AlchemyElement): void {
     const isExist = openedElements.value
-      .some((openedElement) => openedElement.id === element.id)
+      .some(openedElement => openedElement.id === element.id)
 
     if (isExist) {
       sounds.playSound('create')

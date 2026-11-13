@@ -1,6 +1,6 @@
-import freakGames from '@/assets/freak-games.mp3'
-
 import { el } from '@zero-dependency/dom'
+
+import freakGames from '@/assets/freak-games.mp3'
 
 class SplashScreen {
   #el: HTMLDivElement | null = null

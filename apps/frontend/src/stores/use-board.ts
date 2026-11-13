@@ -1,10 +1,12 @@
-import * as vueuse from '@vueuse/core'
+import { computed, ref, watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
-import { computed, ref, watch } from 'vue'
+
 import { useGame } from './use-game.js'
 import { useSettings } from './use-settings.js'
 import type { AlchemyElementOnBoard } from '@/types.js'
+
+import * as vueuse from '@vueuse/core'
 
 export const useBoard = defineStore('board', () => {
   const { settings } = storeToRefs(useSettings())

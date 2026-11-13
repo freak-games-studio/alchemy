@@ -1,28 +1,13 @@
-<script setup lang="ts">
-import { useGame } from '@/stores/use-game'
-import { useGuide } from '@/stores/use-guide'
-import { useSettings } from '@/stores/use-settings'
-import Drawer from '@/ui/drawer/drawer.vue'
-import DrawerBody from '@/ui/drawer/drawer-body.vue'
-import DrawerHeader from '@/ui/drawer/drawer-header.vue'
-import { storeToRefs } from 'pinia'
-
-const guideStore = useGuide()
-const gameStore = useGame()
-const settingsStore = useSettings()
-const { settings } = storeToRefs(settingsStore)
-</script>
-
 <template>
-  <Drawer
+  <drawer
     v-model="guideStore.isOpen"
     min-width="65%"
     :ignore-element="['#toggle-guide']"
   >
-    <DrawerHeader>
+    <drawer-header>
       Об игре
-    </DrawerHeader>
-    <DrawerBody>
+    </drawer-header>
+    <drawer-body>
       <div class="guide">
         <h1>Настройки</h1>
         <div>
@@ -49,16 +34,25 @@ const { settings } = storeToRefs(settingsStore)
           >
           <h3 class="title">
             <label>
-              <input v-model="settings.hideEndedElements" type="checkbox">
+              <input
+                v-model="settings.hideEndedElements"
+                type="checkbox"
+              >
               Скрыть завершенные элементы
             </label>
           </h3>
 
           <div class="button-group">
-            <button class="button-group__item settings" @click="settingsStore.$reset">
+            <button
+              class="button-group__item settings"
+              @click="settingsStore.$reset"
+            >
               Сбросить настройки
             </button>
-            <button class="button-group__item game" @click="gameStore.$reset">
+            <button
+              class="button-group__item game"
+              @click="gameStore.$reset"
+            >
               Начать новую игру
             </button>
           </div>
@@ -89,7 +83,10 @@ const { settings } = storeToRefs(settingsStore)
             Не забывайте читать описания элементов. В них может содержаться подсказка для создания другого элемента. Для отрытия справки, <b class="marker">нажмите левой кнопкой мыши по элементу в каталоге.</b>
           </p>
           <p class="description">
-            Символ <b class="marker" style="color: tomato;">*</b> около элемента означает, что <b class="marker">данный элемент конечный и не участвует в создании других элементов.</b>
+            Символ <b
+              class="marker"
+              style="color: tomato;"
+            >*</b> около элемента означает, что <b class="marker">данный элемент конечный и не участвует в создании других элементов.</b>
           </p>
         </div>
 
@@ -111,9 +108,25 @@ const { settings } = storeToRefs(settingsStore)
           </p>
         </div>
       </div>
-    </DrawerBody>
-  </Drawer>
+    </drawer-body>
+  </drawer>
 </template>
+
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+
+import Drawer from '@/ui/drawer/drawer.vue'
+import DrawerBody from '@/ui/drawer/drawer-body.vue'
+import DrawerHeader from '@/ui/drawer/drawer-header.vue'
+import { useGame } from '@/stores/use-game'
+import { useGuide } from '@/stores/use-guide'
+import { useSettings } from '@/stores/use-settings'
+
+const guideStore = useGuide()
+const gameStore = useGame()
+const settingsStore = useSettings()
+const { settings } = storeToRefs(settingsStore)
+</script>
 
 <style scoped lang="scss">
 .guide {
@@ -123,8 +136,8 @@ const { settings } = storeToRefs(settingsStore)
 }
 
 .description {
-  text-align: justify;
   font-size: 18px;
+  text-align: justify;
 }
 
 .description + .description {
@@ -140,14 +153,14 @@ const { settings } = storeToRefs(settingsStore)
   gap: 8px;
 
   &__item {
-    color: var(--vt-c-white);
-    cursor: pointer;
-    border: none;
-    padding: 12px;
-    border-radius: 12px;
-    margin-top: 1rem;
-    font-size: medium;
     transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    color: var(--vt-c-white);
+    font-size: medium;
 
     &.settings {
       background-color: var(--vt-c-success);

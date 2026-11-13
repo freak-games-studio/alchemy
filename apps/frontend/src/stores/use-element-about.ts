@@ -1,7 +1,8 @@
+import { ref } from 'vue'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import recipes from '@/assets/recipes.json'
 import { useOpenedElements } from '@/stores/use-opened-elements'
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ref } from 'vue'
 import type { AlchemyElement } from '@/types'
 
 interface AlchemyRecipe {
@@ -25,7 +26,7 @@ export const useElementAbout = defineStore('element-about', () => {
   function openElementAbout(element: AlchemyElement) {
     isOpen.value = true
 
-    const el = recipes.find((recipe) => recipe.id === element.id)!
+    const el = recipes.find(recipe => recipe.id === element.id)!
     const openedRecipes: AlchemyRecipe[][] = []
 
     for (const recipe of el.recipes) {

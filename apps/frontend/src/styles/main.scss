@@ -32,10 +32,10 @@
 }
 
 body {
-  user-select: none;
+  background: var(--vt-c-black-soft);
   overflow: hidden;
   color: var(--vt-c-text-dark-2);
-  background: var(--vt-c-black-soft);
+  font-size: 16px;
   line-height: 1.6;
   font-family:
     Inter,
@@ -50,7 +50,7 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  font-size: 16px;
+  user-select: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -58,9 +58,9 @@ body {
 }
 
 #app {
-  height: inherit;
-  width: inherit;
   display: flex;
+  width: inherit;
+  height: inherit;
 }
 
 .hidden {
@@ -84,7 +84,7 @@ body {
 }
 
 .h6 {
+  font-weight: 600;
   font-size: 20px;
   line-height: 32px;
-  font-weight: 600;
 }

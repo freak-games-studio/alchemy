@@ -1,9 +1,10 @@
-import recipes from '@/assets/recipes.json'
-import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
+import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
+
+import recipes from '@/assets/recipes.json'
 import { useBoard } from './use-board.js'
-import { useOpenedElements } from './use-opened-elements.js'
 import { useSettings } from './use-settings.js'
+import { useOpenedElements } from './use-opened-elements.js'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
 export const useGame = defineStore('game', () => {
@@ -39,6 +40,7 @@ export const useGame = defineStore('game', () => {
     if (!elementData) return
     if (elementData.element.id !== 'vodka') return
 
+    // eslint-disable-next-line no-alert
     const isConfirm = confirm('ТЫ ЧЕ ПЬЯНЫЙ!?')
     if (!isConfirm) return
 
@@ -57,6 +59,7 @@ export const useGame = defineStore('game', () => {
   }
 
   function $reset() {
+    // eslint-disable-next-line no-alert
     const isConfirm = confirm('Вы точно хотите начать новую игру?')
     if (!isConfirm) return
     board.$reset()

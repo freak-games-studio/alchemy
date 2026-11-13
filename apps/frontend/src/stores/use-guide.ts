@@ -1,5 +1,5 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 
 export const useGuide = defineStore('guide', () => {
   const isOpen = ref(false)

@@ -1,12 +1,34 @@
+<template>
+  <div
+    ref="boardRef"
+    class="board"
+    @drop="onDrop"
+    @dragover.prevent
+    @dragenter.prevent
+  >
+    <alchemy-draggable-item
+      v-for="boardElement of board"
+      :key="boardElement.uuid"
+      :alchemy-element="boardElement"
+      @position="updatePosition(boardElement, $event)"
+      @clone-element="createElement(boardElement.position, $event, 1)"
+      @remove-element="removeElement(boardElement)"
+      @dragover.prevent
+      @dragenter.prevent
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
-import recipes from '@/assets/recipes.json'
-import { useBoard } from '@/stores/use-board.js'
-import { useGame } from '@/stores/use-game.js'
-import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { useSounds } from '@/stores/use-sounds'
-import { useEventListener } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
+import { useEventListener } from '@vueuse/core'
+
+import recipes from '@/assets/recipes.json'
 import AlchemyDraggableItem from './alchemy-draggable-item.vue'
+import { useGame } from '@/stores/use-game.js'
+import { useSounds } from '@/stores/use-sounds'
+import { useBoard } from '@/stores/use-board.js'
+import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import type { AlchemyElement, AlchemyElementOnBoard, Position } from '@/types.js'
 
 const game = useGame()
@@ -49,7 +71,9 @@ function checkCollision(boardElement: AlchemyElementOnBoard): void {
       createElement(
         boardItem.position,
         element,
-        elementIndex >= 1 ? elementIndex : 0,
+        elementIndex >= 1
+          ? elementIndex
+          : 0,
       )
       openedElements.addElement(element)
     })
@@ -85,7 +109,7 @@ function checkRecipe(
 }
 
 function removeElement(boardElement: AlchemyElementOnBoard): void {
-  const elementIndex = board.value.findIndex((boardItem) => boardItem.uuid === boardElement.uuid)
+  const elementIndex = board.value.findIndex(boardItem => boardItem.uuid === boardElement.uuid)
   if (elementIndex === -1) return
   board.value.splice(elementIndex, 1)
 }
@@ -99,8 +123,12 @@ function createElement(
     ...element,
     uuid: crypto.randomUUID(),
     position: {
-      x: positionOffset ? position.x + (30 * positionOffset) : position.x,
-      y: positionOffset ? position.y + (30 * positionOffset) : position.y,
+      x: positionOffset
+        ? position.x + (30 * positionOffset)
+        : position.x,
+      y: positionOffset
+        ? position.y + (30 * positionOffset)
+        : position.y,
     },
   })
 }
@@ -145,27 +173,6 @@ function onDrop(event: DragEvent) {
   checkCollision(newElement)
 }
 </script>
-
-<template>
-  <div
-    ref="boardRef"
-    class="board"
-    @drop="onDrop"
-    @dragover.prevent
-    @dragenter.prevent
-  >
-    <AlchemyDraggableItem
-      v-for="boardElement of board"
-      :key="boardElement.uuid"
-      :alchemy-element="boardElement"
-      @position="updatePosition(boardElement, $event)"
-      @clone-element="createElement(boardElement.position, $event, 1)"
-      @remove-element="removeElement(boardElement)"
-      @dragover.prevent
-      @dragenter.prevent
-    />
-  </div>
-</template>
 
 <style scoped>
 .board {

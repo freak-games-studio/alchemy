@@ -1,20 +1,33 @@
+<template>
+  <div
+    ref="element"
+    class="alchemy-item"
+    :style="{ left: `${xPosition}px`, top: `${yPosition}px` }"
+    @dblclick="$emit('clone-element', alchemyElement)"
+    @contextmenu.prevent="$emit('remove-element', alchemyElement)"
+  >
+    <alchemy-item :element="alchemyElement" />
+  </div>
+</template>
+
 <script setup lang="ts">
-import { useBoard } from '@/stores/use-board'
-import { useSounds } from '@/stores/use-sounds'
-import { clamp, useDraggable, useElementBounding } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
+import { clamp, useDraggable, useElementBounding } from '@vueuse/core'
+
 import AlchemyItem from './alchemy-item.vue'
+import { useBoard } from '@/stores/use-board'
+import { useSounds } from '@/stores/use-sounds'
 import type { AlchemyElementOnBoard, Position } from '@/types.js'
 
 const props = defineProps<{
   alchemyElement: AlchemyElementOnBoard
 }>()
 
-const emits = defineEmits<{
-  'position': [Position]
-  'clone-element': [AlchemyElementOnBoard]
-  'remove-element': [AlchemyElementOnBoard]
+const emit = defineEmits<{
+  (event: 'position', value: Position): void
+  (event: 'clone-element', value: AlchemyElementOnBoard): void
+  (event: 'remove-element', value: AlchemyElementOnBoard): void
 }>()
 
 const { boardSize } = storeToRefs(useBoard())
@@ -29,7 +42,7 @@ const { position } = useDraggable(element, {
   },
   onEnd() {
     // eslint-disable-next-line ts/no-use-before-define
-    emits('position', { x: xPosition.value, y: yPosition.value })
+    emit('position', { x: xPosition.value, y: yPosition.value })
   },
 })
 
@@ -54,31 +67,20 @@ watch(() => props.alchemyElement.position, () => {
 })
 </script>
 
-<template>
-  <div
-    ref="element"
-    class="alchemy-item"
-    :style="{ left: `${xPosition}px`, top: `${yPosition}px` }"
-    @dblclick="emits('clone-element', alchemyElement)"
-    @contextmenu.prevent="emits('remove-element', alchemyElement)"
-  >
-    <AlchemyItem :element="alchemyElement" />
-  </div>
-</template>
-
 <style scoped>
 .alchemy-item {
-  cursor: pointer;
-  touch-action: none;
   position: fixed;
-  inline-size: min-content;
-  overflow-wrap: break-word;
   z-index: 1;
+  cursor: pointer;
   isolation: isolate;
+  inline-size: min-content;
+  touch-action: none;
+  overflow-wrap: break-word;
 }
 
-.alchemy-item:active, .alchemy-item:hover {
-  transition: none;
+.alchemy-item:active,
+.alchemy-item:hover {
   z-index: 2;
+  transition: none;
 }
 </style>

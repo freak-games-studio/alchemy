@@ -12,8 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import XIcon from '@/assets/x.svg'
 import { inject } from 'vue'
+
+import XIcon from '@/assets/x.svg'
 import { drawerInjectionKey } from './drawer-injection-key'
 
 const { toggleDrawer } = inject(drawerInjectionKey)!
@@ -22,18 +23,18 @@ const { toggleDrawer } = inject(drawerInjectionKey)!
 <style scoped lang="scss">
 .drawer-header {
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  padding: 0 24px;
   border-bottom: 1px solid var(--vt-c-divider-dark-2);
+  padding: 0 24px;
   height: 52px;
-  flex-shrink: 0;
 
   &__close {
+    cursor: pointer;
     width: 24px;
     height: 24px;
-    cursor: pointer;
   }
 }
 </style>

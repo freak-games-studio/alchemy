@@ -11,6 +11,7 @@ export const useSettings = defineStore('settings', () => {
   const settings = useLocalStorage('alchemy-settings', { ...DEFAULT_SETTINGS })
 
   function $reset() {
+    // eslint-disable-next-line no-alert
     const isConfirm = confirm('Вы точно хотите сбросить настройки?')
     if (!isConfirm) return
     settings.value = { ...DEFAULT_SETTINGS }

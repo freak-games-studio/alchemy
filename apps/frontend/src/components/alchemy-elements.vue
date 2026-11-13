@@ -1,13 +1,61 @@
+<template>
+  <div class="container">
+    <input
+      v-model="searchInput"
+      class="search-input"
+      type="text"
+      name="search"
+      placeholder="Искать элемент..."
+      @dragover.prevent
+    >
+    <div class="elements-list">
+      <div
+        v-for="element in filteredElements"
+        :key="element.id"
+        class="element"
+        draggable="true"
+        @click="game.createElement(element)"
+        @dragstart="dragStart($event, element)"
+        @contextmenu.prevent="() => {
+          guide.closeGuide()
+          elementAbout.openElementAbout(element)
+        }"
+      >
+        <alchemy-item :element="element" />
+      </div>
+    </div>
+    <div class="controls">
+      <div
+        id="toggle-guide"
+        class="button border-right"
+        @click="guide.toggleGuide()"
+        @drop="game.activateCheatCode($event)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        Об игре
+      </div>
+      <div
+        class="button"
+        @click="board.$reset()"
+      >
+        Очистить поле
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { useBoard } from '@/stores/use-board.js'
-import { useElementAbout } from '@/stores/use-element-about'
-import { useGame } from '@/stores/use-game'
-import { useGuide } from '@/stores/use-guide'
-import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import { useSettings } from '@/stores/use-settings'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
+
 import AlchemyItem from './alchemy-item.vue'
+import { useGame } from '@/stores/use-game'
+import { useGuide } from '@/stores/use-guide'
+import { useBoard } from '@/stores/use-board.js'
+import { useSettings } from '@/stores/use-settings'
+import { useElementAbout } from '@/stores/use-element-about'
+import { useOpenedElements } from '@/stores/use-opened-elements.js'
 import type { AlchemyElement } from '@/types.js'
 
 const guide = useGuide()
@@ -38,71 +86,24 @@ function dragStart(event: DragEvent, element: AlchemyElement) {
 }
 </script>
 
-<template>
-  <div class="container">
-    <input
-      v-model="searchInput"
-      class="search-input"
-      type="text"
-      name="search"
-      placeholder="Искать элемент..."
-      @dragover.prevent
-    >
-    <div class="elements-list">
-      <div
-        v-for="element in filteredElements"
-        :key="element.id"
-        class="element"
-        draggable="true"
-        @click="game.createElement(element)"
-        @dragstart="dragStart($event, element)"
-        @contextmenu.prevent="() => {
-          guide.closeGuide()
-          elementAbout.openElementAbout(element)
-        }"
-      >
-        <AlchemyItem :element="element" />
-      </div>
-    </div>
-    <div class="controls">
-      <div
-        id="toggle-guide"
-        class="button border-right"
-        @click="guide.toggleGuide()"
-        @drop="game.activateCheatCode($event)"
-        @dragover.prevent
-        @dragenter.prevent
-      >
-        Об игре
-      </div>
-      <div
-        class="button"
-        @click="board.$reset()"
-      >
-        Очистить поле
-      </div>
-    </div>
-  </div>
-</template>
-
 <style scoped>
 .container {
-  background-color: var(--vt-c-black);
-  width: 35%;
   display: flex;
   flex-direction: column;
+  background-color: var(--vt-c-black);
+  width: 35%;
 }
 
 .elements-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   align-content: flex-start;
+  justify-content: center;
   align-items: center;
-  height: 100%;
   gap: 1rem;
-  overflow-x: hidden;
   padding: 1rem 0;
+  height: 100%;
+  overflow-x: hidden;
   overscroll-behavior: contain;
 }
 
@@ -113,22 +114,22 @@ function dragStart(event: DragEvent, element: AlchemyElement) {
 }
 
 .element {
-  cursor: pointer;
   /* remove background on drag element */
   transform: translate(0, 0);
+  cursor: pointer;
 }
 
 .search-input {
-  width: 100%;
-  padding: 1rem;
-  background: var(--vt-c-black);
-  border: none;
   outline: none;
+  border: none;
   border-bottom: 1px solid var(--vt-c-divider-dark-2);
+  background: var(--vt-c-black);
+  padding: 1rem;
+  width: 100%;
+  height: 52px;
+  color: var(--vt-c-text-dark-2);
   font-size: 18px;
   text-align: center;
-  color: var(--vt-c-text-dark-2);
-  height: 52px;
 }
 
 .controls {
@@ -137,17 +138,17 @@ function dragStart(event: DragEvent, element: AlchemyElement) {
 }
 
 .button {
-  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  color: var(--vt-c-text-dark-2);
   background-color: var(--vt-c-black);
-  font-size: inherit;
-  text-align: center;
+  padding: 12px;
   width: 50%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--vt-c-text-dark-2);
+  font-size: inherit;
+  text-align: center;
 }
 
 .border-right {

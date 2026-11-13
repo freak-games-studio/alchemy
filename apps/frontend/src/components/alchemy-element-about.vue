@@ -1,21 +1,13 @@
-<script setup lang="ts">
-import { sprites } from '@/assets/sprites'
-import { useElementAbout } from '@/stores/use-element-about'
-import Drawer from '@/ui/drawer/drawer.vue'
-import DrawerBody from '@/ui/drawer/drawer-body.vue'
-import DrawerHeader from '@/ui/drawer/drawer-header.vue'
-import AlchemyItem from './alchemy-item.vue'
-
-const elementAbout = useElementAbout()
-</script>
-
 <template>
-  <Drawer v-model="elementAbout.isOpen" min-width="65%">
+  <drawer
+    v-model="elementAbout.isOpen"
+    min-width="65%"
+  >
     <template v-if="elementAbout.activeElement">
-      <DrawerHeader>
+      <drawer-header>
         Об элементе
-      </DrawerHeader>
-      <DrawerBody>
+      </drawer-header>
+      <drawer-body>
         <div class="container">
           <div class="info">
             <h2>{{ elementAbout.activeElement.name }}</h2>
@@ -35,20 +27,37 @@ const elementAbout = useElementAbout()
               :key="index"
               class="recipe"
             >
-              <div class="element" @click="elementAbout.openElementAbout(recipe[0])">
-                <AlchemyItem :element="recipe[0]" />
+              <div
+                class="element"
+                @click="elementAbout.openElementAbout(recipe[0])"
+              >
+                <alchemy-item :element="recipe[0]" />
               </div>
               <span class="plus">+</span>
-              <div class="element" @click="elementAbout.openElementAbout(recipe[1])">
-                <AlchemyItem :element="recipe[1]" />
+              <div
+                class="element"
+                @click="elementAbout.openElementAbout(recipe[1])"
+              >
+                <alchemy-item :element="recipe[1]" />
               </div>
             </div>
           </div>
         </div>
-      </DrawerBody>
+      </drawer-body>
     </template>
-  </Drawer>
+  </drawer>
 </template>
+
+<script setup lang="ts">
+import Drawer from '@/ui/drawer/drawer.vue'
+import DrawerBody from '@/ui/drawer/drawer-body.vue'
+import DrawerHeader from '@/ui/drawer/drawer-header.vue'
+import AlchemyItem from './alchemy-item.vue'
+import { sprites } from '@/assets/sprites'
+import { useElementAbout } from '@/stores/use-element-about'
+
+const elementAbout = useElementAbout()
+</script>
 
 <style scoped lang="scss">
 .container {
@@ -59,19 +68,19 @@ const elementAbout = useElementAbout()
 
 .info {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 16px;
-  flex-direction: column;
 
   .image {
-    height: 120px;
     width: 120px;
+    height: 120px;
   }
 
   .description {
-    text-align: justify;
     font-size: 18px;
+    text-align: justify;
   }
 }
 
@@ -80,8 +89,8 @@ const elementAbout = useElementAbout()
   align-items: baseline;
 
   .plus {
-    font-size: 64px;
     font-weight: bold;
+    font-size: 64px;
   }
 
   .element {

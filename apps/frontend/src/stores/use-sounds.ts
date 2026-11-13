@@ -1,6 +1,7 @@
-import { SOUND_FILES } from '@/assets/sounds'
-import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
+import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
+
+import { SOUND_FILES } from '@/assets/sounds'
 import { useSettings } from './use-settings'
 
 export const useSounds = defineStore('sounds', () => {
