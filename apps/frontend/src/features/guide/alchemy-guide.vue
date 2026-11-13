@@ -1,6 +1,6 @@
 <template>
   <drawer
-    v-model="guideStore.isOpen"
+    v-model="guideOpen"
     min-width="65%"
     :ignore-element="['#toggle-guide']"
   >
@@ -45,13 +45,13 @@
           <div class="button-group">
             <button
               class="button-group__item settings"
-              @click="settingsStore.$reset"
+              @click="game.settings.reset"
             >
               Сбросить настройки
             </button>
             <button
               class="button-group__item game"
-              @click="gameStore.$reset"
+              @click="game.startNew"
             >
               Начать новую игру
             </button>
@@ -113,19 +113,14 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
+import Drawer from '@/shared/ui/drawer/drawer.vue'
+import DrawerBody from '@/shared/ui/drawer/drawer-body.vue'
+import DrawerHeader from '@/shared/ui/drawer/drawer-header.vue'
+import { useGame } from '@/game/injection'
 
-import Drawer from '@/ui/drawer/drawer.vue'
-import DrawerBody from '@/ui/drawer/drawer-body.vue'
-import DrawerHeader from '@/ui/drawer/drawer-header.vue'
-import { useGame } from '@/stores/use-game'
-import { useGuide } from '@/stores/use-guide'
-import { useSettings } from '@/stores/use-settings'
-
-const guideStore = useGuide()
-const gameStore = useGame()
-const settingsStore = useSettings()
-const { settings } = storeToRefs(settingsStore)
+const game = useGame()
+const guideOpen = game.session.guide.isOpen
+const settings = game.settings.values
 </script>
 
 <style scoped lang="scss">

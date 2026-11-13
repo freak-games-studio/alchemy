@@ -14,12 +14,9 @@
         :key="element.id"
         class="element"
         draggable="true"
-        @click="game.createElement(element)"
+        @click="game.board.place(element)"
         @dragstart="dragStart($event, element)"
-        @contextmenu.prevent="() => {
-          guide.closeGuide()
-          elementAbout.openElementAbout(element)
-        }"
+        @contextmenu.prevent="openAbout(element)"
       >
         <alchemy-item :element="element" />
       </div>
@@ -28,8 +25,8 @@
       <div
         id="toggle-guide"
         class="button border-right"
-        @click="guide.toggleGuide()"
-        @drop="game.activateCheatCode($event)"
+        @click="game.session.guide.toggle()"
+        @drop="game.activateCheat($event)"
         @dragover.prevent
         @dragenter.prevent
       >
@@ -37,7 +34,7 @@
       </div>
       <div
         class="button"
-        @click="board.$reset()"
+        @click="game.board.clear()"
       >
         Очистить поле
       </div>
@@ -46,28 +43,19 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
-import AlchemyItem from './alchemy-item.vue'
-import { useGame } from '@/stores/use-game'
-import { useGuide } from '@/stores/use-guide'
-import { useBoard } from '@/stores/use-board.js'
-import { useSettings } from '@/stores/use-settings'
-import { useElementAbout } from '@/stores/use-element-about'
-import { useOpenedElements } from '@/stores/use-opened-elements.js'
-import type { AlchemyElement } from '@/types.js'
+import AlchemyItem from '@/shared/ui/alchemy-item.vue'
+import { useGame } from '@/game/injection'
+import type { AlchemyElement } from '@/game/element'
 
-const guide = useGuide()
 const game = useGame()
-const board = useBoard()
-const { settings } = storeToRefs(useSettings())
-const elementAbout = useElementAbout()
-const openedElements = useOpenedElements()
+const opened = game.catalog.opened
+const settings = game.settings.values
 const searchInput = ref('')
 
 const filteredElements = computed(() => {
-  return openedElements.openedElements.filter((element) => {
+  return opened.value.filter((element) => {
     if (settings.value.hideEndedElements && element.ended) return false
     const value = searchInput.value.toLowerCase()
     const id = element.id.includes(value)
@@ -83,6 +71,11 @@ function dragStart(event: DragEvent, element: AlchemyElement) {
     x: event.offsetX,
     y: event.offsetY,
   }))
+}
+
+function openAbout(element: AlchemyElement) {
+  game.session.guide.close()
+  game.session.about.open(element)
 }
 </script>
 

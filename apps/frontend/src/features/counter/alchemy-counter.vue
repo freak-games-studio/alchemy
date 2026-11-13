@@ -1,15 +1,13 @@
 <template>
   <div class="counter">
-    {{ elementsCounter }}
+    {{ counter }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
+import { useGame } from '@/game/injection'
 
-import { useOpenedElements } from '@/stores/use-opened-elements'
-
-const { elementsCounter } = storeToRefs(useOpenedElements())
+const counter = useGame().catalog.counter
 </script>
 
 <style scoped>

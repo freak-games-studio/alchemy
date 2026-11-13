@@ -1,6 +1,5 @@
 // @ts-check
 
-import pinia from 'eslint-plugin-pinia'
 import antfu from '@antfu/eslint-config'
 
 export default antfu({
@@ -30,17 +29,7 @@ export default antfu({
       'style/brace-style': 'error',
     },
   },
-  plugins: {
-    pinia,
-  },
-
   rules: {
-    // pinia
-    ...pinia.configs.recommended.rules,
-    'pinia/no-store-to-refs-in-store': 'off',
-    'pinia/prefer-single-store-per-file': ['error'],
-    'pinia/prefer-use-store-naming-convention': ['error'],
-
     // yaml
     'yaml/indent': ['error', 2],
 

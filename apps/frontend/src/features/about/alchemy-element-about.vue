@@ -1,42 +1,42 @@
 <template>
   <drawer
-    v-model="elementAbout.isOpen"
+    v-model="isOpen"
     min-width="65%"
   >
-    <template v-if="elementAbout.activeElement">
+    <template v-if="activeElement">
       <drawer-header>
         Об элементе
       </drawer-header>
       <drawer-body>
         <div class="container">
           <div class="info">
-            <h2>{{ elementAbout.activeElement.name }}</h2>
+            <h2>{{ activeElement.name }}</h2>
             <img
               class="image"
-              :src="sprites[elementAbout.activeElement.id]"
+              :src="sprites[activeElement.id]"
             >
             <p class="description">
-              {{ elementAbout.activeElement.description }}
+              {{ activeElement.description }}
             </p>
           </div>
 
-          <div v-if="elementAbout.activeElement.recipes.length">
+          <div v-if="activeElement.recipes.length">
             <h2>Доступные рецепты</h2>
             <div
-              v-for="(recipe, index) of elementAbout.activeElement.recipes"
+              v-for="(recipe, index) of activeElement.recipes"
               :key="index"
               class="recipe"
             >
               <div
                 class="element"
-                @click="elementAbout.openElementAbout(recipe[0])"
+                @click="game.session.about.open(recipe[0])"
               >
                 <alchemy-item :element="recipe[0]" />
               </div>
               <span class="plus">+</span>
               <div
                 class="element"
-                @click="elementAbout.openElementAbout(recipe[1])"
+                @click="game.session.about.open(recipe[1])"
               >
                 <alchemy-item :element="recipe[1]" />
               </div>
@@ -49,14 +49,16 @@
 </template>
 
 <script setup lang="ts">
-import Drawer from '@/ui/drawer/drawer.vue'
-import DrawerBody from '@/ui/drawer/drawer-body.vue'
-import DrawerHeader from '@/ui/drawer/drawer-header.vue'
-import AlchemyItem from './alchemy-item.vue'
+import Drawer from '@/shared/ui/drawer/drawer.vue'
+import AlchemyItem from '@/shared/ui/alchemy-item.vue'
+import DrawerBody from '@/shared/ui/drawer/drawer-body.vue'
+import DrawerHeader from '@/shared/ui/drawer/drawer-header.vue'
 import { sprites } from '@/assets/sprites'
-import { useElementAbout } from '@/stores/use-element-about'
+import { useGame } from '@/game/injection'
 
-const elementAbout = useElementAbout()
+const game = useGame()
+const isOpen = game.session.about.isOpen
+const activeElement = game.session.about.activeElement
 </script>
 
 <style scoped lang="scss">

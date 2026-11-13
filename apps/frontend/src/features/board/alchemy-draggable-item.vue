@@ -11,14 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { clamp, useDraggable, useElementBounding } from '@vueuse/core'
 
-import AlchemyItem from './alchemy-item.vue'
-import { useBoard } from '@/stores/use-board'
-import { useSounds } from '@/stores/use-sounds'
-import type { AlchemyElementOnBoard, Position } from '@/types.js'
+import AlchemyItem from '@/shared/ui/alchemy-item.vue'
+import { useGame } from '@/game/injection'
+import type { AlchemyElementOnBoard, Position } from '@/game/element'
 
 const props = defineProps<{
   alchemyElement: AlchemyElementOnBoard
@@ -30,15 +28,15 @@ const emit = defineEmits<{
   (event: 'remove-element', value: AlchemyElementOnBoard): void
 }>()
 
-const { boardSize } = storeToRefs(useBoard())
-const sounds = useSounds()
+const game = useGame()
+const boardSize = game.board.boardSize
 const element = ref<HTMLElement | null>(null)
 const { width, height } = useElementBounding(element)
 
 const { position } = useDraggable(element, {
   initialValue: props.alchemyElement.position,
   onStart() {
-    sounds.playSound('taking')
+    game.audio.play('taking')
   },
   onEnd() {
     // eslint-disable-next-line ts/no-use-before-define

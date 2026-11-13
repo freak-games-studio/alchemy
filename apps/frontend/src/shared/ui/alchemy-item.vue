@@ -17,16 +17,16 @@
 import { computed } from 'vue'
 
 import { sprites } from '@/assets/sprites'
-import { useBoard } from '@/stores/use-board'
-import type { AlchemyElement } from '@/types.js'
+import { useGame } from '@/game/injection'
+import type { AlchemyElement } from '@/game/element'
 
 defineProps<{
   element: AlchemyElement
 }>()
 
-const game = useBoard()
-const width = computed(() => `${game.elementSize.width}px`)
-const height = computed(() => `${game.elementSize.height}px`)
+const elementSize = useGame().board.elementSize
+const width = computed(() => `${elementSize.value.width}px`)
+const height = computed(() => `${elementSize.value.height}px`)
 </script>
 
 <style scoped>
@@ -50,7 +50,7 @@ const height = computed(() => `${game.elementSize.height}px`)
   display: flex;
   gap: 6px;
   margin: 0 4px;
-  font-size: v-bind('game.elementSize.fontSize');
+  font-size: v-bind('elementSize.fontSize');
   text-align: center;
 }
 
