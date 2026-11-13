@@ -1,6 +1,6 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "vue.updateImportsOnFileMove.enabled": true,
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
+    "js/ts.preferences.importModuleSpecifierEnding": "index",
 
   // Disable the default formatter, use eslint instead
   "prettier.enable": false,

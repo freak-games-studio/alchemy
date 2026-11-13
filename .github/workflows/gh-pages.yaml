@@ -6,35 +6,26 @@ on:
       - master
 
 permissions:
-  id-token: write
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  cache-and-install:
+  publish:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
+      - uses: pnpm/setup@v3
         with:
-          version: 9
+          runtime: node@22
+          cache: true
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build apps and packages
-        run: pnpm build
+      - run: pnpm build
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        uses: JamesIves/github-pages-deploy-action@v4.9.0
         with:
           branch: gh-pages
           folder: apps/frontend/dist
