@@ -2,12 +2,14 @@ import { watch } from 'vue'
 
 import { createAudio } from './audio'
 import { createBoard } from './board'
+import { createToast } from './toast'
 import { createCatalog } from './catalog'
 import { createSession } from './session'
 import { createStarters } from './recipe'
 import { createSettings } from './settings'
 import type { AudioApi } from './audio'
 import type { BoardApi } from './board'
+import type { ToastApi } from './toast'
 import type { CatalogApi } from './catalog'
 import type { SessionApi } from './session'
 import type { SettingsApi } from './settings'
@@ -19,6 +21,7 @@ export interface Game {
   board: BoardApi
   catalog: CatalogApi
   session: SessionApi
+  toast: ToastApi
   startNew: () => void
 }
 
@@ -33,7 +36,8 @@ export function createGame(): Game {
   const settings = createSettings()
   const audio = createAudio(settings)
   const catalog = createCatalog(audio)
-  const board = createBoard(settings, audio, catalog)
+  const toast = createToast()
+  const board = createBoard(settings, audio, { catalog, toast })
   const session = createSession(catalog)
 
   watch(board.boardSize, (size) => {
@@ -58,6 +62,7 @@ export function createGame(): Game {
     board,
     catalog,
     session,
+    toast,
     startNew,
   }
 }

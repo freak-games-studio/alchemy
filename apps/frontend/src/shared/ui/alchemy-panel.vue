@@ -5,7 +5,10 @@
       class="anchor"
       :class="[side, { minimized }]"
     >
-      <div class="panel">
+      <div
+        class="panel"
+        :class="{ wide }"
+      >
         <header
           class="panel-header"
           :class="{ nested }"
@@ -39,8 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import { useGame } from '@/game/injection'
 
 withDefaults(defineProps<{
@@ -48,10 +49,12 @@ withDefaults(defineProps<{
   minimized?: boolean
   nested?: boolean
   scroll?: boolean
+  wide?: boolean
 }>(), {
   minimized: false,
   nested: false,
   scroll: false,
+  wide: false,
 })
 
 const emit = defineEmits<{
@@ -59,7 +62,7 @@ const emit = defineEmits<{
 }>()
 
 const game = useGame()
-const side = computed(() => game.settings.values.value.dock || 'bottom')
+const side = game.settings.dock
 </script>
 
 <style scoped lang="scss">
@@ -102,8 +105,8 @@ const side = computed(() => game.settings.values.value.dock || 'bottom')
   border: 1px solid var(--border);
   border-radius: 20px;
   background: var(--card);
-  width: min(448px, calc(100vw - 108px));
-  max-height: min(72dvh, 680px);
+  width: min(720px, calc(100vw - 108px));
+  max-height: min(70dvh, 680px);
   overflow: hidden;
 }
 
@@ -229,6 +232,12 @@ const side = computed(() => game.settings.values.value.dock || 'bottom')
 
   .anchor.bottom .panel {
     width: 100%;
+  }
+}
+
+@media screen and (min-width: 641px) {
+  .panel.wide {
+    width: min(960px, calc(100vw - 48px));
   }
 }
 

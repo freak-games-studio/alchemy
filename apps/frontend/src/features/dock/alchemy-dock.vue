@@ -59,8 +59,8 @@
         viewBox="0 0 24 24"
         aria-hidden="true"
       >
-        <path d="M12 6.2c-2.1-1.2-4.4-1.7-7.2-1.4v11.6c2.8-.3 5.1.2 7.2 1.4 2.1-1.2 4.4-1.7 7.2-1.4V4.8c-2.8-.3-5.1.2-7.2 1.4z" />
-        <path d="M12 6.2v11.6" />
+        <path d="M12 7v14" />
+        <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
       </svg>
       <span class="label">Справочник</span>
     </button>
@@ -75,12 +75,12 @@
         viewBox="0 0 24 24"
         aria-hidden="true"
       >
+        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
         <circle
           cx="12"
           cy="12"
           r="3"
         />
-        <path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M18 6l-1.6 1.6M7.6 16.4 6 18" />
       </svg>
       <span class="label">Настройки</span>
     </button>
@@ -116,8 +116,10 @@
         viewBox="0 0 24 24"
         aria-hidden="true"
       >
-        <path d="M20 12a8 8 0 1 1-2.2-5.5" />
-        <path d="M20 4v5h-5" />
+        <path d="M3 6h18" />
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        <path d="M10 11v6M14 11v6" />
       </svg>
       <span class="label">Очистить</span>
     </button>
@@ -125,15 +127,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import { useGame } from '@/game/injection'
 
 const game = useGame()
 const shell = game.session.shell
 const active = shell.active
 const dockRef = game.board.dockRef
-const side = computed(() => game.settings.values.value.dock || 'bottom')
+const side = game.settings.dock
 </script>
 
 <style scoped lang="scss">

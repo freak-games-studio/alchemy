@@ -3,17 +3,58 @@ import { uniqueId } from './id'
 import { randomPosition } from './position'
 import type { AlchemyElement, AlchemyElementOnBoard, BoardBounds } from './element'
 
+export type RecipePair = [string, string] | [string, string, true]
+
 export interface RecipeDefinition {
   id: string
   name: string
   description: string
-  recipes: string[][]
+  recipes: RecipePair[]
+  category?: string[]
   ended?: boolean
+}
+
+export interface RecipeMatch {
+  element: AlchemyElement
+  propagate: boolean
+}
+
+export interface RecipeCategory {
+  id: string
+  label: string
+}
+
+const categoryOrder = [
+  'food',
+  'fauna',
+  'flora',
+  'country',
+  'traffic',
+  'figures',
+  'alcohol',
+  'people',
+  'being',
+  'space',
+  'buildings',
+]
+
+const categoryLabels: Record<string, string> = {
+  food: 'Пища',
+  fauna: 'Фауна',
+  flora: 'Флора',
+  country: 'Страны',
+  traffic: 'Транспорт',
+  figures: 'Личности',
+  alcohol: 'Алкоголь',
+  people: 'Люди',
+  being: 'Существа',
+  space: 'Космос',
+  buildings: 'Постройки',
 }
 
 const recipes = recipesSource as RecipeDefinition[]
 const recipesById = new Map<string, RecipeDefinition>()
-const recipesByPair = new Map<string, AlchemyElement[]>()
+const recipesByPair = new Map<string, RecipeMatch[]>()
 
 function pairKey(leftId: string, rightId: string): string {
   return leftId < rightId
@@ -26,17 +67,20 @@ for (const element of recipes) {
 
   for (const pair of element.recipes) {
     const key = pairKey(pair[0], pair[1])
-    const result: AlchemyElement = {
-      id: element.id,
-      name: element.name,
-      ended: element.ended ?? false,
+    const match: RecipeMatch = {
+      element: {
+        id: element.id,
+        name: element.name,
+        ended: element.ended ?? false,
+      },
+      propagate: pair.length === 3 && pair[2] === true,
     }
     const results = recipesByPair.get(key)
     if (results) {
-      results.push(result)
+      results.push(match)
       continue
     }
-    recipesByPair.set(key, [result])
+    recipesByPair.set(key, [match])
   }
 }
 
@@ -48,7 +92,24 @@ export function recipeById(id: string): RecipeDefinition | undefined {
   return recipesById.get(id)
 }
 
-export function matchRecipes(leftId: string, rightId: string): AlchemyElement[] {
+export function recipeCategories(): RecipeCategory[] {
+  const present = new Set<string>()
+  for (const element of recipes) {
+    element.category?.forEach(name => present.add(name))
+  }
+
+  const known = categoryOrder.filter(id => present.has(id))
+  const extra = [...present].filter(id => !categoryOrder.includes(id))
+  return [
+    ...known,
+    ...extra,
+  ].map(id => ({
+    id,
+    label: categoryLabels[id] ?? id,
+  }))
+}
+
+export function matchRecipes(leftId: string, rightId: string): RecipeMatch[] {
   return recipesByPair.get(pairKey(leftId, rightId)) ?? []
 }
 

@@ -7,6 +7,7 @@ import { matchRecipes } from './recipe'
 import { boxesOverlap } from './collision'
 import { gridPositions, offsetPosition, randomPosition } from './position'
 import type { AudioApi } from './audio'
+import type { ToastApi } from './toast'
 import type { CatalogApi } from './catalog'
 import type { SettingsApi } from './settings'
 import type {
@@ -43,8 +44,12 @@ export interface BoardApi {
 export function createBoard(
   settings: SettingsApi,
   audio: AudioApi,
-  catalog: CatalogApi,
+  services: {
+    catalog: CatalogApi
+    toast: ToastApi
+  },
 ): BoardApi {
+  const { catalog, toast } = services
   const boardRef = ref<HTMLDivElement>()
   const dockRef = ref<HTMLElement>()
   const bounds = useElementBounding(boardRef)
@@ -60,7 +65,7 @@ export function createBoard(
     const left = bounds.left.value ?? 0
     const right = bounds.right.value ?? 0
     const bottom = bounds.bottom.value ?? 0
-    const side = settings.values.value.dock || 'bottom'
+    const side = settings.dock.value
     const dockReady = dockBounds.width.value > 0 && dockBounds.height.value > 0
 
     if (!dockReady) {
@@ -93,7 +98,7 @@ export function createBoard(
     }
   })
 
-  watch(() => settings.values.value.dock, () => {
+  watch(settings.dock, () => {
     nextTick(() => dockBounds.update())
   })
 
@@ -134,13 +139,21 @@ export function createBoard(
       const results = matchRecipes(element.id, other.id)
       if (!results.length) break
 
-      results.forEach((result, index) => {
-        if (result.id === 'freak_games') audio.play('freakGames')
+      let slot = 0
+      for (const match of results) {
+        if (match.element.id === 'freak_games') audio.play('freakGames')
         remove(other)
         remove(element)
-        place(result, offsetPosition(other.position, index))
-        catalog.add(result)
-      })
+        place(match.element, offsetPosition(other.position, slot))
+        slot += 1
+        if (match.propagate) {
+          place(match.element, offsetPosition(other.position, slot))
+          slot += 1
+        }
+        if (catalog.add(match.element)) {
+          toast.show(`Новый элемент: ${element.name} + ${other.name} = ${match.element.name}`)
+        }
+      }
 
       return true
     }
@@ -223,7 +236,9 @@ export function createBoard(
       uuid: uniqueId(),
       position: randomPoint(),
     }))
+    if (!next.length) return
     items.value.push(...next)
+    audio.play('create')
   }
 
   return {

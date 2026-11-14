@@ -41,25 +41,27 @@
         </button>
       </div>
 
-      <h3 class="title">
-        Положение панели
-      </h3>
-      <div
-        class="segment"
-        role="group"
-        aria-label="Положение панели"
-      >
-        <button
-          v-for="option in dockSides"
-          :key="option.id"
-          class="press segment-button"
-          :class="{ selected: settings.dock === option.id }"
-          type="button"
-          @click="settings.dock = option.id"
+      <template v-if="!mobile">
+        <h3 class="title">
+          Положение панели
+        </h3>
+        <div
+          class="segment"
+          role="group"
+          aria-label="Положение панели"
         >
-          {{ option.label }}
-        </button>
-      </div>
+          <button
+            v-for="option in dockSides"
+            :key="option.id"
+            class="press segment-button"
+            :class="{ selected: settings.dock === option.id }"
+            type="button"
+            @click="settings.dock = option.id"
+          >
+            {{ option.label }}
+          </button>
+        </div>
+      </template>
 
       <h3 class="title">
         Тема
@@ -88,16 +90,6 @@
           {{ option.label }}
         </button>
       </div>
-
-      <h3 class="title">
-        <label class="check">
-          <input
-            v-model="settings.hideEndedElements"
-            type="checkbox"
-          >
-          Скрыть завершенные элементы
-        </label>
-      </h3>
 
       <div class="button-group">
         <button
@@ -129,6 +121,7 @@ const game = useGame()
 const shell = game.session.shell
 const active = shell.active
 const settings = game.settings.values
+const mobile = game.settings.mobile
 
 const elementSizes = ELEMENT_SIZE_OPTIONS
 
@@ -244,36 +237,6 @@ async function startNewGame() {
     &:active {
       background: var(--primary);
       color: var(--primary-foreground);
-    }
-  }
-}
-
-.check {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-
-  input {
-    flex: none;
-    appearance: none;
-    cursor: pointer;
-    margin: 0;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: transparent;
-    width: 18px;
-    height: 18px;
-
-    &:checked {
-      box-shadow: inset 0 0 0 3px var(--card);
-      border-color: var(--primary);
-      background: var(--primary);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
     }
   }
 }

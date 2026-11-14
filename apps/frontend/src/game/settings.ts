@@ -1,6 +1,6 @@
-import { watch } from 'vue'
-import { useLocalStorage } from '@vueuse/core'
-import type { Ref } from 'vue'
+import { computed, watch } from 'vue'
+import { useLocalStorage, useMediaQuery } from '@vueuse/core'
+import type { ComputedRef, Ref } from 'vue'
 
 export type DockSide = 'bottom' | 'left' | 'right'
 export type ThemeName = 'light' | 'dark'
@@ -47,8 +47,12 @@ function snapElementSize(value: number): ElementSize {
   }, DEFAULT_SETTINGS.elementSize)
 }
 
+const MOBILE_DOCK_QUERY = '(max-width: 640px)'
+
 export interface SettingsApi {
   values: Ref<GameSettings>
+  dock: ComputedRef<DockSide>
+  mobile: Ref<boolean>
   reset: () => void
 }
 
@@ -67,12 +71,20 @@ export function createSettings(): SettingsApi {
     if (next !== size) values.value.elementSize = next
   }, { immediate: true })
 
+  const mobile = useMediaQuery(MOBILE_DOCK_QUERY)
+  const dock = computed<DockSide>(() => {
+    if (mobile.value) return 'bottom'
+    return values.value.dock || 'bottom'
+  })
+
   function reset() {
     values.value = { ...DEFAULT_SETTINGS }
   }
 
   return {
     values,
+    dock,
+    mobile,
     reset,
   }
 }

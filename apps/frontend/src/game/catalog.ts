@@ -11,7 +11,7 @@ export interface CatalogApi {
   counter: ComputedRef<string>
   reset: () => void
   isOpen: (elementId: string) => AlchemyElement | undefined
-  add: (element: AlchemyElement) => void
+  add: (element: AlchemyElement) => boolean
   seed: (elements: AlchemyElement[]) => void
   unlockAll: () => void
 }
@@ -32,7 +32,7 @@ export function createCatalog(audio: AudioApi): CatalogApi {
     const exists = opened.value.some(item => item.id === element.id)
     if (exists) {
       audio.play('create')
-      return
+      return false
     }
 
     audio.play('create_new')
@@ -41,6 +41,7 @@ export function createCatalog(audio: AudioApi): CatalogApi {
       name: element.name,
       ended: element.ended,
     })
+    return true
   }
 
   function seed(elements: AlchemyElement[]) {
