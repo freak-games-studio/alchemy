@@ -11,36 +11,44 @@ export interface RecipeDefinition {
 }
 
 const recipes = recipesSource as RecipeDefinition[]
+const recipesById = new Map<string, RecipeDefinition>()
+const recipesByPair = new Map<string, AlchemyElement[]>()
+
+function pairKey(leftId: string, rightId: string): string {
+  return leftId < rightId
+    ? `${leftId}\0${rightId}`
+    : `${rightId}\0${leftId}`
+}
+
+for (const element of recipes) {
+  recipesById.set(element.id, element)
+
+  for (const pair of element.recipes) {
+    const key = pairKey(pair[0], pair[1])
+    const result: AlchemyElement = {
+      id: element.id,
+      name: element.name,
+      ended: element.ended ?? false,
+    }
+    const results = recipesByPair.get(key)
+    if (results) {
+      results.push(result)
+      continue
+    }
+    recipesByPair.set(key, [result])
+  }
+}
 
 export function recipeCount(): number {
   return recipes.length
 }
 
 export function recipeById(id: string): RecipeDefinition | undefined {
-  return recipes.find(recipe => recipe.id === id)
+  return recipesById.get(id)
 }
 
 export function matchRecipes(leftId: string, rightId: string): AlchemyElement[] {
-  const results: AlchemyElement[] = []
-
-  for (const element of recipes) {
-    if (!element.recipes.length) continue
-
-    for (const pair of element.recipes) {
-      const [first, second] = pair
-      const matches = (first === leftId && second === rightId)
-        || (first === rightId && second === leftId)
-      if (!matches) continue
-
-      results.push({
-        id: element.id,
-        name: element.name,
-        ended: element.ended ?? false,
-      })
-    }
-  }
-
-  return results
+  return recipesByPair.get(pairKey(leftId, rightId)) ?? []
 }
 
 export function createStarters(bounds: BoardBounds, elementSize: number): AlchemyElementOnBoard[] {

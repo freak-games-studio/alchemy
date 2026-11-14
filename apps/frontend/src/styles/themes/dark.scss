@@ -1,0 +1,18 @@
+:root,
+[data-theme='dark'] {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --primary: #e08a45;
+  --primary-foreground: #2a160c;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --destructive: #9f3d38;
+  --destructive-foreground: #fafafa;
+  --success: #3f6b4e;
+  --success-foreground: #fafafa;
+  --border: rgba(255, 255, 255, 0.12);
+  --ring: #e08a45;
+  --overlay: rgba(0, 0, 0, 0.72);
+}

@@ -1,17 +1,26 @@
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useElementBounding, useStorage } from '@vueuse/core'
 import type { ComputedRef, Ref } from 'vue'
 
 import { matchRecipes } from './recipe'
 import { boxesOverlap } from './collision'
-import { offsetPosition, randomPosition } from './position'
+import { clusterPositions, offsetPosition, randomPosition } from './position'
 import type { AudioApi } from './audio'
 import type { CatalogApi } from './catalog'
 import type { SettingsApi } from './settings'
-import type { AlchemyElement, AlchemyElementOnBoard, BoardBounds, ElementBox } from './element'
+import type {
+  AlchemyElement,
+  AlchemyElementOnBoard,
+  BoardBounds,
+  ElementBox,
+} from './element'
+
+// var(--dock-padding)
+const DOCK_GAP = 8
 
 export interface BoardApi {
   boardRef: Ref<HTMLDivElement | undefined>
+  dockRef: Ref<HTMLElement | undefined>
   items: Ref<AlchemyElementOnBoard[]>
   boardSize: ComputedRef<BoardBounds>
   elementSize: ComputedRef<ElementBox & { fontSize: string }>
@@ -22,7 +31,7 @@ export interface BoardApi {
   drop: (element: AlchemyElement, position: AlchemyElementOnBoard['position']) => void
   clone: (element: AlchemyElementOnBoard) => void
   clear: () => void
-  spawnBasics: () => void
+  spawnBasics: (origin: AlchemyElementOnBoard['position']) => void
   combine: (element: AlchemyElementOnBoard) => void
 }
 
@@ -32,17 +41,52 @@ export function createBoard(
   catalog: CatalogApi,
 ): BoardApi {
   const boardRef = ref<HTMLDivElement>()
+  const dockRef = ref<HTMLElement>()
   const bounds = useElementBounding(boardRef)
+  const dockBounds = useElementBounding(dockRef)
   const items = useStorage<AlchemyElementOnBoard[]>('alchemy-board', [])
   const basics = ref<AlchemyElementOnBoard[]>([])
 
   const boardSize = computed<BoardBounds>(() => {
-    return {
-      bottom: bounds.bottom.value ?? 0,
-      left: bounds.left.value ?? 0,
-      right: bounds.right.value ?? 0,
-      top: bounds.top.value ?? 0,
+    const top = bounds.top.value ?? 0
+    const left = bounds.left.value ?? 0
+    const right = bounds.right.value ?? 0
+    const bottom = bounds.bottom.value ?? 0
+    const side = settings.values.value.dock || 'bottom'
+    const dockReady = dockBounds.width.value > 0 && dockBounds.height.value > 0
+
+    if (!dockReady) {
+      return { top, left, right, bottom }
     }
+
+    if (side === 'bottom') {
+      return {
+        top,
+        left,
+        right,
+        bottom: Math.min(bottom, dockBounds.top.value - DOCK_GAP),
+      }
+    }
+
+    if (side === 'left') {
+      return {
+        top,
+        left: Math.max(left, dockBounds.right.value + DOCK_GAP),
+        right,
+        bottom,
+      }
+    }
+
+    return {
+      top,
+      left,
+      right: Math.min(right, dockBounds.left.value - DOCK_GAP),
+      bottom,
+    }
+  })
+
+  watch(() => settings.values.value.dock, () => {
+    nextTick(() => dockBounds.update())
   })
 
   const elementSize = computed(() => {
@@ -114,17 +158,20 @@ export function createBoard(
     }))
   }
 
-  function spawnBasics() {
-    const next = basics.value.map(element => ({
+  function spawnBasics(origin: AlchemyElementOnBoard['position']) {
+    const cell = settings.values.value.elementSize * 2
+    const spots = clusterPositions(origin, cell, boardSize.value)
+    const next = basics.value.map((element, index) => ({
       ...element,
       uuid: crypto.randomUUID(),
-      position: randomPoint(),
+      position: spots[index] ?? origin,
     }))
     items.value.push(...next)
   }
 
   return {
     boardRef,
+    dockRef,
     items,
     boardSize,
     elementSize,

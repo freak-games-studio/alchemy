@@ -1,0 +1,57 @@
+.press {
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted-foreground);
+  font: inherit;
+
+  &:hover {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--foreground);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--primary) 22%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+
+  &.safe {
+    background: var(--success);
+    color: var(--success-foreground);
+
+    &:hover,
+    &:active {
+      color: var(--success-foreground);
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--success) 88%, white);
+    }
+
+    &:active {
+      background: color-mix(in srgb, var(--success) 82%, black);
+    }
+  }
+
+  &.danger {
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+
+    &:hover,
+    &:active {
+      color: var(--destructive-foreground);
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--destructive) 88%, white);
+    }
+
+    &:active {
+      background: color-mix(in srgb, var(--destructive) 82%, black);
+    }
+  }
+}

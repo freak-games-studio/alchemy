@@ -11,7 +11,7 @@ import type { BoardApi } from './board'
 import type { CatalogApi } from './catalog'
 import type { SessionApi } from './session'
 import type { SettingsApi } from './settings'
-import type { AlchemyElement, AlchemyElementOnBoard } from './element'
+import type { AlchemyElementOnBoard } from './element'
 
 export interface Game {
   settings: SettingsApi
@@ -20,7 +20,6 @@ export interface Game {
   catalog: CatalogApi
   session: SessionApi
   startNew: () => void
-  activateCheat: (event: DragEvent) => void
 }
 
 function copyElements(elements: AlchemyElementOnBoard[]): AlchemyElementOnBoard[] {
@@ -38,7 +37,7 @@ export function createGame(): Game {
   const session = createSession(catalog)
 
   watch(board.boardSize, (size) => {
-    if (size.bottom === 0) return
+    if (size.bottom === 0 || board.basics.value.length > 0) return
 
     board.basics.value = createStarters(size, settings.values.value.elementSize)
     if (board.items.value.length === 0) {
@@ -48,30 +47,9 @@ export function createGame(): Game {
   })
 
   function startNew() {
-    // eslint-disable-next-line no-alert
-    const isConfirm = confirm('Вы точно хотите начать новую игру?')
-    if (!isConfirm) return
-
     board.clear()
     catalog.reset()
     catalog.seed(board.basics.value)
-  }
-
-  function activateCheat(event: DragEvent) {
-    if (!event.dataTransfer) return
-    event.preventDefault()
-
-    const elementData = JSON.parse(event.dataTransfer.getData('text/plain')) as {
-      element: AlchemyElement
-    }
-    if (!elementData) return
-    if (elementData.element.id !== 'vodka') return
-
-    // eslint-disable-next-line no-alert
-    const isConfirm = confirm('ТЫ ЧЕ ПЬЯНЫЙ!?')
-    if (!isConfirm) return
-
-    catalog.unlockAll()
   }
 
   return {
@@ -81,6 +59,5 @@ export function createGame(): Game {
     catalog,
     session,
     startNew,
-    activateCheat,
   }
 }

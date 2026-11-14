@@ -3,6 +3,9 @@
     <img
       class="image"
       :src="spriteUrl(element.id)"
+      :loading="lazy ? 'lazy' : undefined"
+      :decoding="lazy ? 'async' : undefined"
+      alt=""
     >
     <p
       class="text"
@@ -22,6 +25,7 @@ import type { AlchemyElement } from '@/game/element'
 
 defineProps<{
   element: AlchemyElement
+  lazy?: boolean
 }>()
 
 const elementSize = useGame().board.elementSize
@@ -29,15 +33,18 @@ const width = computed(() => `${elementSize.value.width}px`)
 const height = computed(() => `${elementSize.value.height}px`)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .item {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 4px;
+  box-sizing: border-box;
+  padding: 0 4px;
   width: calc(v-bind(width) * 2);
-  height: calc(v-bind(height) * 2);
+  height: auto;
+  min-height: calc(v-bind(height) * 2);
   pointer-events: none;
 }
 
@@ -47,15 +54,20 @@ const height = computed(() => `${elementSize.value.height}px`)
 }
 
 .text {
-  display: flex;
-  gap: 6px;
-  margin: 0 4px;
+  display: block;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  color: var(--foreground);
   font-size: v-bind('elementSize.fontSize');
+  line-height: 1.15;
   text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .ended::after {
   content: '*';
-  color: tomato;
+  color: var(--primary);
 }
 </style>

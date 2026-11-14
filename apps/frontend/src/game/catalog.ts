@@ -18,7 +18,7 @@ export interface CatalogApi {
 
 export function createCatalog(audio: AudioApi): CatalogApi {
   const opened = useStorage<AlchemyElement[]>('alchemy-opened-elements', [])
-  const counter = computed(() => `${opened.value.length} / ${recipeCount()}`)
+  const counter = computed(() => `${opened.value.length}/${recipeCount()}`)
 
   function reset() {
     opened.value = []

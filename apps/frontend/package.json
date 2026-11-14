@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "pnpm type-check && vite build",
     "preview": "pnpm build && vite preview",
-    "type-check": "vue-tsc --noEmit",
+    "type-check": "vue-tsc --build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
