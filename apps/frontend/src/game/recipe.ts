@@ -36,6 +36,7 @@ const categoryOrder = [
   'being',
   'space',
   'buildings',
+  'easter',
 ]
 
 const categoryLabels: Record<string, string> = {
@@ -50,6 +51,7 @@ const categoryLabels: Record<string, string> = {
   being: 'Существа',
   space: 'Космос',
   buildings: 'Постройки',
+  easter: 'Пасхалки',
 }
 
 const recipes = recipesSource as RecipeDefinition[]

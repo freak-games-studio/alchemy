@@ -4194,7 +4194,7 @@
       ["worm", "grass"],
       ["worm", "leaf"]
     ],
-    "category": ["fauna"]
+    "category": ["fauna", "easter"]
   },
   {
     "id": "xray",
@@ -4993,18 +4993,21 @@
       ["hamster", "monkey"],
       ["vscode", "lexot"]
     ],
+    "category": ["easter"],
     "ended": true
   },
   {
     "id": "vscode",
     "name": "Всщоде",
     "description": "Какой-то фрик.",
-    "recipes": [["dolphin", "salt"]]
+    "recipes": [["dolphin", "salt"]],
+    "category": ["easter"]
   },
   {
     "id": "lexot",
     "name": "Лешот",
     "description": "Человек, обладающий сверхчеловеческими способностями.",
-    "recipes": [["computer", "beer"]]
+    "recipes": [["computer", "beer"]],
+    "category": ["easter"]
   }
 ]
