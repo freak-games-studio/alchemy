@@ -1,0 +1,30 @@
+label.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--foreground);
+
+  input {
+    flex: none;
+    appearance: none;
+    cursor: pointer;
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: transparent;
+    width: 18px;
+    height: 18px;
+
+    &:checked {
+      box-shadow: inset 0 0 0 3px var(--card);
+      border-color: var(--primary);
+      background: var(--primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  }
+}

@@ -20,7 +20,7 @@ export function createAudio(settings: SettingsApi): AudioApi {
     if (audio.volume === 0) return
 
     audio.currentTime = 0
-    void audio.play()
+    audio.play()
   }
 
   onMounted(() => {

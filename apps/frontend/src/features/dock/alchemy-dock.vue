@@ -84,6 +84,36 @@
       </svg>
       <span class="label">Настройки</span>
     </button>
+    <button
+      v-if="dev"
+      class="press dock-button"
+      type="button"
+      aria-label="Рецепты"
+      @click="recipeEditorOpen = true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle
+          cx="5.5"
+          cy="5.5"
+          r="2.5"
+        />
+        <circle
+          cx="18.5"
+          cy="5.5"
+          r="2.5"
+        />
+        <circle
+          cx="12"
+          cy="18.5"
+          r="2.5"
+        />
+        <path d="M6.62 7.74 10.88 16.26M17.38 7.74 13.12 16.26" />
+      </svg>
+      <span class="label">Рецепты</span>
+    </button>
     <span class="separator" />
     <button
       class="press dock-button"
@@ -128,7 +158,9 @@
 
 <script setup lang="ts">
 import { useGame } from '@/game/injection'
+import { recipeEditorOpen } from '@/features/recipe-editor/open'
 
+const dev = import.meta.env.DEV
 const game = useGame()
 const shell = game.session.shell
 const active = shell.active

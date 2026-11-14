@@ -22,7 +22,7 @@ export interface GameSettings {
 }
 
 const DEFAULT_SETTINGS: GameSettings = {
-  volume: 20,
+  volume: 10,
   elementSize: 38,
   hideEndedElements: false,
   dock: 'bottom',

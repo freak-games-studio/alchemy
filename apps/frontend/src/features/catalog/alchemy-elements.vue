@@ -52,31 +52,14 @@
             </svg>
           </button>
         </div>
-        <div class="category-field">
-          <select
-            v-model="category"
-            class="category"
-            aria-label="Тип элемента"
-          >
-            <option value="">
-              Все
-            </option>
-            <option
-              v-for="item in categories"
-              :key="item.id"
-              :value="item.id"
-            >
-              {{ item.label }}
-            </option>
-          </select>
-          <svg
-            class="category-chevron"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </div>
+        <alchemy-combobox
+          class="category-field"
+          :value="category"
+          :options="categoryOptions"
+          label="Тип элемента"
+          placeholder="Все"
+          @select="category = $event"
+        />
         <label class="check">
           <input
             v-model="settings.hideEndedElements"
@@ -127,6 +110,7 @@ import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import AlchemyItem from '@/shared/ui/alchemy-item.vue'
 import AlchemyPanel from '@/shared/ui/alchemy-panel.vue'
+import AlchemyCombobox from '@/shared/ui/alchemy-combobox.vue'
 import AlchemyElementAbout from '@/features/about/alchemy-element-about.vue'
 import { useGame } from '@/game/injection'
 import { recipeById, recipeCategories } from '@/game/recipe'
@@ -163,6 +147,16 @@ const categories = computed(() => {
     for (const name of groups) openedCategories.add(name)
   }
   return recipeCategories().filter(item => openedCategories.has(item.id))
+})
+
+const categoryOptions = computed(() => {
+  return [
+    { id: '', label: 'Все' },
+    ...categories.value.map(item => ({
+      id: item.id,
+      label: item.label,
+    })),
+  ]
 })
 
 watch(categories, (items) => {
@@ -339,7 +333,7 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
     }
 
     if (hit?.closest('.dock')) {
-      if (element.id === 'vodka' && hit.closest('#toggle-guide')) void unlockWithVodka()
+      if (element.id === 'vodka' && hit.closest('#toggle-guide')) unlockWithVodka()
       return
     }
 
@@ -447,80 +441,21 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
 }
 
 .search-input {
-  outline: none;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: transparent;
+  background: var(--background);
   padding: 0 40px 0 12px;
   width: 100%;
   height: 40px;
   color: var(--foreground);
-  font-size: 16px;
-  font-family: inherit;
+  font: inherit;
+  user-select: text;
 }
 
 .category-field {
-  position: relative;
   flex: none;
+  width: 180px;
   color: var(--foreground);
-}
-
-.category {
-  appearance: none;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: transparent;
-  padding: 0 36px 0 12px;
-  height: 40px;
-  color: inherit;
-  font: inherit;
-}
-
-.category-chevron {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.6;
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-}
-
-.check {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  color: var(--foreground);
-
-  input {
-    flex: none;
-    appearance: none;
-    cursor: pointer;
-    margin: 0;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: transparent;
-    width: 18px;
-    height: 18px;
-
-    &:checked {
-      box-shadow: inset 0 0 0 3px var(--card);
-      border-color: var(--primary);
-      background: var(--primary);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-  }
 }
 
 @media screen and (max-width: 640px) {
