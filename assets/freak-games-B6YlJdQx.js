@@ -1,0 +1,1 @@
+var e=new URL(`freak-games-B56rFrTi.mp3`,import.meta.url).href;export{e as t};
