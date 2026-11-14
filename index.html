@@ -1,13 +1,37 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+      try {
+        const saved = JSON.parse(localStorage.getItem('alchemy-settings') || 'null')
+        document.documentElement.dataset.theme = saved?.theme === 'light' ? 'light' : 'dark'
+      } catch {
+        /* ignore broken settings */
+      }
+    </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Alchemy</title>
-    <script type="module" crossorigin src="/assets/index-BTY_1ETP.js"></script>
+    <script type="module" crossorigin src="/assets/index-BJ1xZ-Ee.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DDUDEOvH.css">
   </head>
   <body>
     <div id="app" class="hidden"></div>
+    <script>
+      function preventZoom(event) {
+        event.preventDefault()
+      }
+
+      document.addEventListener('gesturestart', preventZoom)
+      document.addEventListener('gesturechange', preventZoom)
+      document.addEventListener('gestureend', preventZoom)
+      document.addEventListener('wheel', (event) => {
+        if (event.ctrlKey) event.preventDefault()
+      }, { passive: false })
+      document.addEventListener('keydown', (event) => {
+        if (!(event.ctrlKey || event.metaKey)) return
+        if (['+', '-', '=', '_', '0'].includes(event.key)) event.preventDefault()
+      })
+    </script>
   </body>
 </html>
