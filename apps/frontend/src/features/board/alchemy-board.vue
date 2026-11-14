@@ -28,10 +28,7 @@ const items = game.board.items
 
 useEventListener(boardRef, 'dblclick', (event) => {
   if ((event.target as HTMLElement).closest('.alchemy-item')) return
-  game.board.spawnBasics({
-    x: event.clientX,
-    y: event.clientY,
-  })
+  game.board.spawnBasics()
 })
 </script>
 

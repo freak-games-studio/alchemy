@@ -4,7 +4,7 @@ import type { ComputedRef, Ref } from 'vue'
 
 import { matchRecipes } from './recipe'
 import { boxesOverlap } from './collision'
-import { clusterPositions, gridPositions, offsetPosition, randomPosition } from './position'
+import { gridPositions, offsetPosition, randomPosition } from './position'
 import type { AudioApi } from './audio'
 import type { CatalogApi } from './catalog'
 import type { SettingsApi } from './settings'
@@ -35,7 +35,7 @@ export interface BoardApi {
   clear: () => void
   arrange: () => void
   settling: Ref<boolean>
-  spawnBasics: (origin: AlchemyElementOnBoard['position']) => void
+  spawnBasics: () => void
   combine: (element: AlchemyElementOnBoard) => void
 }
 
@@ -216,13 +216,11 @@ export function createBoard(
     })
   }
 
-  function spawnBasics(origin: AlchemyElementOnBoard['position']) {
-    const cell = settings.values.value.elementSize * 2
-    const spots = clusterPositions(origin, cell, boardSize.value)
-    const next = basics.value.map((element, index) => ({
+  function spawnBasics() {
+    const next = basics.value.map(element => ({
       ...element,
       uuid: crypto.randomUUID(),
-      position: spots[index] ?? origin,
+      position: randomPoint(),
     }))
     items.value.push(...next)
   }
