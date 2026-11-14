@@ -1,7 +1,8 @@
-import type { BoardBounds, Position } from './element'
+import type { BoardBounds, ElementBox, Position } from './element'
 
 const CLUSTER_GAP = 12
 const CLUSTER_COLS = 2
+const GRID_GAP = 16
 
 function clamp(min: number, value: number, max: number) {
   return Math.min(Math.max(value, min), Math.max(min, max))
@@ -27,6 +28,45 @@ export function clusterPositions(center: Position, cell: number, bounds: BoardBo
     return {
       x: originX + col * (cell + CLUSTER_GAP),
       y: originY + row * (cell + CLUSTER_GAP),
+    }
+  })
+}
+
+export function gridPositions(
+  count: number,
+  bounds: BoardBounds,
+  cell: ElementBox,
+): Position[] {
+  const gap = GRID_GAP
+  if (count <= 0) return []
+
+  const width = Math.max(1, cell.width)
+  const height = Math.max(1, cell.height)
+  const innerW = Math.max(0, bounds.right - bounds.left)
+  const innerH = Math.max(0, bounds.bottom - bounds.top)
+  const maxCols = Math.max(1, Math.floor((innerW + gap) / (width + gap)))
+  const maxRows = Math.max(1, Math.floor((innerH + gap) / (height + gap)))
+
+  let cols = Math.min(count, maxCols)
+  let rows = Math.ceil(count / cols)
+  if (rows > maxRows) {
+    cols = Math.min(count, Math.ceil(count / maxRows))
+    rows = Math.ceil(count / cols)
+  }
+
+  const stepX = cols <= 1
+    ? 0
+    : Math.min(width + gap, Math.max(0, (innerW - width) / (cols - 1)))
+  const stepY = rows <= 1
+    ? 0
+    : Math.min(height + gap, Math.max(0, (innerH - height) / (rows - 1)))
+
+  return Array.from({ length: count }, (_, index) => {
+    const col = index % cols
+    const row = Math.floor(index / cols)
+    return {
+      x: bounds.left + col * stepX,
+      y: bounds.top + row * stepY,
     }
   })
 }

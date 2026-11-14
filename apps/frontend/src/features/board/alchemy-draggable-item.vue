@@ -2,6 +2,7 @@
   <div
     ref="element"
     class="alchemy-item"
+    :class="{ settling }"
     :style="{ left: `${xPosition}px`, top: `${yPosition}px` }"
     @dblclick="$emit('clone-element', alchemyElement)"
     @contextmenu.prevent="$emit('remove-element', alchemyElement)"
@@ -37,6 +38,7 @@ const HOLD_CANCEL_PX = 8
 
 const game = useGame()
 const boardSize = game.board.boardSize
+const settling = game.board.settling
 const element = ref<HTMLElement | null>(null)
 const box = ref({ width: 0, height: 0 })
 let holdTimer = 0
@@ -130,6 +132,17 @@ watch(() => props.alchemyElement.position, () => {
 .alchemy-item:active,
 .alchemy-item:hover {
   z-index: 2;
+  transition: none;
+}
+
+.alchemy-item.settling,
+.alchemy-item.settling:hover {
+  transition:
+    left 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    top 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.alchemy-item.settling:active {
   transition: none;
 }
 </style>

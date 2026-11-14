@@ -269,7 +269,10 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
     const hit = document.elementFromPoint(upEvent.clientX, upEvent.clientY)
     finishDrag()
     if (held || !moved || !snapshot) {
-      if (!held && pointerDistance < DRAG_PX) game.board.place(element)
+      if (!held && pointerDistance < DRAG_PX) {
+        game.board.place(element)
+        game.audio.play('create')
+      }
       return
     }
 

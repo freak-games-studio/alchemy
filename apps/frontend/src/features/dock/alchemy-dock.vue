@@ -88,6 +88,27 @@
     <button
       class="press dock-button"
       type="button"
+      aria-label="Упорядочить"
+      @click="game.board.arrange()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <rect
+          x="3"
+          y="3"
+          width="18"
+          height="18"
+          rx="2"
+        />
+        <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+      </svg>
+      <span class="label">Упорядочить</span>
+    </button>
+    <button
+      class="press dock-button"
+      type="button"
       aria-label="Очистить поле"
       @click="game.board.clear()"
     >
