@@ -2,6 +2,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useElementBounding, useStorage } from '@vueuse/core'
 import type { ComputedRef, Ref } from 'vue'
 
+import { uniqueId } from './id'
 import { matchRecipes } from './recipe'
 import { boxesOverlap } from './collision'
 import { gridPositions, offsetPosition, randomPosition } from './position'
@@ -117,7 +118,7 @@ export function createBoard(
   function place(element: AlchemyElement, position = randomPoint()) {
     const next: AlchemyElementOnBoard = {
       ...element,
-      uuid: crypto.randomUUID(),
+      uuid: uniqueId(),
       position,
     }
     items.value.push(next)
@@ -219,7 +220,7 @@ export function createBoard(
   function spawnBasics() {
     const next = basics.value.map(element => ({
       ...element,
-      uuid: crypto.randomUUID(),
+      uuid: uniqueId(),
       position: randomPoint(),
     }))
     items.value.push(...next)

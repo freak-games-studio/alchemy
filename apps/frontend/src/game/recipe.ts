@@ -1,4 +1,5 @@
 import recipesSource from '@/assets/recipes.json'
+import { uniqueId } from './id'
 import { randomPosition } from './position'
 import type { AlchemyElement, AlchemyElementOnBoard, BoardBounds } from './element'
 
@@ -54,7 +55,7 @@ export function matchRecipes(leftId: string, rightId: string): AlchemyElement[] 
 export function createStarters(bounds: BoardBounds, elementSize: number): AlchemyElementOnBoard[] {
   return recipes.slice(0, 4).map((element) => {
     return {
-      uuid: crypto.randomUUID(),
+      uuid: uniqueId(),
       id: element.id,
       name: element.name,
       ended: element.ended ?? false,
