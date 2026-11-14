@@ -1,10 +1,11 @@
 <template>
-  <alchemy-modal
+  <alchemy-panel
     :open="active === 'settings'"
+    scroll
     @close="shell.close()"
   >
-    <template #title>
-      Настройки
+    <template #heading>
+      <span class="h6 title">Настройки</span>
     </template>
     <div class="settings">
       <h3 class="title heading">
@@ -115,11 +116,11 @@
         </button>
       </div>
     </div>
-  </alchemy-modal>
+  </alchemy-panel>
 </template>
 
 <script setup lang="ts">
-import AlchemyModal from '@/shared/ui/alchemy-modal.vue'
+import AlchemyPanel from '@/shared/ui/alchemy-panel.vue'
 import { useGame } from '@/game/injection'
 import { ELEMENT_SIZE_OPTIONS } from '@/game/settings'
 import type { DockSide, ThemeName } from '@/game/settings'

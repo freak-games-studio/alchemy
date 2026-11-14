@@ -1,10 +1,11 @@
 <template>
-  <alchemy-modal
+  <alchemy-panel
     :open="active === 'guide'"
+    scroll
     @close="shell.close()"
   >
-    <template #title>
-      Справочник
+    <template #heading>
+      <span class="h6 title">Справочник</span>
     </template>
     <div class="guide">
       <div>
@@ -52,11 +53,11 @@
         </p>
       </div>
     </div>
-  </alchemy-modal>
+  </alchemy-panel>
 </template>
 
 <script setup lang="ts">
-import AlchemyModal from '@/shared/ui/alchemy-modal.vue'
+import AlchemyPanel from '@/shared/ui/alchemy-panel.vue'
 import { useGame } from '@/game/injection'
 
 const shell = useGame().session.shell
