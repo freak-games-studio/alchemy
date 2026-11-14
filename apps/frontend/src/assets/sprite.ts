@@ -1,3 +1,3 @@
 export function spriteUrl(id: string): string {
-  return `/sprites/${id}.webp`
+  return `${import.meta.env.BASE_URL}sprites/${id}.webp`
 }
