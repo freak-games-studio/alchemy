@@ -22,6 +22,8 @@ const DOCK_GAP = 8
 // .alchemy-item.settling transition is 450ms
 const SETTLE_MS = 480
 
+export type ElementBirth = 'create' | 'discover'
+
 export interface BoardApi {
   boardRef: Ref<HTMLDivElement | undefined>
   dockRef: Ref<HTMLElement | undefined>
@@ -29,7 +31,12 @@ export interface BoardApi {
   boardSize: ComputedRef<BoardBounds>
   elementSize: ComputedRef<ElementBox & { fontSize: string }>
   basics: Ref<AlchemyElementOnBoard[]>
-  place: (element: AlchemyElement, position?: AlchemyElementOnBoard['position']) => AlchemyElementOnBoard
+  births: Ref<Record<string, ElementBirth>>
+  place: (
+    element: AlchemyElement,
+    position?: AlchemyElementOnBoard['position'],
+    birth?: ElementBirth,
+  ) => AlchemyElementOnBoard
   move: (element: AlchemyElementOnBoard, position: AlchemyElementOnBoard['position']) => void
   remove: (element: AlchemyElementOnBoard) => void
   drop: (element: AlchemyElement, position: AlchemyElementOnBoard['position']) => void
@@ -56,6 +63,7 @@ export function createBoard(
   const dockBounds = useElementBounding(dockRef)
   const items = useStorage<AlchemyElementOnBoard[]>('alchemy-board', [])
   const basics = ref<AlchemyElementOnBoard[]>([])
+  const births = ref<Record<string, ElementBirth>>({})
   const settling = ref(false)
   let settleTimer = 0
   let settleToken = 0
@@ -114,19 +122,37 @@ export function createBoard(
     return randomPosition(boardSize.value, settings.values.value.elementSize)
   }
 
+  function markBirth(uuid: string | undefined, birth: ElementBirth) {
+    if (!uuid) return
+    births.value = { ...births.value, [uuid]: birth }
+  }
+
+  function forgetBirth(uuid: string | undefined) {
+    if (!uuid || !(uuid in births.value)) return
+    const next = { ...births.value }
+    delete next[uuid]
+    births.value = next
+  }
+
   function remove(element: AlchemyElementOnBoard) {
     const index = items.value.findIndex(item => item.uuid === element.uuid)
     if (index === -1) return
     items.value.splice(index, 1)
+    forgetBirth(element.uuid)
   }
 
-  function place(element: AlchemyElement, position = randomPoint()) {
+  function place(
+    element: AlchemyElement,
+    position = randomPoint(),
+    birth?: ElementBirth,
+  ) {
     const next: AlchemyElementOnBoard = {
       ...element,
       uuid: uniqueId(),
       position,
     }
     items.value.push(next)
+    if (birth) markBirth(next.uuid, birth)
     return next
   }
 
@@ -144,13 +170,18 @@ export function createBoard(
         if (match.element.id === 'freak_games') audio.play('freakGames')
         remove(other)
         remove(element)
-        place(match.element, offsetPosition(other.position, slot))
+        const spawned = [
+          place(match.element, offsetPosition(other.position, slot)),
+        ]
         slot += 1
         if (match.propagate) {
-          place(match.element, offsetPosition(other.position, slot))
+          spawned.push(place(match.element, offsetPosition(other.position, slot)))
           slot += 1
         }
-        if (catalog.add(match.element)) {
+        const discovered = catalog.add(match.element)
+        const birth: ElementBirth = discovered ? 'discover' : 'create'
+        for (const item of spawned) markBirth(item.uuid, birth)
+        if (discovered) {
           toast.show(`Новый элемент: ${element.name} + ${other.name} = ${match.element.name}`)
         }
       }
@@ -167,14 +198,18 @@ export function createBoard(
   }
 
   function drop(element: AlchemyElement, position: AlchemyElementOnBoard['position']) {
-    if (!combine(place(element, position))) audio.play('create')
+    const placed = place(element, position)
+    if (combine(placed)) return
+    audio.play('create')
+    markBirth(placed.uuid, 'create')
   }
 
   function clone(element: AlchemyElementOnBoard) {
-    place(element, offsetPosition(element.position, 1))
+    place(element, offsetPosition(element.position, 1), 'create')
   }
 
   function clear() {
+    births.value = {}
     items.value = basics.value.map(element => ({
       ...element,
       position: randomPoint(),
@@ -238,6 +273,7 @@ export function createBoard(
     }))
     if (!next.length) return
     items.value.push(...next)
+    for (const element of next) markBirth(element.uuid, 'create')
     audio.play('create')
   }
 
@@ -248,6 +284,7 @@ export function createBoard(
     boardSize,
     elementSize,
     basics,
+    births,
     place,
     move,
     remove,
