@@ -806,12 +806,12 @@ function pushEdge(list: Edge[], input: {
   if (!input.known.has(input.source) || !input.known.has(input.target)) return
   if (!input.draft && input.center !== input.source && input.center !== input.target) return
   const classes = ['recipe-edge']
-  if (input.draft) classes.push('is-draft')
-  if (input.propagate) classes.push('is-propagate')
+  if (input.draft) classes.push('recipe-edge--draft')
+  if (input.propagate) classes.push('recipe-edge--propagate')
   const linked = input.active === input.source || input.active === input.target || input.active === input.center
-  if (input.active && linked) classes.push('is-active')
-  if (input.active && !linked) classes.push('is-dim')
-  if (input.id === input.pickedEdge) classes.push('is-picked')
+  if (input.active && linked) classes.push('recipe-edge--active')
+  if (input.active && !linked) classes.push('recipe-edge--dim')
+  if (input.id === input.pickedEdge) classes.push('recipe-edge--picked')
   list.push({
     id: input.id,
     source: input.source,

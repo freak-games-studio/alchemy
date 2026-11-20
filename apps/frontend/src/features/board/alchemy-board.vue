@@ -28,7 +28,7 @@ const items = game.board.items
 
 useEventListener(boardRef, 'click', (event) => {
   if (event.detail < 2 || event.detail % 2 !== 0) return
-  if ((event.target as HTMLElement).closest('.alchemy-item')) return
+  if ((event.target as HTMLElement).closest('.draggable')) return
   game.board.spawnBasics()
 })
 </script>

@@ -1,11 +1,11 @@
-label.check {
+.check {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
   color: var(--foreground);
 
-  input {
+  &__input {
     flex: none;
     appearance: none;
     cursor: pointer;

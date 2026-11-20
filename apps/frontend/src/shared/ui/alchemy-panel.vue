@@ -2,22 +2,22 @@
   <Transition name="menu">
     <div
       v-if="open"
-      class="anchor"
-      :class="[side, { minimized }]"
+      class="panel"
+      :class="[`panel--${side}`, { 'panel--minimized': minimized }]"
     >
       <div
-        class="panel"
-        :class="{ wide }"
+        class="panel__card"
+        :class="{ 'panel__card--wide': wide }"
       >
         <header
-          class="panel-header"
-          :class="{ nested }"
+          class="panel__header"
+          :class="{ 'panel__header--nested': nested }"
         >
-          <div class="heading">
+          <div class="panel__heading">
             <slot name="heading" />
           </div>
           <button
-            class="press icon"
+            class="press panel__close"
             type="button"
             aria-label="Закрыть"
             @click="emit('close')"
@@ -31,8 +31,8 @@
           </button>
         </header>
         <div
-          class="body"
-          :class="{ scroll }"
+          class="panel__body"
+          :class="{ 'panel__body--scroll': scroll }"
         >
           <slot />
         </div>
@@ -66,189 +66,174 @@ const side = game.settings.dock
 </script>
 
 <style scoped lang="scss">
-.anchor {
-  display: flex;
-  position: fixed;
-  z-index: 20;
-}
-
-.anchor.bottom {
-  bottom: calc(90px + env(safe-area-inset-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.anchor.left {
-  top: 50%;
-  left: calc(120px + env(safe-area-inset-left));
-  transform: translateY(-50%);
-}
-
-.anchor.right {
-  top: 50%;
-  right: calc(120px + env(safe-area-inset-right));
-  transform: translateY(-50%);
-}
-
-.anchor.minimized {
-  pointer-events: none;
-}
+@use '@/styles/mixins' as *;
 
 .panel {
   display: flex;
-  flex-direction: column;
-  transform-origin: center bottom;
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--card);
-  width: min(720px, calc(100vw - 108px));
-  max-height: min(70dvh, 680px);
-  overflow: hidden;
-}
+  position: fixed;
+  z-index: 20;
 
-.anchor.left .panel {
-  transform-origin: left center;
-}
-
-.anchor.right .panel {
-  transform-origin: right center;
-}
-
-.anchor.minimized .panel {
-  transform: scale(0.96);
-  opacity: 0;
-}
-
-.menu-enter-active,
-.menu-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.menu-enter-active .panel,
-.menu-leave-active .panel {
-  transition: transform 0.2s ease;
-}
-
-.menu-enter-from,
-.menu-leave-to {
-  opacity: 0;
-}
-
-.menu-enter-from.bottom .panel,
-.menu-leave-to.bottom .panel {
-  transform: translateY(8px) scale(0.96);
-}
-
-.menu-enter-from.left .panel,
-.menu-leave-to.left .panel {
-  transform: translateX(-8px) scale(0.96);
-}
-
-.menu-enter-from.right .panel,
-.menu-leave-to.right .panel {
-  transform: translateX(8px) scale(0.96);
-}
-
-.heading {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-}
-
-.heading :deep(.title) {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.panel-header {
-  display: flex;
-  flex-shrink: 0;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--border);
-  padding: 0 12px 0 16px;
-  height: 48px;
-}
-
-.panel-header.nested {
-  padding-left: 8px;
-}
-
-.icon {
-  display: flex;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  width: 36px;
-  height: 36px;
-}
-
-.icon svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.6;
-  width: 18px;
-  height: 18px;
-}
-
-.body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.body.scroll {
-  padding: 16px 20px 20px;
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
-@media screen and (max-width: 640px) {
-  .anchor.bottom {
-    right: 8px;
-    left: 8px;
-    transform: none;
+  &--bottom {
+    bottom: calc(90px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  .anchor.bottom .panel,
-  .panel {
-    width: min(380px, calc(100vw - 100px));
-    max-height: min(58dvh, 560px);
+  &--left {
+    top: 50%;
+    left: calc(120px + env(safe-area-inset-left));
+    transform: translateY(-50%);
   }
 
-  .anchor.bottom .panel {
-    width: 100%;
+  &--right {
+    top: 50%;
+    right: calc(120px + env(safe-area-inset-right));
+    transform: translateY(-50%);
   }
-}
 
-@media screen and (min-width: 641px) {
-  .panel.wide {
-    width: min(960px, calc(100vw - 48px));
+  &--minimized {
+    pointer-events: none;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .panel,
-  .menu-enter-active,
-  .menu-leave-active,
-  .menu-enter-active .panel,
-  .menu-leave-active .panel,
-  .anchor.minimized .panel {
-    transition: none;
+  &__card {
+    display: flex;
+    flex-direction: column;
+    transform-origin: center bottom;
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--card);
+    width: min(720px, calc(100vw - 108px));
+    max-height: min(70dvh, 680px);
+    overflow: hidden;
+
+    .panel--left & {
+      transform-origin: left center;
+    }
+
+    .panel--right & {
+      transform-origin: right center;
+    }
+
+    .panel--minimized & {
+      transform: scale(0.96);
+      opacity: 0;
+    }
+  }
+
+  &.menu-enter-active,
+  &.menu-leave-active {
+    transition: opacity 0.2s ease;
+  }
+
+  &.menu-enter-active &__card,
+  &.menu-leave-active &__card {
+    transition: transform 0.2s ease;
+  }
+
+  &.menu-enter-from,
+  &.menu-leave-to {
+    opacity: 0;
+  }
+
+  &.menu-enter-from#{&}--bottom &__card,
+  &.menu-leave-to#{&}--bottom &__card {
+    transform: translateY(8px) scale(0.96);
+  }
+
+  &.menu-enter-from#{&}--left &__card,
+  &.menu-leave-to#{&}--left &__card {
+    transform: translateX(-8px) scale(0.96);
+  }
+
+  &.menu-enter-from#{&}--right &__card,
+  &.menu-leave-to#{&}--right &__card {
+    transform: translateX(8px) scale(0.96);
+  }
+
+  &__heading {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+
+    :deep(.h6) {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__header {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding: 0 12px 0 16px;
+    height: 48px;
+
+    &--nested {
+      padding-left: 8px;
+    }
+  }
+
+  &__close {
+    @include icon-button;
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+
+    &--scroll {
+      padding: 16px 20px 20px;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    &--bottom {
+      right: 8px;
+      left: 8px;
+      transform: none;
+    }
+
+    &__card {
+      width: min(380px, calc(100vw - 100px));
+      max-height: min(58dvh, 560px);
+
+      .panel--bottom & {
+        width: 100%;
+      }
+    }
+  }
+
+  @media screen and (min-width: 641px) {
+    &__card--wide {
+      width: min(960px, calc(100vw - 48px));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__card,
+    &.menu-enter-active,
+    &.menu-leave-active,
+    &.menu-enter-active &__card,
+    &.menu-leave-active &__card,
+    &--minimized &__card {
+      transition: none;
+    }
   }
 }
 </style>

@@ -19,7 +19,7 @@ import type {
 
 // var(--dock-padding)
 const DOCK_GAP = 8
-// .alchemy-item.settling transition is 450ms
+// .draggable--settling transition is 450ms
 const SETTLE_MS = 480
 
 export type ElementBirth = 'create' | 'discover'
@@ -218,7 +218,7 @@ export function createBoard(
 
   function cellSize() {
     const fallback = settings.values.value.elementSize * 2
-    const nodes = boardRef.value?.querySelectorAll<HTMLElement>('.alchemy-item')
+    const nodes = boardRef.value?.querySelectorAll<HTMLElement>('.draggable')
     let width = fallback
     let height = fallback
     nodes?.forEach((node) => {

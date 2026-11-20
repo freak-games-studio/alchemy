@@ -1,7 +1,7 @@
 <template>
   <div
     class="node"
-    :class="{ selected: props.data.current, ended: props.data.ended }"
+    :class="{ 'node--selected': props.data.current, 'node--ended': props.data.ended }"
   >
     <handle
       type="target"
@@ -9,7 +9,7 @@
     />
     <img
       v-show="!failed"
-      class="sprite"
+      class="node__sprite"
       :src="spriteUrl(props.data.elementId)"
       alt=""
       draggable="false"
@@ -17,12 +17,12 @@
     >
     <span
       v-if="failed"
-      class="fallback"
+      class="node__fallback"
     >{{ props.data.name.slice(0, 1) }}</span>
-    <span class="name">{{ props.data.name }}</span>
+    <span class="node__name">{{ props.data.name }}</span>
     <span
       v-if="props.data.badges.length"
-      class="badges"
+      class="node__badges"
     >{{ props.data.badges.join(' · ') }}</span>
     <handle
       type="source"
@@ -60,56 +60,57 @@ const failed = ref(false)
   width: 100%;
   height: 100%;
   color: var(--foreground);
-}
 
-.node.selected {
-  box-shadow: 0 0 0 1px var(--primary);
-  border-color: var(--primary);
-}
+  &--selected {
+    box-shadow: 0 0 0 1px var(--primary);
+    border-color: var(--primary);
+  }
 
-.sprite,
-.fallback {
-  width: 36px;
-  height: 36px;
-  pointer-events: none;
-}
+  &--ended &__name::after {
+    content: '*';
+    color: var(--primary);
+  }
 
-.fallback {
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  background: var(--muted);
-  color: var(--foreground);
-  font-size: 16px;
-}
+  &__sprite,
+  &__fallback {
+    width: 36px;
+    height: 36px;
+    pointer-events: none;
+  }
 
-.name,
-.badges {
-  width: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  text-align: center;
-}
+  &__fallback {
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: 16px;
+  }
 
-.name {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  color: var(--foreground);
-  font-size: 13px;
-  line-height: 1.15;
-}
+  &__name,
+  &__badges {
+    width: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    text-align: center;
+  }
 
-.ended .name::after {
-  content: '*';
-  color: var(--primary);
-}
+  &__name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    color: var(--foreground);
+    font-size: 13px;
+    line-height: 1.15;
+  }
 
-.badges {
-  color: var(--muted-foreground);
-  font-size: 10px;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  &__badges {
+    color: var(--muted-foreground);
+    font-size: 10px;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 </style>

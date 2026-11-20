@@ -62,7 +62,7 @@ class SplashScreen {
               }
             },
           },
-          el('div', { className: 'logo' }),
+          el('div', { className: 'splash-screen__logo' }),
         )
         document.body.prepend(this.#el)
       })
@@ -85,7 +85,7 @@ class SplashScreen {
 
   destroy() {
     if (!this.#el) return
-    this.#el.classList.add('destroy-animation')
+    this.#el.classList.add('splash-screen--destroy')
   }
 
   #playAudio() {

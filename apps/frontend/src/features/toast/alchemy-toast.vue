@@ -31,24 +31,24 @@ const message = useGame().toast.message
   max-width: min(560px, calc(100vw - 32px));
   color: var(--foreground);
   text-align: center;
-}
 
-.toast-enter-active,
-.toast-leave-active {
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
+  &.toast-enter-active,
+  &.toast-leave-active {
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
 
-.toast-enter-from,
-.toast-leave-to {
-  transform: translateX(-50%) translateY(-8px);
-  opacity: 0;
+  &.toast-enter-from,
+  &.toast-leave-to {
+    transform: translateX(-50%) translateY(-8px);
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toast-enter-active,
-  .toast-leave-active {
+  .toast.toast-enter-active,
+  .toast.toast-leave-active {
     transition: none;
   }
 }

@@ -1,10 +1,10 @@
 <template>
   <div class="editor">
-    <header class="toolbar">
-      <div class="search">
+    <header class="editor__toolbar">
+      <div class="editor__search">
         <input
           v-model="query"
-          class="search-input"
+          class="editor__input"
           type="text"
           placeholder="Найти элемент"
           @keydown.enter.prevent="focusFirst"
@@ -12,26 +12,26 @@
         >
         <ul
           v-if="matches.length"
-          class="matches"
+          class="editor__matches"
         >
           <li
             v-for="match in matches"
             :key="match.id"
           >
             <button
-              class="press match"
+              class="press editor__match"
               type="button"
               @click="focusMatch(match.id)"
             >
               <span>{{ match.name }}</span>
-              <span class="match-id">{{ match.id }}</span>
+              <span class="editor__match-id">{{ match.id }}</span>
             </button>
           </li>
         </ul>
       </div>
-      <div class="controls">
+      <div class="editor__controls">
         <button
-          class="press"
+          class="press editor__control"
           type="button"
           aria-label="К началу"
           title="К началу"
@@ -47,7 +47,7 @@
           </svg>
         </button>
         <button
-          class="press"
+          class="press editor__control"
           type="button"
           aria-label="Назад"
           title="Назад"
@@ -63,7 +63,7 @@
           </svg>
         </button>
         <button
-          class="press"
+          class="press editor__control"
           type="button"
           aria-label="Вперёд"
           title="Вперёд"
@@ -78,9 +78,9 @@
             <path d="m12 5 7 7-7 7" />
           </svg>
         </button>
-        <span class="split" />
+        <span class="editor__split" />
         <button
-          class="press"
+          class="press editor__control"
           type="button"
           aria-label="Создать элемент"
           title="Создать элемент"
@@ -95,7 +95,7 @@
           </svg>
         </button>
         <button
-          class="press"
+          class="press editor__control"
           type="button"
           aria-label="Выход"
           title="Выход"
@@ -111,7 +111,7 @@
           </svg>
         </button>
         <button
-          class="press safe"
+          class="press press--safe editor__control"
           type="button"
           :aria-label="editor.saving ? 'Сохранение' : 'Сохранить'"
           :title="editor.saving ? 'Сохранение' : 'Сохранить'"
@@ -130,14 +130,14 @@
       </div>
       <p
         v-if="editor.error"
-        class="error"
+        class="editor__error"
         :title="editor.error"
       >
         {{ editor.error }}
       </p>
     </header>
-    <div class="workspace">
-      <div class="canvas">
+    <div class="editor__workspace">
+      <div class="editor__canvas">
         <vue-flow
           v-model:nodes="editor.nodes"
           v-model:edges="editor.edges"
@@ -158,7 +158,7 @@
             <recipe-element-node v-bind="nodeProps" />
           </template>
           <template #node-plus>
-            <div class="join">
+            <div class="editor__join">
               +
             </div>
           </template>
@@ -315,6 +315,8 @@ async function closeEditor() {
 </script>
 
 <style scoped lang="scss">
+@use '@/styles/mixins' as *;
+
 .editor {
   display: flex;
   position: fixed;
@@ -323,133 +325,121 @@ async function closeEditor() {
   inset: 0;
   background: var(--background);
   color: var(--foreground);
-}
 
-.toolbar {
-  display: flex;
-  position: relative;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  z-index: 2;
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--card) 92%, transparent);
-  padding: 10px 12px;
-}
+  &__toolbar {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+    padding: 10px 12px;
+  }
 
-.match {
-  border-radius: 12px;
-  padding: 8px 12px;
-}
+  &__search {
+    position: relative;
+    flex: 1 1 220px;
+    min-width: 160px;
+  }
 
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--background) 55%, transparent);
-  padding: 3px;
-}
+  &__input {
+    @include text-field;
+    padding: 0 12px;
+    width: 100%;
+    height: 40px;
+  }
 
-.controls button {
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  width: 36px;
-  height: 36px;
-}
+  &__matches {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    left: 0;
+    z-index: 3;
+    margin: 0;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    padding: 4px;
+    list-style: none;
+  }
 
-.controls button:disabled {
-  opacity: 0.45;
-  cursor: default;
-  pointer-events: none;
-}
+  &__match {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 12px;
+    padding: 8px 12px;
+    width: 100%;
+    text-align: left;
+  }
 
-.controls svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.6;
-  width: 18px;
-  height: 18px;
-}
+  &__match-id {
+    color: var(--muted-foreground);
+    font-size: 12px;
+  }
 
-.split {
-  margin: 0 2px;
-  background: var(--border);
-  width: 1px;
-  height: 20px;
-}
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--background) 55%, transparent);
+    padding: 3px;
+  }
 
-.search {
-  position: relative;
-  flex: 1 1 220px;
-  min-width: 160px;
-}
+  &__control {
+    @include icon-button;
 
-.search-input {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--background);
-  padding: 0 12px;
-  width: 100%;
-  height: 40px;
-  color: var(--foreground);
-  font: inherit;
-  user-select: text;
-}
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
 
-.matches {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  left: 0;
-  z-index: 3;
-  margin: 0;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--card);
-  padding: 4px;
-  list-style: none;
-}
+  &__split {
+    margin: 0 2px;
+    background: var(--border);
+    width: 1px;
+    height: 20px;
+  }
 
-.match {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  text-align: left;
-}
+  &__error {
+    flex: 1 1 100%;
+    margin: 0;
+    overflow: hidden;
+    color: var(--destructive);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.match-id,
-.error {
-  color: var(--muted-foreground);
-  font-size: 12px;
-}
+  &__workspace {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
 
-.error {
-  flex: 1 1 100%;
-  margin: 0;
-  overflow: hidden;
-  color: var(--destructive);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  &__canvas {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
 
-.workspace {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-}
-
-.canvas {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
+  &__join {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    color: var(--muted-foreground);
+    font-size: 22px;
+    line-height: 1;
+  }
 }
 
 :deep(.vue-flow) {
@@ -473,18 +463,8 @@ async function closeEditor() {
 }
 
 :deep(.vue-flow__connection-path),
-:deep(.vue-flow__edge.recipe-edge.is-draft .vue-flow__edge-path) {
+:deep(.vue-flow__edge.recipe-edge.recipe-edge--draft .vue-flow__edge-path) {
   stroke: var(--primary);
-}
-
-.join {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  color: var(--muted-foreground);
-  font-size: 22px;
-  line-height: 1;
 }
 
 :deep(.vue-flow__edge.recipe-edge .vue-flow__edge-path) {
@@ -492,16 +472,16 @@ async function closeEditor() {
   stroke-width: 1.4;
 }
 
-:deep(.vue-flow__edge.recipe-edge.is-propagate .vue-flow__edge-path) {
+:deep(.vue-flow__edge.recipe-edge.recipe-edge--propagate .vue-flow__edge-path) {
   stroke-dasharray: 6 4;
 }
 
-:deep(.vue-flow__edge.recipe-edge.is-active .vue-flow__edge-path),
-:deep(.vue-flow__edge.recipe-edge.is-picked .vue-flow__edge-path) {
+:deep(.vue-flow__edge.recipe-edge.recipe-edge--active .vue-flow__edge-path),
+:deep(.vue-flow__edge.recipe-edge.recipe-edge--picked .vue-flow__edge-path) {
   stroke-width: 2.2;
 }
 
-:deep(.vue-flow__edge.recipe-edge.is-dim) {
+:deep(.vue-flow__edge.recipe-edge.recipe-edge--dim) {
   opacity: 0.16;
 }
 

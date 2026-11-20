@@ -17,7 +17,7 @@
   font-size: 2rem;
   font-family: monospace;
 
-  &:after {
+  &::after {
     display: block;
     position: fixed;
     background: radial-gradient(
@@ -33,7 +33,7 @@
     user-select: none;
   }
 
-  .logo {
+  &__logo {
     filter: hue-rotate(var(--logo-hue));
     animation: fade-in 2s ease-in-out;
     background: url(/freak-games.png) no-repeat center;
@@ -41,7 +41,7 @@
     height: 100%;
   }
 
-  &.destroy-animation {
+  &--destroy {
     animation: fade-out 0.5s ease-in-out;
   }
 

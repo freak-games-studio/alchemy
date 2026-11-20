@@ -3,38 +3,38 @@
     v-if="activeElement"
     class="about"
   >
-    <div class="info">
+    <div class="about__info">
       <img
-        class="image"
+        class="about__image"
         :src="spriteUrl(activeElement.id)"
         alt=""
       >
-      <p class="description">
+      <p class="about__description">
         {{ activeElement.description }}
       </p>
     </div>
 
     <div
       v-if="activeElement.recipes.length"
-      class="recipes"
+      class="about__recipes"
     >
-      <h2 class="recipes-title">
+      <h2 class="about__recipes-title">
         Доступные рецепты
       </h2>
       <div
         v-for="(recipe, index) of activeElement.recipes"
         :key="index"
-        class="recipe"
+        class="about__recipe"
       >
         <div
-          class="element"
+          class="about__element"
           @click="about.open(recipe[0])"
         >
           <alchemy-item :element="recipe[0]" />
         </div>
-        <span class="plus">+</span>
+        <span class="about__plus">+</span>
         <div
-          class="element"
+          class="about__element"
           @click="about.open(recipe[1])"
         >
           <alchemy-item :element="recipe[1]" />
@@ -63,61 +63,61 @@ const activeElement = about.current
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
-}
 
-.info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
 
-.image {
-  width: 72px;
-  height: 72px;
-}
+  &__image {
+    width: 72px;
+    height: 72px;
+  }
 
-.description {
-  color: var(--muted-foreground);
-  font-size: 16px;
-  line-height: 1.5;
-  text-align: left;
-}
+  &__description {
+    color: var(--muted-foreground);
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: left;
+  }
 
-.recipes {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+  &__recipes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-.recipes-title {
-  color: var(--foreground);
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 1.3;
-}
+  &__recipes-title {
+    color: var(--foreground);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+  }
 
-.recipe {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-}
+  &__recipe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
 
-.plus {
-  flex-shrink: 0;
-  color: var(--foreground);
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 1;
-}
+  &__plus {
+    flex-shrink: 0;
+    color: var(--foreground);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1;
+  }
 
-.element {
-  cursor: pointer;
-  border-radius: 12px;
-}
+  &__element {
+    cursor: pointer;
+    border-radius: 12px;
 
-.element:hover {
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
+    &:hover {
+      background: color-mix(in srgb, var(--primary) 10%, transparent);
+    }
+  }
 }
 </style>

@@ -1,27 +1,27 @@
 <template>
   <div
     v-if="isOpen"
-    class="backdrop"
+    class="confirm"
     @click.self="confirm.dismiss()"
   >
     <div
-      class="dialog"
+      class="confirm__dialog"
       role="dialog"
       aria-modal="true"
     >
-      <p class="message">
+      <p class="confirm__message">
         {{ message }}
       </p>
-      <div class="actions">
+      <div class="confirm__actions">
         <button
-          class="press action"
+          class="press confirm__action"
           type="button"
           @click="confirm.dismiss()"
         >
           Нет
         </button>
         <button
-          class="press danger action"
+          class="press press--danger confirm__action"
           type="button"
           @click="confirm.accept()"
         >
@@ -49,7 +49,7 @@ useEventListener(window, 'keydown', (event) => {
 </script>
 
 <style scoped lang="scss">
-.backdrop {
+.confirm {
   display: flex;
   position: fixed;
   justify-content: center;
@@ -58,33 +58,33 @@ useEventListener(window, 'keydown', (event) => {
   inset: 0;
   background: var(--overlay);
   padding: 24px;
-}
 
-.dialog {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--card);
-  padding: 24px;
-  width: min(420px, 100%);
-}
+  &__dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card);
+    padding: 24px;
+    width: min(420px, 100%);
+  }
 
-.message {
-  color: var(--foreground);
-  font-size: 20px;
-  text-align: center;
-}
+  &__message {
+    color: var(--foreground);
+    font-size: 20px;
+    text-align: center;
+  }
 
-.actions {
-  display: flex;
-  gap: 8px;
-}
+  &__actions {
+    display: flex;
+    gap: 8px;
+  }
 
-.action {
-  border-radius: 12px;
-  padding: 12px;
-  width: 50%;
+  &__action {
+    border-radius: 12px;
+    padding: 12px;
+    width: 50%;
+  }
 }
 </style>

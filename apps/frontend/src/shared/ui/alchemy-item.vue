@@ -1,15 +1,15 @@
 <template>
   <div class="item">
     <img
-      class="image"
+      class="item__image"
       :src="spriteUrl(element.id)"
       :loading="lazy ? 'lazy' : undefined"
       :decoding="lazy ? 'async' : undefined"
       alt=""
     >
     <p
-      class="text"
-      :class="[{ ended: element.ended }]"
+      class="item__text"
+      :class="{ 'item__text--ended': element.ended }"
     >
       {{ element.name }}
     </p>
@@ -46,28 +46,28 @@ const height = computed(() => `${elementSize.value.height}px`)
   height: auto;
   min-height: calc(v-bind(height) * 2);
   pointer-events: none;
-}
 
-.image {
-  width: v-bind(width);
-  height: v-bind(height);
-}
+  &__image {
+    width: v-bind(width);
+    height: v-bind(height);
+  }
 
-.text {
-  display: block;
-  margin: 0;
-  width: 100%;
-  min-width: 0;
-  color: var(--foreground);
-  font-size: v-bind('elementSize.fontSize');
-  line-height: 1.15;
-  text-align: center;
-  white-space: normal;
-  overflow-wrap: break-word;
-}
+  &__text {
+    display: block;
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+    color: var(--foreground);
+    font-size: v-bind('elementSize.fontSize');
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: break-word;
 
-.ended::after {
-  content: '*';
-  color: var(--primary);
+    &--ended::after {
+      content: '*';
+      color: var(--primary);
+    }
+  }
 }
 </style>

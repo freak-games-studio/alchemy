@@ -5,35 +5,35 @@
     @close="shell.close()"
   >
     <template #heading>
-      <span class="h6 title">Настройки</span>
+      <span class="h6">Настройки</span>
     </template>
     <div class="settings">
-      <h3 class="title heading">
+      <h3 class="settings__title settings__heading">
         <span>Громкость звука</span>
-        <span class="value">{{ settings.volume }}%</span>
+        <span class="settings__value">{{ settings.volume }}%</span>
       </h3>
       <input
         v-model.number="settings.volume"
-        class="slider"
+        class="settings__slider"
         type="range"
         min="0"
         max="100"
         step="1"
       >
 
-      <h3 class="title">
+      <h3 class="settings__title">
         Размер элементов
       </h3>
       <div
-        class="segment"
+        class="settings__segment"
         role="group"
         aria-label="Размер элементов"
       >
         <button
           v-for="option in elementSizes"
           :key="option.id"
-          class="press segment-button"
-          :class="{ selected: settings.elementSize === option.id }"
+          class="press settings__option"
+          :class="{ 'settings__option--selected': settings.elementSize === option.id }"
           type="button"
           @click="settings.elementSize = option.id"
         >
@@ -42,19 +42,19 @@
       </div>
 
       <template v-if="!mobile">
-        <h3 class="title">
+        <h3 class="settings__title">
           Положение панели
         </h3>
         <div
-          class="segment"
+          class="settings__segment"
           role="group"
           aria-label="Положение панели"
         >
           <button
             v-for="option in dockSides"
             :key="option.id"
-            class="press segment-button"
-            :class="{ selected: settings.dock === option.id }"
+            class="press settings__option"
+            :class="{ 'settings__option--selected': settings.dock === option.id }"
             type="button"
             @click="settings.dock = option.id"
           >
@@ -63,44 +63,44 @@
         </div>
       </template>
 
-      <h3 class="title">
+      <h3 class="settings__title">
         Тема
       </h3>
       <div
-        class="themes"
+        class="settings__themes"
         role="listbox"
         aria-label="Тема"
       >
         <button
           v-for="option in themes"
           :key="option.id"
-          class="press theme"
-          :class="{ selected: settings.theme === option.id }"
+          class="press settings__theme"
+          :class="{ 'settings__theme--selected': settings.theme === option.id }"
           type="button"
           role="option"
           :aria-selected="settings.theme === option.id"
           @click="settings.theme = option.id"
         >
           <span
-            class="swatch"
+            class="settings__swatch"
             :data-theme="option.id"
           >
-            <span class="swatch-dot" />
+            <span class="settings__swatch-dot" />
           </span>
           {{ option.label }}
         </button>
       </div>
 
-      <div class="button-group">
+      <div class="settings__actions">
         <button
-          class="press safe button-group__item"
+          class="press press--safe settings__action"
           type="button"
           @click="resetSettings"
         >
           Сбросить настройки
         </button>
         <button
-          class="press danger button-group__item"
+          class="press press--danger settings__action"
           type="button"
           @click="startNewGame"
         >
@@ -154,145 +154,145 @@ async function startNewGame() {
   display: flex;
   flex-direction: column;
   color: var(--muted-foreground);
-}
 
-.title {
-  color: var(--foreground);
-}
-
-.heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.value {
-  color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums;
-}
-
-.segment {
-  display: flex;
-  gap: 8px;
-  margin: 8px 0 16px;
-}
-
-.themes {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 8px 0 16px;
-}
-
-.theme {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 12px;
-
-  &.selected {
-    border-color: var(--primary);
-    background: color-mix(in srgb, var(--primary) 16%, transparent);
+  &__title {
     color: var(--foreground);
   }
-}
 
-.swatch {
-  display: flex;
-  flex: none;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: #09090b;
-  width: 22px;
-  height: 22px;
-
-  &[data-theme='light'] {
-    background: #f4efe6;
+  &__heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
   }
-}
 
-.swatch-dot {
-  border-radius: 50%;
-  background: #e08a45;
-  width: 8px;
-  height: 8px;
-}
+  &__value {
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+  }
 
-.segment-button {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 12px;
-  width: 100%;
+  &__segment {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0 16px;
+  }
 
-  &.selected {
-    background: var(--primary);
-    color: var(--primary-foreground);
+  &__themes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 8px 0 16px;
+  }
 
-    &:hover,
-    &:active {
-      background: var(--primary);
-      color: var(--primary-foreground);
+  &__theme {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+
+    &--selected {
+      border-color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 16%, transparent);
+      color: var(--foreground);
     }
   }
-}
 
-.slider {
-  appearance: none;
-  cursor: pointer;
-  margin: 4px 0 12px;
-  border-radius: 999px;
-  background: transparent;
-  width: 100%;
-  height: 22px;
+  &__swatch {
+    display: flex;
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: #09090b;
+    width: 22px;
+    height: 22px;
 
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+    &[data-theme='light'] {
+      background: #f4efe6;
+    }
   }
 
-  &::-webkit-slider-runnable-track {
-    border-radius: 999px;
-    background: var(--border);
-    height: 4px;
+  &__swatch-dot {
+    border-radius: 50%;
+    background: #e08a45;
+    width: 8px;
+    height: 8px;
   }
 
-  &::-webkit-slider-thumb {
+  &__option {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    width: 100%;
+
+    &--selected {
+      background: var(--primary);
+      color: var(--primary-foreground);
+
+      &:hover,
+      &:active {
+        background: var(--primary);
+        color: var(--primary-foreground);
+      }
+    }
+  }
+
+  &__slider {
     appearance: none;
-    margin-top: -6px;
-    border: none;
-    border-radius: 50%;
-    background: var(--primary);
-    width: 16px;
-    height: 16px;
-  }
-
-  &::-moz-range-track {
-    border: none;
+    cursor: pointer;
+    margin: 4px 0 12px;
     border-radius: 999px;
-    background: var(--border);
-    height: 4px;
+    background: transparent;
+    width: 100%;
+    height: 22px;
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    &::-webkit-slider-runnable-track {
+      border-radius: 999px;
+      background: var(--border);
+      height: 4px;
+    }
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      margin-top: -6px;
+      border: none;
+      border-radius: 50%;
+      background: var(--primary);
+      width: 16px;
+      height: 16px;
+    }
+
+    &::-moz-range-track {
+      border: none;
+      border-radius: 999px;
+      background: var(--border);
+      height: 4px;
+    }
+
+    &::-moz-range-thumb {
+      border: none;
+      border-radius: 50%;
+      background: var(--primary);
+      width: 16px;
+      height: 16px;
+    }
   }
 
-  &::-moz-range-thumb {
-    border: none;
-    border-radius: 50%;
-    background: var(--primary);
-    width: 16px;
-    height: 16px;
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
-}
 
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-
-  &__item {
+  &__action {
     margin-top: 1rem;
     border-radius: 12px;
     padding: 12px 16px;

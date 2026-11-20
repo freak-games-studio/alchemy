@@ -1,8 +1,8 @@
 <template>
   <div
     ref="element"
-    class="alchemy-item"
-    :class="{ settling }"
+    class="draggable"
+    :class="{ 'draggable--settling': settling }"
     :style="itemStyle"
     @dblclick="$emit('clone-element', alchemyElement)"
     @contextmenu.prevent="$emit('remove-element', alchemyElement)"
@@ -12,17 +12,17 @@
     @pointercancel="onHoldEnd"
   >
     <div
-      class="show"
-      :class="{ born: !!birth }"
+      class="draggable__show"
+      :class="{ 'draggable__show--born': !!birth }"
     >
       <alchemy-item :element="alchemyElement" />
       <span
         v-if="birth === 'discover'"
-        class="wow"
+        class="draggable__wow"
         aria-hidden="true"
       >
         <svg
-          class="wow-shape"
+          class="draggable__wow-shape"
           viewBox="0 0 100 100"
         >
           <polygon
@@ -43,16 +43,16 @@
     </div>
     <span
       v-if="birth"
-      class="smoke"
+      class="draggable__smoke"
       aria-hidden="true"
     >
       <span
         v-for="puff in puffs"
         :key="puff.index"
-        class="puff"
+        class="draggable__puff"
         :style="puff.style"
       >
-        <span class="puff-dot" />
+        <span class="draggable__puff-dot" />
       </span>
     </span>
   </div>
@@ -168,7 +168,7 @@ function measure() {
     height: node.offsetHeight,
   }
   const image = node.querySelector('img')
-  const show = node.querySelector<HTMLElement>('.show')
+  const show = node.querySelector<HTMLElement>('.draggable__show')
   if (!image || !show) return
   const x = image.offsetLeft + image.offsetWidth / 2
   const y = image.offsetTop + image.offsetHeight / 2
@@ -224,7 +224,7 @@ const itemStyle = computed(() => ({
 </script>
 
 <style scoped lang="scss">
-.alchemy-item {
+.draggable {
   position: fixed;
   z-index: 1;
   cursor: pointer;
@@ -232,79 +232,93 @@ const itemStyle = computed(() => ({
   inline-size: min-content;
   touch-action: none;
   overflow-wrap: break-word;
-}
 
-.alchemy-item:active,
-.alchemy-item:hover {
-  z-index: 2;
-  transition: none;
-}
+  &:active,
+  &:hover {
+    z-index: 2;
+    transition: none;
+  }
 
-.alchemy-item.settling,
-.alchemy-item.settling:hover {
-  transition:
-    left 450ms cubic-bezier(0.22, 1, 0.36, 1),
-    top 450ms cubic-bezier(0.22, 1, 0.36, 1);
-}
+  &--settling,
+  &--settling:hover {
+    transition:
+      left 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      top 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 
-.alchemy-item.settling:active {
-  transition: none;
-}
+  &--settling:active {
+    transition: none;
+  }
 
-.show {
-  position: relative;
-}
+  &__show {
+    position: relative;
 
-.show.born {
-  transform-origin: var(--sprite-x) var(--sprite-y);
-  animation: alchemy-show 300ms ease forwards;
-}
+    &--born {
+      transform-origin: var(--sprite-x) var(--sprite-y);
+      animation: alchemy-show 300ms ease forwards;
+    }
+  }
 
-.wow {
-  position: absolute;
-  top: var(--sprite-y);
-  left: var(--sprite-x);
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  width: v-bind(imageWidth);
-  height: v-bind(imageHeight);
-  pointer-events: none;
-}
+  &__wow {
+    position: absolute;
+    top: var(--sprite-y);
+    left: var(--sprite-x);
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    width: v-bind(imageWidth);
+    height: v-bind(imageHeight);
+    pointer-events: none;
+  }
 
-.wow-shape {
-  display: block;
-  animation: alchemy-wow 300ms linear forwards;
-  width: 100%;
-  height: 100%;
-}
+  &__wow-shape {
+    display: block;
+    animation: alchemy-wow 300ms linear forwards;
+    width: 100%;
+    height: 100%;
+  }
 
-.smoke {
-  position: absolute;
-  top: var(--smoke-y);
-  left: var(--smoke-x);
-  z-index: 2;
-  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.45));
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
+  &__smoke {
+    position: absolute;
+    top: var(--smoke-y);
+    left: var(--smoke-x);
+    z-index: 2;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.45));
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
 
-.puff {
-  position: absolute;
-  top: 0;
-  left: 0;
-  animation: alchemy-swirl var(--puff-duration) cubic-bezier(0.22, 1, 0.36, 1) var(--puff-delay) forwards;
-  width: 0;
-  height: 0;
-}
+  &__puff {
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: alchemy-swirl var(--puff-duration) cubic-bezier(0.22, 1, 0.36, 1) var(--puff-delay) forwards;
+    width: 0;
+    height: 0;
+  }
 
-.puff-dot {
-  position: absolute;
-  animation: alchemy-puff-scale var(--puff-duration) cubic-bezier(0.55, 0.085, 0.68, 0.53) var(--puff-delay) forwards;
-  border-radius: 50%;
-  background: #fff;
-  width: var(--puff-size);
-  height: var(--puff-size);
+  &__puff-dot {
+    position: absolute;
+    animation: alchemy-puff-scale var(--puff-duration) cubic-bezier(0.55, 0.085, 0.68, 0.53) var(--puff-delay) forwards;
+    border-radius: 50%;
+    background: #fff;
+    width: var(--puff-size);
+    height: var(--puff-size);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__show--born,
+    &__wow-shape,
+    &__puff,
+    &__puff-dot {
+      animation: none;
+    }
+
+    &__smoke,
+    &__wow {
+      display: none;
+    }
+  }
 }
 
 @keyframes alchemy-show {
@@ -351,20 +365,6 @@ const itemStyle = computed(() => ({
   100% {
     transform: scale(1.45) rotate(360deg);
     opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .show.born,
-  .wow-shape,
-  .puff,
-  .puff-dot {
-    animation: none;
-  }
-
-  .smoke,
-  .wow {
-    display: none;
   }
 }
 </style>

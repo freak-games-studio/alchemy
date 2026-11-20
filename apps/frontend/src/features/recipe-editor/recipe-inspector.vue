@@ -3,12 +3,12 @@
     v-if="recipe"
     class="inspector"
   >
-    <header class="header">
-      <h2 class="title">
+    <header class="inspector__header">
+      <h2 class="inspector__title">
         {{ recipe.name }}
       </h2>
       <button
-        class="press icon"
+        class="press inspector__close"
         type="button"
         aria-label="Закрыть"
         @click="editor.clearSelection()"
@@ -21,41 +21,47 @@
         </svg>
       </button>
     </header>
-    <div class="body">
-      <label class="field">
+    <div class="inspector__body">
+      <label class="inspector__field">
         <span>Id</span>
         <input
           v-model="idDraft"
+          class="inspector__control"
           type="text"
           spellcheck="false"
           @keydown.enter.prevent="commitId"
           @blur="commitId"
         >
       </label>
-      <label class="field">
+      <label class="inspector__field">
         <span>Имя</span>
         <input
           v-model="recipe.name"
+          class="inspector__control"
           type="text"
           @input="editor.syncNode(recipe.id)"
         >
       </label>
-      <label class="field">
+      <label class="inspector__field">
         <span>Описание</span>
         <textarea
           v-model="recipe.description"
+          class="inspector__control inspector__textarea"
           rows="4"
           @input="editor.touch()"
         />
       </label>
-      <fieldset class="categories">
-        <legend>Категории</legend>
+      <fieldset class="inspector__categories">
+        <legend class="inspector__legend">
+          Категории
+        </legend>
         <label
           v-for="choice in editor.categoryChoices"
           :key="choice.id"
           class="check"
         >
           <input
+            class="check__input"
             type="checkbox"
             :checked="recipe.category?.includes(choice.id)"
             @change="onCategory(choice.id, $event)"
@@ -63,18 +69,20 @@
           {{ choice.label }}
         </label>
       </fieldset>
-      <section class="pairs">
-        <h3>Рецепты</h3>
+      <section class="inspector__pairs">
+        <h3 class="inspector__pairs-title">
+          Рецепты
+        </h3>
         <p
           v-if="!recipe.recipes.length && !draft"
-          class="empty"
+          class="inspector__empty"
         >
           Нет рецептов
         </p>
         <div
           v-for="(pair, index) in recipe.recipes"
           :key="`${pair[0]}-${pair[1]}-${index}`"
-          class="pair"
+          class="inspector__pair"
         >
           <alchemy-combobox
             :value="pair[0]"
@@ -82,16 +90,17 @@
             label="Ингредиент"
             @select="onIngredient(index, 0, $event)"
           />
-          <span class="plus">+</span>
+          <span class="inspector__plus">+</span>
           <alchemy-combobox
             :value="pair[1]"
             :options="optionsFor(pair[1])"
             label="Ингредиент"
             @select="onIngredient(index, 1, $event)"
           />
-          <div class="pair-actions">
+          <div class="inspector__pair-actions">
             <label class="check">
               <input
+                class="check__input"
                 type="checkbox"
                 :checked="pair.length === 3"
                 @change="onPropagate(index, $event)"
@@ -99,7 +108,7 @@
               Создавать два элемента
             </label>
             <button
-              class="press icon pair-delete"
+              class="press inspector__pair-delete"
               type="button"
               aria-label="Удалить рецепт"
               @click="removeRecipe(index)"
@@ -118,7 +127,7 @@
         </div>
         <div
           v-if="draft"
-          class="pair draft"
+          class="inspector__pair inspector__pair--draft"
         >
           <alchemy-combobox
             :value="draft.left"
@@ -127,7 +136,7 @@
             label="Ингредиент"
             @select="onDraft('left', $event)"
           />
-          <span class="plus">+</span>
+          <span class="inspector__plus">+</span>
           <alchemy-combobox
             :value="draft.right"
             :options="optionsFor(draft.right)"
@@ -135,9 +144,10 @@
             label="Ингредиент"
             @select="onDraft('right', $event)"
           />
-          <div class="pair-actions">
+          <div class="inspector__pair-actions">
             <label class="check">
               <input
+                class="check__input"
                 type="checkbox"
                 :checked="draft.propagate"
                 @change="onDraftPropagate"
@@ -145,7 +155,7 @@
               Создавать два элемента
             </label>
             <button
-              class="press icon"
+              class="press inspector__close"
               type="button"
               aria-label="Отмена"
               @click="editor.cancelDraft(recipe.id)"
@@ -160,7 +170,7 @@
           </div>
         </div>
         <button
-          class="press add"
+          class="press inspector__add"
           type="button"
           :disabled="Boolean(draft)"
           @click="editor.beginDraft(recipe.id)"
@@ -169,7 +179,7 @@
         </button>
       </section>
       <button
-        class="press danger remove"
+        class="press press--danger inspector__remove"
         type="button"
         @click="remove"
       >
@@ -276,6 +286,8 @@ async function remove() {
 </script>
 
 <style scoped lang="scss">
+@use '@/styles/mixins' as *;
+
 .inspector {
   display: flex;
   flex: none;
@@ -285,167 +297,141 @@ async function remove() {
   width: min(360px, 100%);
   min-height: 0;
   color: var(--foreground);
-}
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--border);
-  padding: 12px 12px 12px 16px;
-}
-
-.title {
-  flex: 1;
-  margin: 0;
-  min-width: 0;
-  overflow: hidden;
-  color: var(--foreground);
-  font-size: 18px;
-  line-height: 1.3;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.icon {
-  display: grid;
-  flex: none;
-  place-items: center;
-  border-radius: 10px;
-  width: 36px;
-  height: 36px;
-}
-
-.icon svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.6;
-  width: 18px;
-  height: 18px;
-}
-
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  min-height: 0;
-  overflow: auto;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: var(--muted-foreground);
-  font-size: 13px;
-}
-
-.field input,
-.field textarea {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--background);
-  padding: 8px 10px;
-  width: 100%;
-  color: var(--foreground);
-  font: inherit;
-  font-size: 15px;
-  user-select: text;
-}
-
-.field textarea {
-  resize: vertical;
-}
-
-.empty {
-  margin: -4px 0 0;
-  color: var(--muted-foreground);
-  font-size: 12px;
-}
-
-.categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  margin: 0;
-  border: 0;
-  padding: 0;
-}
-
-.categories legend {
-  margin-bottom: 8px;
-  width: 100%;
-  color: var(--muted-foreground);
-  font-size: 13px;
-}
-
-.pairs {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.pairs h3 {
-  margin: 0;
-  color: var(--foreground);
-  font-size: 14px;
-}
-
-.pair {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 8px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 8px;
-}
-
-.pair.draft {
-  border-style: dashed;
-}
-
-.plus {
-  align-self: center;
-  color: var(--muted-foreground);
-}
-
-.pair-actions,
-.add,
-.remove {
-  grid-column: 1 / -1;
-}
-
-.pair-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pair-actions .check {
-  flex: 1;
-  min-width: 0;
-}
-
-.pair-delete {
-  flex: none;
-  color: var(--destructive);
-
-  &:hover,
-  &:active {
-    color: var(--destructive);
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 12px 12px 16px;
   }
-}
 
-.add,
-.remove {
-  border-radius: 10px;
-  padding: 8px 10px;
-}
+  &__title {
+    flex: 1;
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--foreground);
+    font-size: 18px;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.remove {
-  margin-top: 8px;
+  &__close,
+  &__pair-delete {
+    @include icon-button;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--muted-foreground);
+    font-size: 13px;
+  }
+
+  &__control {
+    @include text-field(10px);
+    padding: 8px 10px;
+    width: 100%;
+    font-size: 15px;
+  }
+
+  &__textarea {
+    resize: vertical;
+  }
+
+  &__categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin: 0;
+    border: 0;
+    padding: 0;
+  }
+
+  &__legend {
+    margin-bottom: 8px;
+    width: 100%;
+    color: var(--muted-foreground);
+    font-size: 13px;
+  }
+
+  &__pairs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__pairs-title {
+    margin: 0;
+    color: var(--foreground);
+    font-size: 14px;
+  }
+
+  &__empty {
+    margin: -4px 0 0;
+    color: var(--muted-foreground);
+    font-size: 12px;
+  }
+
+  &__pair {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+
+    &--draft {
+      border-style: dashed;
+    }
+  }
+
+  &__plus {
+    align-self: center;
+    color: var(--muted-foreground);
+  }
+
+  &__pair-actions {
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    gap: 8px;
+
+    .check {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  &__pair-delete {
+    color: var(--destructive);
+
+    &:hover,
+    &:active {
+      color: var(--destructive);
+    }
+  }
+
+  &__add,
+  &__remove {
+    border-radius: 10px;
+    padding: 8px 10px;
+  }
+
+  &__remove {
+    margin-top: 8px;
+  }
 }
 </style>

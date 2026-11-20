@@ -2,12 +2,12 @@
   <nav
     ref="dockRef"
     class="dock"
-    :class="side"
+    :class="[`dock--${side}`]"
     aria-label="Разделы"
   >
     <button
-      class="press dock-button"
-      :class="{ active: active === 'elements' }"
+      class="press dock__button"
+      :class="{ 'dock__button--active': active === 'elements' }"
       type="button"
       aria-label="Элементы"
       @click="shell.toggle('elements')"
@@ -45,12 +45,12 @@
           rx="1.5"
         />
       </svg>
-      <span class="label">Элементы</span>
+      <span class="dock__label">Элементы</span>
     </button>
     <button
       id="toggle-guide"
-      class="press dock-button"
-      :class="{ active: active === 'guide' }"
+      class="press dock__button"
+      :class="{ 'dock__button--active': active === 'guide' }"
       type="button"
       aria-label="Справочник"
       @click="shell.toggle('guide')"
@@ -62,11 +62,11 @@
         <path d="M12 7v14" />
         <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
       </svg>
-      <span class="label">Справочник</span>
+      <span class="dock__label">Справочник</span>
     </button>
     <button
-      class="press dock-button"
-      :class="{ active: active === 'settings' }"
+      class="press dock__button"
+      :class="{ 'dock__button--active': active === 'settings' }"
       type="button"
       aria-label="Настройки"
       @click="shell.toggle('settings')"
@@ -82,11 +82,11 @@
           r="3"
         />
       </svg>
-      <span class="label">Настройки</span>
+      <span class="dock__label">Настройки</span>
     </button>
     <button
       v-if="dev"
-      class="press dock-button"
+      class="press dock__button"
       type="button"
       aria-label="Рецепты"
       @click="recipeEditorOpen = true"
@@ -112,11 +112,11 @@
         />
         <path d="M6.62 7.74 10.88 16.26M17.38 7.74 13.12 16.26" />
       </svg>
-      <span class="label">Рецепты</span>
+      <span class="dock__label">Рецепты</span>
     </button>
-    <span class="separator" />
+    <span class="dock__separator" />
     <button
-      class="press dock-button"
+      class="press dock__button"
       type="button"
       aria-label="Упорядочить"
       @click="game.board.arrange()"
@@ -134,10 +134,10 @@
         />
         <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
       </svg>
-      <span class="label">Упорядочить</span>
+      <span class="dock__label">Упорядочить</span>
     </button>
     <button
-      class="press dock-button"
+      class="press dock__button"
       type="button"
       aria-label="Очистить поле"
       @click="game.board.clear()"
@@ -151,7 +151,7 @@
         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
         <path d="M10 11v6M14 11v6" />
       </svg>
-      <span class="label">Очистить</span>
+      <span class="dock__label">Очистить</span>
     </button>
   </nav>
 </template>
@@ -169,6 +169,8 @@ const side = game.settings.dock
 </script>
 
 <style scoped lang="scss">
+@use '@/styles/mixins' as *;
+
 .dock {
   --dock-padding: 8px;
 
@@ -182,84 +184,78 @@ const side = game.settings.dock
   border-radius: 22px;
   background: color-mix(in srgb, var(--card) 88%, transparent);
   padding: var(--dock-padding);
-}
 
-.dock.bottom {
-  bottom: calc(var(--dock-padding) + env(safe-area-inset-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.dock.left,
-.dock.right {
-  top: 50%;
-  flex-direction: column;
-  transform: translateY(-50%);
-}
-
-.dock.left {
-  left: calc(var(--dock-padding) + env(safe-area-inset-left));
-}
-
-.dock.right {
-  right: calc(var(--dock-padding) + env(safe-area-inset-right));
-}
-
-.dock-button {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2px;
-  border-radius: 14px;
-  padding: 6px 8px;
-  min-width: 64px;
-  min-height: 52px;
-  color: var(--muted-foreground);
-}
-
-.dock-button svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.6;
-  width: 22px;
-  height: 22px;
-}
-
-.dock-button.active {
-  background: color-mix(in srgb, var(--primary) 22%, transparent);
-  color: var(--foreground);
-}
-
-.label {
-  font-size: 11px;
-  line-height: 1.1;
-}
-
-.separator {
-  align-self: stretch;
-  margin: 6px 4px;
-  background: var(--border);
-  width: 1px;
-}
-
-.dock.left .separator,
-.dock.right .separator {
-  margin: 4px 6px;
-  width: auto;
-  height: 1px;
-}
-
-@media screen and (max-width: 420px) {
-  .label {
-    display: none;
+  &--bottom {
+    bottom: calc(var(--dock-padding) + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  .dock-button {
-    min-width: 48px;
-    min-height: 48px;
+  &--left,
+  &--right {
+    top: 50%;
+    flex-direction: column;
+    transform: translateY(-50%);
+  }
+
+  &--left {
+    left: calc(var(--dock-padding) + env(safe-area-inset-left));
+  }
+
+  &--right {
+    right: calc(var(--dock-padding) + env(safe-area-inset-right));
+  }
+
+  &__button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border-radius: 14px;
+    padding: 6px 8px;
+    min-width: 64px;
+    min-height: 52px;
+    color: var(--muted-foreground);
+
+    svg {
+      @include icon-stroke(22px);
+    }
+
+    &--active {
+      background: color-mix(in srgb, var(--primary) 22%, transparent);
+      color: var(--foreground);
+    }
+  }
+
+  &__label {
+    font-size: 11px;
+    line-height: 1.1;
+  }
+
+  &__separator {
+    align-self: stretch;
+    margin: 6px 4px;
+    background: var(--border);
+    width: 1px;
+
+    .dock--left &,
+    .dock--right & {
+      margin: 4px 6px;
+      width: auto;
+      height: 1px;
+    }
+  }
+
+  @media screen and (max-width: 420px) {
+    &__label {
+      display: none;
+    }
+
+    &__button {
+      min-width: 48px;
+      min-height: 48px;
+    }
   }
 }
 </style>

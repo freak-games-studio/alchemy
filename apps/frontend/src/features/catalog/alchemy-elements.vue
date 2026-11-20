@@ -9,7 +9,7 @@
     <template #heading>
       <button
         v-if="aboutOpen"
-        class="press icon"
+        class="press catalog__back"
         type="button"
         aria-label="Назад"
         @click="about.back()"
@@ -21,25 +21,25 @@
           <path d="M15 6 9 12l6 6" />
         </svg>
       </button>
-      <span class="h6 title">{{ heading }}</span>
+      <span class="h6">{{ heading }}</span>
     </template>
     <div
       v-show="!aboutOpen"
       class="catalog"
     >
-      <div class="filters">
-        <div class="search">
+      <div class="catalog__filters">
+        <div class="catalog__search">
           <input
             ref="searchRef"
             v-model="searchInput"
-            class="search-input"
+            class="catalog__input"
             type="text"
             name="search"
             placeholder="Найти"
           >
           <button
             v-if="searchInput"
-            class="press icon search-clear"
+            class="press catalog__clear"
             type="button"
             aria-label="Очистить"
             @click="clearSearch"
@@ -53,7 +53,7 @@
           </button>
         </div>
         <alchemy-combobox
-          class="category-field"
+          class="catalog__category"
           :value="category"
           :options="categoryOptions"
           label="Тип элемента"
@@ -63,6 +63,7 @@
         <label class="check">
           <input
             v-model="settings.hideEndedElements"
+            class="check__input"
             type="checkbox"
           >
           Скрыть конечные элементы
@@ -70,18 +71,18 @@
       </div>
       <div
         ref="listRef"
-        class="elements-list"
+        class="catalog__list"
       >
         <p
           v-if="!filteredElements.length"
-          class="empty"
+          class="catalog__empty"
         >
           Ничего не найдено
         </p>
         <div
           v-for="element in filteredElements"
           :key="element.id"
-          class="element"
+          class="catalog__element"
           @pointerdown="onPointerDown($event, element)"
           @contextmenu.prevent="openAbout(element)"
         >
@@ -97,7 +98,7 @@
   <Teleport to="body">
     <div
       v-if="ghost"
-      class="ghost"
+      class="catalog__ghost"
       :style="{ left: `${ghost.x}px`, top: `${ghost.y}px` }"
     >
       <alchemy-item :element="ghost.element" />
@@ -279,7 +280,7 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
   }, HOLD_MS)
 
   function pointerInside(clientX: number, clientY: number) {
-    const bounds = card.closest('.panel')?.getBoundingClientRect()
+    const bounds = card.closest('.panel__card')?.getBoundingClientRect()
     return !!bounds
       && clientX >= bounds.left
       && clientX <= bounds.right
@@ -362,119 +363,101 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
 </script>
 
 <style scoped lang="scss">
-.icon {
-  display: flex;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  width: 36px;
-  height: 36px;
-}
-
-.icon svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.6;
-  width: 18px;
-  height: 18px;
-}
+@use '@/styles/mixins' as *;
 
 .catalog {
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: 0;
-}
 
-.elements-list {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
-.element {
-  transform: translate(0, 0);
-  content-visibility: auto;
-  cursor: pointer;
-  contain-intrinsic-size: auto 140px;
-  touch-action: none;
-  -webkit-touch-callout: none;
-  border-radius: 8px;
-}
-
-.element:hover {
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
-}
-
-.empty {
-  padding: 2rem 1rem;
-  width: 100%;
-  color: var(--muted-foreground);
-  text-align: center;
-}
-
-.filters {
-  display: flex;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
-}
-
-.search {
-  position: relative;
-  flex: 1 1 180px;
-  min-width: 0;
-}
-
-.search-input {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--background);
-  padding: 0 40px 0 12px;
-  width: 100%;
-  height: 40px;
-  color: var(--foreground);
-  font: inherit;
-  user-select: text;
-}
-
-.category-field {
-  flex: none;
-  width: 180px;
-  color: var(--foreground);
-}
-
-@media screen and (max-width: 640px) {
-  .search {
-    flex-basis: 100%;
+  &__back,
+  &__clear {
+    @include icon-button;
   }
-}
 
-.search-clear {
-  position: absolute;
-  top: 50%;
-  right: 8px;
-  transform: translateY(-50%);
-}
+  &__filters {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+  }
 
-.ghost {
-  position: fixed;
-  opacity: 0.9;
-  z-index: 60;
-  pointer-events: none;
+  &__search {
+    position: relative;
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+
+  &__input {
+    @include text-field;
+    padding: 0 40px 0 12px;
+    width: 100%;
+    height: 40px;
+  }
+
+  &__clear {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+  }
+
+  &__category {
+    flex: none;
+    width: 180px;
+    color: var(--foreground);
+  }
+
+  &__list {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  &__element {
+    transform: translate(0, 0);
+    content-visibility: auto;
+    cursor: pointer;
+    contain-intrinsic-size: auto 140px;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    border-radius: 8px;
+
+    &:hover {
+      background: color-mix(in srgb, var(--primary) 10%, transparent);
+    }
+  }
+
+  &__empty {
+    padding: 2rem 1rem;
+    width: 100%;
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+
+  &__ghost {
+    position: fixed;
+    opacity: 0.9;
+    z-index: 60;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 640px) {
+    &__search {
+      flex-basis: 100%;
+    }
+  }
 }
 </style>
