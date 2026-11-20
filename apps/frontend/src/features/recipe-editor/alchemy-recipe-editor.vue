@@ -176,10 +176,10 @@
 
 <script setup lang="ts">
 import { Controls } from '@vue-flow/controls'
-import { useEventListener } from '@vueuse/core'
 import { Background } from '@vue-flow/background'
-import { computed, nextTick, onMounted, provide, ref } from 'vue'
-import { ConnectionMode, useVueFlow, VueFlow } from '@vue-flow/core'
+import { until, useEventListener } from '@vueuse/core'
+import { computed, onMounted, provide, ref } from 'vue'
+import { ConnectionMode, useNodesInitialized, useVueFlow, VueFlow } from '@vue-flow/core'
 import type { Connection, Node } from '@vue-flow/core'
 
 import RecipeInspector from './recipe-inspector.vue'
@@ -196,7 +196,21 @@ import '@vue-flow/controls/dist/style.css'
 const editor = createRecipeEditor()
 const game = useGame()
 const query = ref('')
-const { fitView } = useVueFlow()
+const { dimensions, fitView, vueFlowRef } = useVueFlow()
+const nodesReady = useNodesInitialized()
+let frameToken = 0
+const paneReady = computed(() => {
+  const pane = vueFlowRef.value
+  const measured = dimensions.value
+  const nodesAreReady = editor.nodes.length === 0 || nodesReady.value
+  const width = pane?.clientWidth ?? 0
+  const height = pane?.clientHeight ?? 0
+  return width > 0
+    && height > 0
+    && measured.width === width
+    && measured.height === height
+    && nodesAreReady
+})
 
 provide(recipeEditorKey, editor)
 
@@ -265,11 +279,9 @@ function onConnect(connection: Connection) {
 }
 
 async function frame() {
-  await nextTick()
-  await fitView({ padding: 0.2, duration: 0 })
-  await new Promise((resolve) => {
-    window.setTimeout(resolve, 50)
-  })
+  const token = ++frameToken
+  await until(paneReady).toBe(true)
+  if (token !== frameToken) return
   await fitView({ padding: 0.2, duration: 180 })
 }
 

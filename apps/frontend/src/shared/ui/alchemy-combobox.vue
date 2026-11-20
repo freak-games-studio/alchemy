@@ -28,7 +28,6 @@
         :style="menuStyle"
       >
         <input
-          ref="search"
           v-model="query"
           class="combobox__search"
           type="text"
@@ -102,7 +101,6 @@ const LIMIT = 80
 
 const root = ref<HTMLElement>()
 const menu = ref<HTMLElement>()
-const search = ref<HTMLInputElement>()
 const open = ref(false)
 const query = ref('')
 const cursor = ref(0)
@@ -138,7 +136,6 @@ function toggle() {
   cursor.value = Math.max(0, shown.value.findIndex(option => option.id === props.value))
   nextTick(() => {
     place()
-    search.value?.focus()
   })
 }
 

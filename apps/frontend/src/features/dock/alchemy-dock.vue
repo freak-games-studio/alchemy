@@ -157,6 +157,8 @@
 </template>
 
 <script setup lang="ts">
+import { useEventListener } from '@vueuse/core'
+
 import { useGame } from '@/game/injection'
 import { recipeEditorOpen } from '@/features/recipe-editor/open'
 
@@ -166,6 +168,22 @@ const shell = game.session.shell
 const active = shell.active
 const dockRef = game.board.dockRef
 const side = game.settings.dock
+
+useEventListener('keydown', (event) => {
+  if (event.code !== 'Space' || event.repeat) return
+  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+  if (recipeEditorOpen.value || game.session.confirm.isOpen.value) return
+  if (isField(event.target)) return
+  event.preventDefault()
+  shell.toggle('elements')
+})
+
+function isField(target: EventTarget | null) {
+  return target instanceof HTMLInputElement
+    || target instanceof HTMLTextAreaElement
+    || target instanceof HTMLSelectElement
+    || (target instanceof HTMLElement && target.isContentEditable)
+}
 </script>
 
 <style scoped lang="scss">

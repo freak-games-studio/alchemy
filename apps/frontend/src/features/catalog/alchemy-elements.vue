@@ -60,18 +60,22 @@
           placeholder="Все"
           @select="category = $event"
         />
-        <label class="check">
+        <label
+          class="check catalog__ended"
+          aria-label="Скрыть конечные элементы"
+        >
           <input
             v-model="settings.hideEndedElements"
             class="check__input"
             type="checkbox"
           >
-          Скрыть конечные элементы
+          <span>Скрыть конечные элементы</span>
         </label>
       </div>
       <div
         ref="listRef"
         class="catalog__list"
+        @scroll="onListScroll"
       >
         <p
           v-if="!filteredElements.length"
@@ -80,16 +84,30 @@
           Ничего не найдено
         </p>
         <div
-          v-for="element in filteredElements"
-          :key="element.id"
-          class="catalog__element"
-          @pointerdown="onPointerDown($event, element)"
-          @contextmenu.prevent="openAbout(element)"
+          v-else
+          class="catalog__spacer"
+          :style="{ height: `${totalHeight}px` }"
         >
-          <alchemy-item
-            :element="element"
-            lazy
-          />
+          <div
+            v-for="row in visibleRows"
+            :key="row.key"
+            :ref="(element) => measureRow(row.index, element)"
+            class="catalog__row"
+            :style="{ transform: `translateY(${row.top}px)` }"
+          >
+            <div
+              v-for="element in row.items"
+              :key="element.id"
+              class="catalog__element"
+              @pointerdown="onPointerDown($event, element)"
+              @contextmenu.prevent="openAbout(element)"
+            >
+              <alchemy-item
+                :element="element"
+                lazy
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -107,7 +125,9 @@
 </template>
 
 <script setup lang="ts">
+import { useElementSize } from '@vueuse/core'
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 
 import AlchemyItem from '@/shared/ui/alchemy-item.vue'
 import AlchemyPanel from '@/shared/ui/alchemy-panel.vue'
@@ -119,6 +139,10 @@ import type { AlchemyElement } from '@/game/element'
 
 const HOLD_MS = 550
 const DRAG_PX = 8
+const GAP = 8
+const OVERSCAN = 3
+const LIST_PAD_X = 12
+const LIST_PAD_Y = 8
 
 interface Ghost {
   element: AlchemyElement
@@ -166,7 +190,24 @@ watch(categories, (items) => {
 const searchRef = ref<HTMLInputElement>()
 const listRef = ref<HTMLElement>()
 const ghost = ref<Ghost | null>(null)
+const scrollTop = ref(0)
+const listWidth = ref(0)
+const listHeight = ref(0)
+const rowHeights = ref<number[]>([])
+const measuredList = useElementSize(listRef, { width: 0, height: 0 }, { box: 'content-box' })
 let listScroll = 0
+
+watch(measuredList.width, (value) => {
+  if (value > 0) listWidth.value = value
+})
+
+watch(measuredList.height, (value) => {
+  if (value > 0) listHeight.value = value
+})
+
+function onListScroll(event: Event) {
+  scrollTop.value = (event.target as HTMLElement).scrollTop
+}
 
 function rememberListScroll() {
   if (listRef.value) listScroll = listRef.value.scrollTop
@@ -174,7 +215,9 @@ function rememberListScroll() {
 
 function restoreListScroll() {
   nextTick(() => {
-    if (listRef.value) listRef.value.scrollTop = listScroll
+    if (!listRef.value) return
+    listRef.value.scrollTop = listScroll
+    scrollTop.value = listRef.value.scrollTop
   })
 }
 
@@ -219,6 +262,108 @@ const filteredElements = computed(() => {
   })
 })
 
+const itemWidth = computed(() => game.board.elementSize.value.width * 2)
+const rowEstimate = computed(() => game.board.elementSize.value.height * 2)
+const columns = computed(() => {
+  const available = listWidth.value - LIST_PAD_X * 2
+  if (available <= 0) return 0
+  return Math.max(1, Math.floor((available + GAP) / (itemWidth.value + GAP)))
+})
+
+const elementRows = computed(() => {
+  const count = columns.value
+  const source = filteredElements.value
+  if (count <= 0) return []
+  const next: AlchemyElement[][] = []
+  for (let index = 0; index < source.length; index += count) next.push(source.slice(index, index + count))
+  return next
+})
+
+watch([columns, itemWidth, filteredElements], () => {
+  rowHeights.value = []
+})
+
+const rowOffsets = computed(() => {
+  const estimate = rowEstimate.value
+  const offsets = [LIST_PAD_Y]
+  for (let index = 0; index < elementRows.value.length; index += 1) {
+    const height = rowHeights.value[index] || estimate
+    const gap = index === elementRows.value.length - 1
+      ? 0
+      : GAP
+    offsets.push(offsets[index] + height + gap)
+  }
+  return offsets
+})
+
+const totalHeight = computed(() => {
+  const offsets = rowOffsets.value
+  return offsets[offsets.length - 1] + LIST_PAD_Y
+})
+
+const visibleRows = computed(() => {
+  const offsets = rowOffsets.value
+  const count = elementRows.value.length
+  if (!count) return []
+  const viewTop = scrollTop.value
+  const viewBottom = scrollTop.value + Math.max(listHeight.value, 1)
+  let start = 0
+  while (start < count && offsets[start + 1] < viewTop) start += 1
+  let end = start
+  while (end < count && offsets[end] < viewBottom) end += 1
+  start = Math.max(0, start - OVERSCAN)
+  end = Math.min(count, end + OVERSCAN)
+  const visible = []
+  for (let index = start; index < end; index += 1) {
+    const items = elementRows.value[index]
+    if (!items?.[0]) continue
+    visible.push({
+      index,
+      key: items[0].id,
+      top: offsets[index] ?? LIST_PAD_Y,
+      items,
+    })
+  }
+  return visible
+})
+
+const rowObservers = new Map<number, { element: HTMLElement, disconnect: () => void }>()
+const pendingHeights = new Map<number, number>()
+let heightFrame = 0
+
+function queueRowHeight(index: number, height: number) {
+  if (height <= 0 || rowHeights.value[index] === height) return
+  pendingHeights.set(index, height)
+  if (heightFrame) return
+  heightFrame = requestAnimationFrame(() => {
+    heightFrame = 0
+    if (!pendingHeights.size) return
+    const next = rowHeights.value.slice()
+    for (const [rowIndex, rowHeight] of pendingHeights) next[rowIndex] = rowHeight
+    pendingHeights.clear()
+    rowHeights.value = next
+  })
+}
+
+function measureRow(index: number, element: Element | ComponentPublicInstance | null) {
+  const current = rowObservers.get(index)
+  if (!(element instanceof HTMLElement)) {
+    current?.disconnect()
+    rowObservers.delete(index)
+    return
+  }
+  if (current?.element === element) return
+  current?.disconnect()
+  const observer = new ResizeObserver(() => {
+    queueRowHeight(index, element.offsetHeight)
+  })
+  observer.observe(element)
+  rowObservers.set(index, {
+    element,
+    disconnect: () => observer.disconnect(),
+  })
+}
+
 let dragStop: (() => void) | null = null
 let holdTimer = 0
 let holdOpened = false
@@ -237,7 +382,12 @@ function finishDrag() {
   shell.restoreElements()
 }
 
-onUnmounted(stopListeners)
+onUnmounted(() => {
+  stopListeners()
+  if (heightFrame) cancelAnimationFrame(heightFrame)
+  for (const observer of rowObservers.values()) observer.disconnect()
+  rowObservers.clear()
+})
 
 function openAbout(element: AlchemyElement) {
   about.open(element)
@@ -260,21 +410,14 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
   const pointerId = event.pointerId
   const offsetX = originX - rect.left
   const offsetY = originY - rect.top
-  let lastY = originY
+  let scrolling = false
   stopListeners()
   dragMoved = false
   holdOpened = false
   pointerDistance = 0
-  if (touch) {
-    try {
-      card.setPointerCapture(pointerId)
-    } catch {
-      // The pointer can already be gone.
-    }
-  }
 
   holdTimer = window.setTimeout(() => {
-    if (dragMoved) return
+    if (dragMoved || scrolling) return
     holdOpened = true
     openAbout(element)
   }, HOLD_MS)
@@ -288,32 +431,82 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
       && clientY <= bounds.bottom
   }
 
-  function onMove(moveEvent: PointerEvent) {
-    if (moveEvent.pointerId !== pointerId || holdOpened) return
-    const distance = Math.hypot(moveEvent.clientX - originX, moveEvent.clientY - originY)
+  function claimDrag() {
+    if (dragMoved) return
+    dragMoved = true
+    window.clearTimeout(holdTimer)
+    shell.minimizeElements()
+    if (!touch) return
+    try {
+      card.setPointerCapture(pointerId)
+    } catch {
+      // The pointer can already be gone.
+    }
+  }
+
+  function gesture(clientX: number, clientY: number) {
+    const dx = clientX - originX
+    const dy = clientY - originY
+    const distance = Math.hypot(dx, dy)
     pointerDistance = distance
     if (distance >= DRAG_PX) window.clearTimeout(holdTimer)
-    const inside = pointerInside(moveEvent.clientX, moveEvent.clientY)
-    if (!dragMoved) {
-      if (touch && distance >= DRAG_PX && inside && listRef.value) {
-        listRef.value.scrollTop -= moveEvent.clientY - lastY
-      }
-      lastY = moveEvent.clientY
-      if (distance < DRAG_PX || inside) return
-      dragMoved = true
-      shell.minimizeElements()
+    if (dragMoved) return 'drag'
+    if (!card.isConnected) return 'scroll'
+    if (distance < DRAG_PX) return 'wait'
+    const inside = pointerInside(clientX, clientY)
+    if (!touch) {
+      return inside
+        ? 'wait'
+        : 'drag'
     }
-    if (touch && moveEvent.cancelable) moveEvent.preventDefault()
+    if (inside && Math.abs(dy) >= Math.abs(dx)) return 'scroll'
+    return 'drag'
+  }
+
+  function follow(clientX: number, clientY: number) {
     ghost.value = {
       element,
-      x: moveEvent.clientX - offsetX,
-      y: moveEvent.clientY - offsetY,
+      x: clientX - offsetX,
+      y: clientY - offsetY,
       offsetX,
       offsetY,
     }
   }
 
+  function onMove(moveEvent: PointerEvent) {
+    if (moveEvent.pointerId !== pointerId || holdOpened || scrolling) return
+    const action = gesture(moveEvent.clientX, moveEvent.clientY)
+    if (action === 'wait') return
+    if (action === 'scroll') {
+      scrolling = true
+      return
+    }
+    claimDrag()
+    if (touch && moveEvent.cancelable) moveEvent.preventDefault()
+    follow(moveEvent.clientX, moveEvent.clientY)
+  }
+
+  function touchPoint(touchEvent: TouchEvent) {
+    const lists = [touchEvent.touches, touchEvent.changedTouches]
+    for (const list of lists) {
+      for (let index = 0; index < list.length; index += 1) {
+        const point = list.item(index)
+        if (point?.identifier === pointerId) return point
+      }
+    }
+  }
+
   function onTouchMove(touchEvent: TouchEvent) {
+    if (holdOpened || scrolling) return
+    const point = touchPoint(touchEvent)
+    if (!point) return
+    const action = gesture(point.clientX, point.clientY)
+    if (action === 'wait') return
+    if (action === 'scroll') {
+      scrolling = true
+      return
+    }
+    claimDrag()
     if (touchEvent.cancelable) touchEvent.preventDefault()
   }
 
@@ -322,11 +515,12 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
     const cancelled = upEvent.type === 'pointercancel'
     const moved = dragMoved
     const held = holdOpened
+    const scrolled = scrolling
     const snapshot = ghost.value
     const hit = document.elementFromPoint(upEvent.clientX, upEvent.clientY)
     finishDrag()
-    if (cancelled || held || !moved || !snapshot) {
-      if (!cancelled && !held && pointerDistance < DRAG_PX) {
+    if (cancelled || held || scrolled || !moved || !snapshot) {
+      if (!cancelled && !held && !scrolled && pointerDistance < DRAG_PX) {
         game.board.place(element, undefined, 'create')
         game.audio.play('create')
       }
@@ -412,26 +606,41 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
     color: var(--foreground);
   }
 
+  &__ended::after {
+    margin-left: -6px;
+    content: '*';
+    color: var(--primary);
+  }
+
   &__list {
-    display: flex;
+    position: relative;
     flex: 1;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    min-height: 0;
+    overflow: auto;
+    overflow-anchor: none;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
+  &__spacer {
+    position: relative;
+    width: 100%;
+  }
+
+  &__row {
+    display: flex;
+    position: absolute;
+    right: 12px;
+    left: 12px;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
-    min-height: 0;
-    overflow: auto;
-    overscroll-behavior: contain;
   }
 
   &__element {
-    transform: translate(0, 0);
-    content-visibility: auto;
+    flex: none;
     cursor: pointer;
-    contain-intrinsic-size: auto 140px;
-    touch-action: none;
+    touch-action: pan-y;
     -webkit-touch-callout: none;
     border-radius: 8px;
 
@@ -455,8 +664,42 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
   }
 
   @media screen and (max-width: 640px) {
+    &__filters {
+      flex-wrap: nowrap;
+      padding: 8px 12px;
+    }
+
     &__search {
-      flex-basis: 100%;
+      flex: 1 1 auto;
+    }
+
+    &__input {
+      height: 36px;
+    }
+
+    &__category {
+      flex: 0 1 112px;
+      width: auto;
+
+      :deep(.combobox__trigger) {
+        height: 36px;
+      }
+    }
+
+    &__ended {
+      position: relative;
+
+      span {
+        position: absolute;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        width: 1px;
+        height: 1px;
+      }
+
+      &::after {
+        margin-left: 0;
+      }
     }
   }
 }
