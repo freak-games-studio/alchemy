@@ -150,13 +150,14 @@
         <vue-flow
           v-model:nodes="editor.nodes"
           v-model:edges="editor.edges"
+          :pro-options="{ hideAttribution: true }"
           :elements-selectable="false"
           :min-zoom="0.02"
           :max-zoom="1.75"
           :connection-radius="28"
           :connection-mode="ConnectionMode.Strict"
           :delete-key-code="null"
-          :edges-updatable="false"
+          :edges-reconnectable="false"
           :is-valid-connection="editor.canConnect"
           @node-click="onNodeClick"
           @edge-click="onEdgeClick"
@@ -173,7 +174,7 @@
           </template>
           <background
             :gap="24"
-            pattern-color="var(--border)"
+            color="var(--border)"
           />
           <controls
             position="bottom-left"
@@ -187,12 +188,19 @@
 </template>
 
 <script setup lang="ts">
-import { Controls } from '@vue-flow/controls'
-import { Background } from '@vue-flow/background'
 import { until, useEventListener } from '@vueuse/core'
 import { computed, nextTick, onMounted, provide, ref, watch } from 'vue'
-import { ConnectionMode, useNodesInitialized, useVueFlow, VueFlow } from '@vue-flow/core'
-import type { Connection, Node } from '@vue-flow/core'
+import {
+  Background,
+  ConnectionMode,
+  Controls,
+  setupVueFlow,
+  storeToRefs,
+  useNodesInitialized,
+  useVueFlowStore,
+  VueFlow,
+} from '@xyflow/vue'
+import type { Connection, Node } from '@xyflow/vue'
 
 import RecipeInspector from './recipe-inspector.vue'
 import RecipeElementNode from './recipe-element-node.vue'
@@ -202,16 +210,17 @@ import { recipeEditorOpen } from './open'
 import { createRecipeEditor, recipeEditorKey } from './editor'
 import type { ElementNodeData } from './editor'
 
-import '@vue-flow/core/dist/style.css'
-import '@vue-flow/core/dist/theme-default.css'
-import '@vue-flow/controls/dist/style.css'
+import '@xyflow/vue/style.css'
 
 const editor = createRecipeEditor()
 const game = useGame()
-const query = ref('')
-const { dimensions, fitView, updateNodeInternals, vueFlowRef } = useVueFlow()
+const { fitView, updateNodeInternals } = setupVueFlow()
+const { dimensions, vueFlowRef } = storeToRefs(useVueFlowStore())
 const nodesReady = useNodesInitialized()
+
+const query = ref('')
 let frameToken = 0
+
 const paneReady = computed(() => {
   const pane = vueFlowRef.value
   const measured = dimensions.value
@@ -303,10 +312,10 @@ function onConnect(connection: Connection) {
 async function frame() {
   const token = ++frameToken
   await nextTick()
-  updateNodeInternals()
+  updateNodeInternals(editor.nodes.map(node => node.id))
   await until(paneReady).toBe(true)
   if (token !== frameToken) return
-  await fitView({ padding: 0.2, duration: 180 })
+  await fitView({ padding: '8.3%', duration: 180 })
 }
 
 function goHome() {
@@ -544,6 +553,7 @@ async function closeEditor() {
 }
 
 :deep(.vue-flow__controls) {
+  margin: 8px;
   box-shadow: none;
   border: 1px solid var(--border);
   border-radius: 12px;

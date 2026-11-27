@@ -34,13 +34,13 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { Handle, Position } from '@vue-flow/core'
-import type { NodeProps } from '@vue-flow/core'
+import { Handle, Position } from '@xyflow/vue'
+import type { Node, NodeProps } from '@xyflow/vue'
 
 import { spriteUrl } from '@/assets/sprite'
 import type { ElementNodeData } from './editor'
 
-const props = defineProps<NodeProps<ElementNodeData>>()
+const props = defineProps<NodeProps<Node<ElementNodeData, 'element'>>>()
 const src = computed(() => spriteUrl(props.data.elementId))
 const failed = ref(false)
 
@@ -95,6 +95,7 @@ watch(src, () => {
 
   &__name,
   &__badges {
+    flex-shrink: 0;
     width: 100%;
     overflow: hidden;
     pointer-events: none;

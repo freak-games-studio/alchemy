@@ -1,7 +1,7 @@
 import type { RecipeDefinition } from '@/game/recipe'
 
 export const ELEMENT_WIDTH = 172
-export const ELEMENT_HEIGHT = 86
+export const ELEMENT_HEIGHT = 100
 
 const COLUMNS = 8
 const GAP_X = 28

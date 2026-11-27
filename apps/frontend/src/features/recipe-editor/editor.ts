@@ -1,7 +1,7 @@
-import { MarkerType } from '@vue-flow/core'
+import { MarkerType } from '@xyflow/vue'
 import { computed, inject, reactive, ref, shallowRef } from 'vue'
 import type { InjectionKey } from 'vue'
-import type { Connection, Edge, Node } from '@vue-flow/core'
+import type { Connection, Edge, Node } from '@xyflow/vue'
 
 import { categoryLabel, loadRecipes, recipeCategoryOrder, recipeSource, refreshEnded } from '@/game/recipe'
 import { layoutFocus } from './layout'
@@ -19,7 +19,7 @@ const PAIR_COLORS = [
   '#ff8faf',
 ]
 
-export interface ElementNodeData {
+export interface ElementNodeData extends Record<string, unknown> {
   elementId: string
   name: string
   ended: boolean
@@ -27,6 +27,8 @@ export interface ElementNodeData {
   current: boolean
   pairIndex: number | null
 }
+
+export type RecipeNode = Node<ElementNodeData, 'element'> | Node<Record<string, unknown>, 'plus'>
 
 export interface DraftPair {
   resultId: string
@@ -44,7 +46,7 @@ export interface IngredientChange {
 
 export interface RecipeEditorApi {
   recipes: RecipeDefinition[]
-  nodes: Node[]
+  nodes: RecipeNode[]
   edges: Edge[]
   selectedId: string | null
   selectedEdgeId: string | null
@@ -62,7 +64,7 @@ export interface RecipeEditorApi {
   forward: () => void
   open: (id: string) => void
   connect: (source: string, target: string) => void
-  canConnect: (connection: Connection) => boolean
+  canConnect: (connection: Connection | Edge) => boolean
   removeEdge: (edgeId: string) => void
   selectNode: (id: string) => void
   selectEdge: (id: string) => void
@@ -137,7 +139,7 @@ function elementData(recipe: RecipeDefinition, current: boolean, pairIndex: numb
 
 export function createRecipeEditor(): RecipeEditorApi {
   const recipes = ref<RecipeDefinition[]>(cloneRecipes())
-  const nodes = shallowRef<Node[]>([])
+  const nodes = shallowRef<RecipeNode[]>([])
   const edges = shallowRef<Edge[]>([])
   const drafts = ref<DraftPair[]>([])
   const centerId = ref<string | null>(null)
@@ -285,7 +287,7 @@ export function createRecipeEditor(): RecipeEditorApi {
     return (node.data as ElementNodeData).elementId
   }
 
-  function elementNode(recipe: RecipeDefinition, item: LayoutNode): Node<ElementNodeData> {
+  function elementNode(recipe: RecipeDefinition, item: LayoutNode): Node<ElementNodeData, 'element'> {
     return {
       id: item.id,
       type: 'element',
@@ -299,7 +301,7 @@ export function createRecipeEditor(): RecipeEditorApi {
     }
   }
 
-  function plusNode(item: LayoutNode): Node {
+  function plusNode(item: LayoutNode): Node<Record<string, unknown>, 'plus'> {
     return {
       id: item.id,
       type: 'plus',
@@ -317,7 +319,7 @@ export function createRecipeEditor(): RecipeEditorApi {
   function relayout() {
     refreshEnded(recipes.value)
     const placed = layoutFocus(recipes.value, centerId.value)
-    const next: Node[] = []
+    const next: RecipeNode[] = []
     for (const item of placed) {
       if (item.kind === 'plus') {
         next.push(plusNode(item))
@@ -478,7 +480,7 @@ export function createRecipeEditor(): RecipeEditorApi {
     error.value = 'Сначала завершите черновик'
   }
 
-  function canConnect(connection: Connection): boolean {
+  function canConnect(connection: Connection | Edge): boolean {
     const source = connection.source
       ? resolveElement(connection.source)
       : null
@@ -820,7 +822,7 @@ function pushEdge(list: Edge[], input: {
       ? { type: MarkerType.ArrowClosed, color: input.tone }
       : MarkerType.ArrowClosed,
     interactionWidth: 12,
-    updatable: false,
+    reconnectable: false,
     class: classes.join(' '),
     style: input.tone
       ? { stroke: input.tone }
