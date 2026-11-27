@@ -22,6 +22,61 @@
       </button>
     </header>
     <div class="inspector__body">
+      <div class="inspector__field">
+        <span>Изображение</span>
+        <span class="inspector__samples">
+          <label
+            class="inspector__sprite"
+            :class="{
+              'inspector__sprite--over': dragging,
+              'inspector__sprite--filled': showSprite,
+            }"
+            @dragenter.prevent="onDragEnter"
+            @dragover.prevent
+            @dragleave="onDragLeave"
+            @drop.prevent="onDrop"
+          >
+            <img
+              v-show="showSprite"
+              :key="shown"
+              class="inspector__preview"
+              :src="shown"
+              alt=""
+              @error="onPreviewError"
+            >
+            <span
+              v-if="!showSprite"
+              class="inspector__fallback"
+            >{{ recipe.name.slice(0, 1) }}</span>
+            <input
+              class="inspector__file"
+              type="file"
+              accept="image/*"
+              @change="onFile"
+            >
+          </label>
+          <span
+            v-if="showSprite"
+            class="inspector__plates"
+            aria-hidden="true"
+          >
+            <span class="inspector__plate inspector__plate--dark">
+              <img
+                :key="shown"
+                :src="shown"
+                alt=""
+              >
+            </span>
+            <span class="inspector__plate inspector__plate--light">
+              <img
+                :key="`${shown}-light`"
+                :src="shown"
+                alt=""
+              >
+            </span>
+          </span>
+        </span>
+      </div>
       <label class="inspector__field">
         <span>Id</span>
         <input
@@ -73,12 +128,6 @@
         <h3 class="inspector__pairs-title">
           Рецепты
         </h3>
-        <p
-          v-if="!recipe.recipes.length && !draft"
-          class="inspector__empty"
-        >
-          Нет рецептов
-        </p>
         <div
           v-for="(pair, index) in recipe.recipes"
           :key="`${pair[0]}-${pair[1]}-${index}`"
@@ -88,6 +137,8 @@
             :value="pair[0]"
             :options="optionsFor(pair[0])"
             label="Ингредиент"
+            span=".inspector__pair"
+            autofocus
             @select="onIngredient(index, 0, $event)"
           />
           <span class="inspector__plus">+</span>
@@ -95,6 +146,8 @@
             :value="pair[1]"
             :options="optionsFor(pair[1])"
             label="Ингредиент"
+            span=".inspector__pair"
+            autofocus
             @select="onIngredient(index, 1, $event)"
           />
           <div class="inspector__pair-actions">
@@ -134,6 +187,8 @@
             :options="optionsFor(draft.left)"
             placeholder="Ингредиент"
             label="Ингредиент"
+            span=".inspector__pair"
+            autofocus
             @select="onDraft('left', $event)"
           />
           <span class="inspector__plus">+</span>
@@ -142,6 +197,8 @@
             :options="optionsFor(draft.right)"
             placeholder="Ингредиент"
             label="Ингредиент"
+            span=".inspector__pair"
+            autofocus
             @select="onDraft('right', $event)"
           />
           <div class="inspector__pair-actions">
@@ -175,7 +232,14 @@
           :disabled="Boolean(draft)"
           @click="editor.beginDraft(recipe.id)"
         >
-          Новая пара
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path d="M12 5v14" />
+            <path d="M5 12h14" />
+          </svg>
+          Добавить рецепт
         </button>
       </section>
       <button
@@ -190,28 +254,131 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import AlchemyCombobox from '@/shared/ui/alchemy-combobox.vue'
 import { useGame } from '@/game/injection'
+import { spriteUrl } from '@/assets/sprite'
 import { useRecipeEditor } from './editor'
+import { removeSprite, renameSprite, saveSprite } from './sprite-file'
 
 const editor = useRecipeEditor()
 const game = useGame()
 const recipe = computed(() => editor.selected)
 const draft = computed(() => editor.draft)
 const idDraft = ref('')
+const spriteFailed = ref(false)
+const dragging = ref(false)
+const localPreview = ref('')
+let dragDepth = 0
+let localUrl = ''
+const preview = computed(() => recipe.value
+  ? spriteUrl(recipe.value.id)
+  : '')
+const shown = computed(() => localPreview.value || preview.value)
+const showSprite = computed(() => Boolean(localPreview.value) || !spriteFailed.value)
 
 watch(() => editor.selected?.id, (id) => {
   idDraft.value = id ?? ''
+  releaseLocal()
 }, { immediate: true })
 
-function commitId() {
+watch(preview, () => {
+  spriteFailed.value = false
+})
+
+function releaseLocal() {
+  const url = localUrl
+  localUrl = ''
+  localPreview.value = ''
+  dragDepth = 0
+  dragging.value = false
+  if (!url) return
+  nextTick(() => URL.revokeObjectURL(url))
+}
+
+onUnmounted(releaseLocal)
+
+function failure(cause: unknown, fallback: string) {
+  editor.error = cause instanceof Error
+    ? cause.message
+    : fallback
+}
+
+async function commitId() {
   if (!recipe.value) return
-  const message = editor.rename(recipe.value.id, idDraft.value)
-  if (!message) return
-  editor.error = message
-  idDraft.value = recipe.value.id
+  const from = recipe.value.id
+  const message = editor.rename(from, idDraft.value)
+  if (message) {
+    editor.error = message
+    idDraft.value = recipe.value.id
+    return
+  }
+  if (from === recipe.value.id) return
+  try {
+    await renameSprite(from, recipe.value.id)
+    editor.error = ''
+  } catch (cause) {
+    failure(cause, 'Не удалось переименовать картинку')
+  }
+}
+
+function onDragEnter() {
+  dragDepth += 1
+  dragging.value = true
+}
+
+function onDragLeave() {
+  dragDepth -= 1
+  if (dragDepth > 0) return
+  dragDepth = 0
+  dragging.value = false
+}
+
+function onDrop(event: DragEvent) {
+  dragDepth = 0
+  dragging.value = false
+  const file = event.dataTransfer?.files[0]
+  if (file) useSprite(file)
+}
+
+function onFile(event: Event) {
+  const input = event.target
+  if (!(input instanceof HTMLInputElement)) return
+  const file = input.files?.[0]
+  input.value = ''
+  if (file) useSprite(file)
+}
+
+function onPreviewError(event: Event) {
+  if (localPreview.value) return
+  const image = event.target
+  if (!(image instanceof HTMLImageElement)) return
+  if (image.getAttribute('src') !== shown.value) return
+  spriteFailed.value = true
+}
+
+async function useSprite(file: File) {
+  if (!recipe.value) return
+  const id = recipe.value.id
+  releaseLocal()
+  const url = URL.createObjectURL(file)
+  localUrl = url
+  localPreview.value = url
+  spriteFailed.value = false
+  try {
+    await saveSprite(id, file)
+    editor.error = ''
+  } catch (cause) {
+    failure(cause, 'Не удалось сохранить картинку')
+  } finally {
+    if (localUrl === url) {
+      localPreview.value = ''
+      localUrl = ''
+      await nextTick()
+      URL.revokeObjectURL(url)
+    }
+  }
 }
 
 function onCategory(categoryId: string, event: Event) {
@@ -254,11 +421,15 @@ function optionsFor(current: string) {
   const options = editor.recipes.map(item => ({
     id: item.id,
     label: item.name,
+    image: spriteUrl(item.id),
+    ended: Boolean(item.ended),
   }))
   if (current && !options.some(item => item.id === current)) {
     options.unshift({
       id: current,
       label: `${current} (нет элемента)`,
+      image: spriteUrl(current),
+      ended: false,
     })
   }
   return options
@@ -281,7 +452,13 @@ async function remove() {
   if (!recipe.value) return
   const accepted = await game.session.confirm.ask(`Удалить «${recipe.value.name}»?`)
   if (!accepted) return
-  editor.remove(recipe.value.id)
+  const id = recipe.value.id
+  editor.remove(id)
+  try {
+    await removeSprite(id)
+  } catch (cause) {
+    failure(cause, 'Не удалось удалить картинку')
+  }
 }
 </script>
 
@@ -294,7 +471,7 @@ async function remove() {
   flex-direction: column;
   border-left: 1px solid var(--border);
   background: var(--card);
-  width: min(360px, 100%);
+  width: min(400px, 100%);
   min-height: 0;
   color: var(--foreground);
 
@@ -330,6 +507,87 @@ async function remove() {
     padding: 16px;
     min-height: 0;
     overflow: auto;
+  }
+
+  &__samples {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__plates {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__plate {
+    display: grid;
+    flex: none;
+    place-items: center;
+    border-radius: 10px;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+
+    &--dark {
+      background: #000;
+    }
+
+    &--light {
+      background: #fff;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+  }
+
+  &__sprite {
+    display: grid;
+    position: relative;
+    flex: none;
+    place-items: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    background: var(--muted);
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+
+    &:hover,
+    &--over {
+      border-style: solid;
+      border-color: var(--primary);
+    }
+  }
+
+  &__preview,
+  &__fallback {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__preview {
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  &__fallback {
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    color: var(--foreground);
+    font-size: 28px;
+  }
+
+  &__file {
+    display: none;
   }
 
   &__field {
@@ -371,18 +629,18 @@ async function remove() {
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
 
-  &__pairs-title {
-    margin: 0;
-    color: var(--foreground);
-    font-size: 14px;
+    &-title {
+      margin: 0;
+      color: var(--muted-foreground);
+      font-size: 14px;
+    }
   }
 
   &__empty {
-    margin: -4px 0 0;
     color: var(--muted-foreground);
     font-size: 12px;
+    text-align: center;
   }
 
   &__pair {
@@ -424,14 +682,37 @@ async function remove() {
     }
   }
 
-  &__add,
-  &__remove {
-    border-radius: 10px;
-    padding: 8px 10px;
+  &__add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    width: 100%;
+    color: var(--foreground);
+
+    svg {
+      @include icon-stroke(16px);
+    }
+
+    &:hover {
+      border-style: solid;
+      border-color: var(--primary);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+      pointer-events: none;
+    }
   }
 
   &__remove {
     margin-top: 8px;
+    border-radius: 10px;
+    padding: 8px 10px;
   }
 }
 </style>

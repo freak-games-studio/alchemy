@@ -9,8 +9,9 @@
     />
     <img
       v-show="!failed"
+      :key="src"
       class="node__sprite"
-      :src="spriteUrl(props.data.elementId)"
+      :src="src"
       alt=""
       draggable="false"
       @error="failed = true"
@@ -32,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Handle, Position } from '@vue-flow/core'
 import type { NodeProps } from '@vue-flow/core'
 
@@ -40,7 +41,12 @@ import { spriteUrl } from '@/assets/sprite'
 import type { ElementNodeData } from './editor'
 
 const props = defineProps<NodeProps<ElementNodeData>>()
+const src = computed(() => spriteUrl(props.data.elementId))
 const failed = ref(false)
+
+watch(src, () => {
+  failed.value = false
+})
 </script>
 
 <style scoped lang="scss">

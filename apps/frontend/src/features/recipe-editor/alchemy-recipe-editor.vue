@@ -23,7 +23,16 @@
               type="button"
               @click="focusMatch(match.id)"
             >
-              <span>{{ match.name }}</span>
+              <img
+                class="editor__match-image"
+                :src="spriteUrl(match.id)"
+                alt=""
+                @error="hideImage"
+              >
+              <span
+                class="editor__match-name"
+                :class="{ 'editor__match-name--ended': match.ended }"
+              >{{ match.name }}</span>
               <span class="editor__match-id">{{ match.id }}</span>
             </button>
           </li>
@@ -166,7 +175,10 @@
             :gap="24"
             pattern-color="var(--border)"
           />
-          <controls position="bottom-left" />
+          <controls
+            position="bottom-left"
+            :show-interactive="false"
+          />
         </vue-flow>
       </div>
       <recipe-inspector />
@@ -178,13 +190,14 @@
 import { Controls } from '@vue-flow/controls'
 import { Background } from '@vue-flow/background'
 import { until, useEventListener } from '@vueuse/core'
-import { computed, onMounted, provide, ref } from 'vue'
+import { computed, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { ConnectionMode, useNodesInitialized, useVueFlow, VueFlow } from '@vue-flow/core'
 import type { Connection, Node } from '@vue-flow/core'
 
 import RecipeInspector from './recipe-inspector.vue'
 import RecipeElementNode from './recipe-element-node.vue'
 import { useGame } from '@/game/injection'
+import { spriteUrl } from '@/assets/sprite'
 import { recipeEditorOpen } from './open'
 import { createRecipeEditor, recipeEditorKey } from './editor'
 import type { ElementNodeData } from './editor'
@@ -196,7 +209,7 @@ import '@vue-flow/controls/dist/style.css'
 const editor = createRecipeEditor()
 const game = useGame()
 const query = ref('')
-const { dimensions, fitView, vueFlowRef } = useVueFlow()
+const { dimensions, fitView, updateNodeInternals, vueFlowRef } = useVueFlow()
 const nodesReady = useNodesInitialized()
 let frameToken = 0
 const paneReady = computed(() => {
@@ -224,7 +237,16 @@ const matches = computed(() => {
 
 onMounted(frame)
 
+watch(recipeEditorOpen, (open) => {
+  if (open) frame()
+})
+
 useEventListener('keydown', onKeydown)
+
+function hideImage(event: Event) {
+  const image = event.target
+  if (image instanceof HTMLImageElement) image.style.visibility = 'hidden'
+}
 
 function isField(target: EventTarget | null): boolean {
   return target instanceof HTMLInputElement
@@ -280,6 +302,8 @@ function onConnect(connection: Connection) {
 
 async function frame() {
   const token = ++frameToken
+  await nextTick()
+  updateNodeInternals()
   await until(paneReady).toBe(true)
   if (token !== frameToken) return
   await fitView({ padding: 0.2, duration: 180 })
@@ -380,15 +404,37 @@ async function closeEditor() {
 
   &__match {
     display: flex;
-    justify-content: space-between;
-    gap: 12px;
+    align-items: center;
+    gap: 8px;
     border-radius: 12px;
-    padding: 8px 12px;
+    padding: 6px 10px;
     width: 100%;
     text-align: left;
   }
 
+  &__match-image {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  &__match-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &--ended::after {
+      margin-left: 6px;
+      content: '*';
+      color: var(--primary);
+    }
+  }
+
   &__match-id {
+    flex: none;
     color: var(--muted-foreground);
     font-size: 12px;
   }
