@@ -5,7 +5,7 @@
     :class="{ 'draggable--settling': settling }"
     :style="itemStyle"
     @dblclick="$emit('clone-element', alchemyElement)"
-    @contextmenu.prevent="$emit('remove-element', alchemyElement)"
+    @contextmenu.prevent="onContextMenu"
     @pointerdown="onHoldStart"
     @pointermove="onHoldMove"
     @pointerup="onHoldEnd"
@@ -73,7 +73,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'position', value: Position): void
   (event: 'clone-element', value: AlchemyElementOnBoard): void
-  (event: 'remove-element', value: AlchemyElementOnBoard): void
+  (event: 'context-menu', value: { x: number, y: number }): void
 }>()
 
 const HOLD_MS = 550
@@ -137,14 +137,18 @@ function cancelHold() {
   holdTimer = 0
 }
 
+function onContextMenu(event: MouseEvent) {
+  emit('context-menu', { x: event.clientX, y: event.clientY })
+}
+
 function onHoldStart(event: PointerEvent) {
-  if (event.button !== 0) return
+  if (event.button !== 0 || event.pointerType !== 'touch') return
   removedByHold = false
   holdOrigin = { x: event.clientX, y: event.clientY }
   cancelHold()
   holdTimer = window.setTimeout(() => {
     removedByHold = true
-    emit('remove-element', props.alchemyElement)
+    emit('context-menu', holdOrigin)
   }, HOLD_MS)
 }
 

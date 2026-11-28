@@ -100,7 +100,7 @@
               :key="element.id"
               class="catalog__element"
               @pointerdown="onPointerDown($event, element)"
-              @contextmenu.prevent="openAbout(element)"
+              @contextmenu.prevent="onContextMenu($event, element)"
             >
               <alchemy-item
                 :element="element"
@@ -122,6 +122,14 @@
       <alchemy-item :element="ghost.element" />
     </div>
   </Teleport>
+  <alchemy-context-menu
+    v-if="menu"
+    :x="menu.x"
+    :y="menu.y"
+    :items="menuItems"
+    @select="onMenuSelect"
+    @close="menu = null"
+  />
 </template>
 
 <script setup lang="ts">
@@ -132,10 +140,12 @@ import type { ComponentPublicInstance } from 'vue'
 import AlchemyItem from '@/shared/ui/alchemy-item.vue'
 import AlchemyPanel from '@/shared/ui/alchemy-panel.vue'
 import AlchemyCombobox from '@/shared/ui/alchemy-combobox.vue'
+import AlchemyContextMenu from '@/shared/ui/alchemy-context-menu.vue'
 import AlchemyElementAbout from '@/features/about/alchemy-element-about.vue'
 import { useGame } from '@/game/injection'
 import { recipeById, recipeCategories } from '@/game/recipe'
 import type { AlchemyElement } from '@/game/element'
+import type { ContextMenuItem } from '@/shared/ui/alchemy-context-menu.vue'
 
 const HOLD_MS = 550
 const DRAG_PX = 8
@@ -190,6 +200,11 @@ watch(categories, (items) => {
 const searchRef = ref<HTMLInputElement>()
 const listRef = ref<HTMLElement>()
 const ghost = ref<Ghost | null>(null)
+const menu = ref<{ element: AlchemyElement, x: number, y: number } | null>(null)
+const menuItems: ContextMenuItem[] = [
+  { id: 'add', label: 'Добавить элемент' },
+  { id: 'about', label: 'Информация об элементе' },
+]
 const scrollTop = ref(0)
 const listWidth = ref(0)
 const listHeight = ref(0)
@@ -366,9 +381,12 @@ function measureRow(index: number, element: Element | ComponentPublicInstance | 
 
 let dragStop: (() => void) | null = null
 let holdTimer = 0
-let holdOpened = false
 let dragMoved = false
 let pointerDistance = 0
+let pointerDown = false
+let gestureTouch = false
+let suppressTouchMenu = false
+let pendingMenu: { element: AlchemyElement, x: number, y: number } | null = null
 
 function stopListeners() {
   window.clearTimeout(holdTimer)
@@ -383,14 +401,39 @@ function finishDrag() {
 }
 
 onUnmounted(() => {
+  pointerDown = false
+  pendingMenu = null
   stopListeners()
   if (heightFrame) cancelAnimationFrame(heightFrame)
   for (const observer of rowObservers.values()) observer.disconnect()
   rowObservers.clear()
 })
 
-function openAbout(element: AlchemyElement) {
-  about.open(element)
+function openMenu(element: AlchemyElement, x: number, y: number) {
+  menu.value = { element, x, y }
+}
+
+function onContextMenu(event: MouseEvent, element: AlchemyElement) {
+  if (event.button !== 2 && pointerDown && gestureTouch) {
+    if (dragMoved || pointerDistance >= DRAG_PX) return
+    pendingMenu = { element, x: event.clientX, y: event.clientY }
+    return
+  }
+  if (event.button !== 2 && suppressTouchMenu) return
+  window.clearTimeout(holdTimer)
+  pendingMenu = null
+  openMenu(element, event.clientX, event.clientY)
+}
+
+function onMenuSelect(id: string) {
+  const current = menu.value
+  if (!current) return
+  if (id === 'add') {
+    game.board.place(current.element, undefined, 'create')
+    game.audio.play('create')
+    return
+  }
+  about.open(current.element)
 }
 
 async function unlockWithVodka() {
@@ -413,13 +456,15 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
   let scrolling = false
   stopListeners()
   dragMoved = false
-  holdOpened = false
   pointerDistance = 0
+  pointerDown = true
+  gestureTouch = touch
+  suppressTouchMenu = false
+  pendingMenu = null
 
   holdTimer = window.setTimeout(() => {
-    if (dragMoved || scrolling) return
-    holdOpened = true
-    openAbout(element)
+    if (dragMoved || scrolling || !touch || pointerDistance >= DRAG_PX) return
+    pendingMenu = { element, x: originX, y: originY }
   }, HOLD_MS)
 
   function pointerInside(clientX: number, clientY: number) {
@@ -449,7 +494,10 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
     const dy = clientY - originY
     const distance = Math.hypot(dx, dy)
     pointerDistance = distance
-    if (distance >= DRAG_PX) window.clearTimeout(holdTimer)
+    if (distance >= DRAG_PX) {
+      window.clearTimeout(holdTimer)
+      pendingMenu = null
+    }
     if (dragMoved) return 'drag'
     if (!card.isConnected) return 'scroll'
     if (distance < DRAG_PX) return 'wait'
@@ -474,7 +522,7 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
   }
 
   function onMove(moveEvent: PointerEvent) {
-    if (moveEvent.pointerId !== pointerId || holdOpened || scrolling) return
+    if (moveEvent.pointerId !== pointerId || scrolling) return
     const action = gesture(moveEvent.clientX, moveEvent.clientY)
     if (action === 'wait') return
     if (action === 'scroll') {
@@ -497,7 +545,7 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
   }
 
   function onTouchMove(touchEvent: TouchEvent) {
-    if (holdOpened || scrolling) return
+    if (scrolling) return
     const point = touchPoint(touchEvent)
     if (!point) return
     const action = gesture(point.clientX, point.clientY)
@@ -514,13 +562,23 @@ function onPointerDown(event: PointerEvent, element: AlchemyElement) {
     if (upEvent.pointerId !== pointerId) return
     const cancelled = upEvent.type === 'pointercancel'
     const moved = dragMoved
-    const held = holdOpened
     const scrolled = scrolling
     const snapshot = ghost.value
     const hit = document.elementFromPoint(upEvent.clientX, upEvent.clientY)
+    const still = pointerDistance < DRAG_PX
+    const menuPoint = !cancelled && !moved && !scrolled && still
+      ? pendingMenu
+      : null
+    pointerDown = false
+    suppressTouchMenu = cancelled || moved || scrolled || !still
+    pendingMenu = null
     finishDrag()
-    if (cancelled || held || scrolled || !moved || !snapshot) {
-      if (!cancelled && !held && !scrolled && pointerDistance < DRAG_PX) {
+    if (menuPoint) {
+      openMenu(menuPoint.element, menuPoint.x, menuPoint.y)
+      return
+    }
+    if (cancelled || scrolled || !moved || !snapshot) {
+      if (!cancelled && !scrolled && still) {
         game.board.place(element, undefined, 'create')
         game.audio.play('create')
       }

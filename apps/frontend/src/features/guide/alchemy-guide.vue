@@ -15,12 +15,39 @@
         <p class="guide__description">
           Создавайте новые элементы, <b class="guide__marker">комбинируя элементы друг с другом.</b> У одного элемента может быть <b class="guide__marker">несколько рецептов.</b> Один элемент может использоваться в создании нескольких элементов.
         </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/combine.gif"
+            alt="Огонь перетаскивают на Землю, появляется Лава"
+          >
+        </figure>
         <p class="guide__description">
           Чтобы добавить уже созданный элемент на поле, откройте <b class="guide__marker">«Элементы»</b> на панели и <b class="guide__marker">нажмите на него или перетащите на стол.</b>
         </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/catalog.gif"
+            alt="Землю перетаскивают из списка элементов на стол"
+          >
+        </figure>
+        <p class="guide__description">
+          Правый клик или долгое нажатие по элементу в списке открывает меню. Пункт <b class="guide__marker">«Добавить элемент»</b> кладёт его на стол.
+        </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/catalog-add.gif"
+            alt="В меню списка выбирают «Добавить элемент», и он появляется на столе"
+          >
+        </figure>
         <p class="guide__description">
           <b class="guide__marker">Двойное нажатие по пустой области на поле</b> создаст четыре базовых элемента.
         </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/basics.gif"
+            alt="Двойное нажатие по пустому полю создаёт Огонь, Воду, Воздух и Землю"
+          >
+        </figure>
       </div>
 
       <div>
@@ -28,11 +55,23 @@
           Просмотр информации об элементе
         </h2>
         <p class="guide__description">
-          Не забывайте читать описания элементов. В них может содержаться подсказка для создания другого элемента. Для открытия справки <b class="guide__marker">нажмите правой кнопкой мыши или удерживайте элемент в списке «Элементы».</b>
+          Не забывайте читать описания элементов. В них может содержаться подсказка для создания другого элемента. На столе или в списке <b class="guide__marker">«Элементы»</b> нажмите правой кнопкой мыши или удерживайте элемент, затем выберите <b class="guide__marker">«Информация об элементе».</b>
         </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/about.gif"
+            alt="В меню списка выбирают «Информация об элементе» и открывается описание"
+          >
+        </figure>
         <p class="guide__description">
           Символ <b class="guide__marker guide__marker--ended">*</b> около элемента означает, что <b class="guide__marker">данный элемент конечный и не участвует в создании других элементов.</b>
         </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/ended.png"
+            alt="У конечного элемента рядом с названием стоит звёздочка"
+          >
+        </figure>
       </div>
 
       <div>
@@ -42,6 +81,12 @@
         <p class="guide__description">
           Чтобы скопировать элемент, кликните по нему два раза.
         </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/copy.gif"
+            alt="Двойной клик по элементу на поле создаёт его копию"
+          >
+        </figure>
       </div>
 
       <div>
@@ -49,8 +94,14 @@
           Удаление элементов
         </h2>
         <p class="guide__description">
-          Чтобы удалить элемент на поле, <b class="guide__marker">нажмите по нему правой кнопкой мыши или удерживайте его.</b> Кнопка <b class="guide__marker">«Очистить»</b> на панели убирает всё, кроме базовых элементов.
+          Чтобы удалить элемент на поле, <b class="guide__marker">нажмите по нему правой кнопкой мыши или удерживайте его</b> и выберите <b class="guide__marker">«Удалить элемент».</b> Кнопка <b class="guide__marker">«Очистить»</b> на панели убирает всё, кроме базовых элементов.
         </p>
+        <figure class="guide__demo">
+          <img
+            src="/guide/remove.gif"
+            alt="В меню стола выбирают «Удалить элемент», затем «Очистить» убирает остальное"
+          >
+        </figure>
       </div>
     </div>
   </alchemy-panel>
@@ -89,6 +140,21 @@ const active = shell.active
 
     &--ended {
       color: var(--primary);
+    }
+  }
+
+  &__demo {
+    margin: 12px 0 0;
+
+    img {
+      display: block;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #09090b;
+      width: auto;
+      max-width: 100%;
+      height: auto;
     }
   }
 }

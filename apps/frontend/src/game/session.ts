@@ -109,6 +109,7 @@ export function createSession(catalog: CatalogApi): SessionApi {
 
   function onEscape(event: KeyboardEvent) {
     if (event.key !== 'Escape' || confirmOpen.value) return
+    if (document.querySelector('[data-context-menu]')) return
     if (aboutStack.value.length) {
       event.stopImmediatePropagation()
       backAbout()
