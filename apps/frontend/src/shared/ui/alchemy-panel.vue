@@ -42,10 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { useGame } from '@/game/injection'
-
 withDefaults(defineProps<{
   open: boolean
+  side: 'bottom' | 'left' | 'right'
   minimized?: boolean
   nested?: boolean
   scroll?: boolean
@@ -60,9 +59,6 @@ withDefaults(defineProps<{
 const emit = defineEmits<{
   close: []
 }>()
-
-const game = useGame()
-const side = game.settings.dock
 </script>
 
 <style scoped lang="scss">

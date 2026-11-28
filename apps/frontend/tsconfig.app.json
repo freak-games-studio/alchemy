@@ -14,9 +14,8 @@
     "strictPropertyInitialization": false
   },
   "include": [
-    "env.d.ts",
     "src/**/*",
     "src/**/*.vue"
   ],
-  "exclude": ["src/**/__tests__/*"]
+  "exclude": ["src/**/*.test.ts"]
 }

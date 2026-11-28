@@ -259,7 +259,7 @@ import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 import AlchemyCombobox from '@/shared/ui/alchemy-combobox.vue'
 import { useGame } from '@/game/injection'
 import { spriteUrl } from '@/assets/sprite'
-import { useRecipeEditor } from './editor'
+import { ingredientName, useRecipeEditor } from './editor'
 import { removeSprite, renameSprite, saveSprite } from './sprite-file'
 
 const editor = useRecipeEditor()
@@ -435,15 +435,11 @@ function optionsFor(current: string) {
   return options
 }
 
-function ingredientName(id: string) {
-  return editor.recipes.find(item => item.id === id)?.name || id
-}
-
 async function removeRecipe(index: number) {
   if (!recipe.value) return
   const pair = recipe.value.recipes[index]
   if (!pair) return
-  const accepted = await game.session.confirm.ask(`Удалить рецепт «${ingredientName(pair[0])} + ${ingredientName(pair[1])}»?`)
+  const accepted = await game.session.confirm.ask(`Удалить рецепт «${ingredientName(editor.recipes, pair[0])} + ${ingredientName(editor.recipes, pair[1])}»?`)
   if (!accepted) return
   editor.removePair(recipe.value.id, index)
 }

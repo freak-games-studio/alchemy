@@ -210,8 +210,9 @@ import RecipeInspector from './recipe-inspector.vue'
 import RecipeElementNode from './recipe-element-node.vue'
 import { useGame } from '@/game/injection'
 import { spriteUrl } from '@/assets/sprite'
-import { recipeEditorOpen } from './open'
-import { createRecipeEditor, recipeEditorKey } from './editor'
+import { isField } from '@/shared/is-field'
+import { recipeEditorOpen } from '@/shared/recipe-editor-open'
+import { createRecipeEditor, ingredientName, pairEdge, recipeEditorKey } from './editor'
 import type { ElementNodeData } from './editor'
 
 import '@xyflow/vue/style.css'
@@ -257,23 +258,13 @@ function hideImage(event: Event) {
   if (image instanceof HTMLImageElement) image.style.visibility = 'hidden'
 }
 
-function isField(target: EventTarget | null): boolean {
-  return target instanceof HTMLInputElement
-    || target instanceof HTMLTextAreaElement
-    || target instanceof HTMLSelectElement
-}
-
-function ingredientName(id: string) {
-  return editor.recipes.find(item => item.id === id)?.name || id
-}
-
 function recipeQuestion(edgeId: string) {
-  const match = /^pair:([a-z0-9_]+):(\d+):\d+$/.exec(edgeId)
-  if (!match) return null
-  const recipe = editor.recipes.find(item => item.id === match[1])
-  const pair = recipe?.recipes[Number(match[2])]
+  const parsed = pairEdge(edgeId)
+  if (!parsed) return null
+  const recipe = editor.recipes.find(item => item.id === parsed.resultId)
+  const pair = recipe?.recipes[parsed.index]
   if (!pair) return null
-  return `Удалить рецепт «${ingredientName(pair[0])} + ${ingredientName(pair[1])}»?`
+  return `Удалить рецепт «${ingredientName(editor.recipes, pair[0])} + ${ingredientName(editor.recipes, pair[1])}»?`
 }
 
 async function onKeydown(event: KeyboardEvent) {

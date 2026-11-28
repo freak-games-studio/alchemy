@@ -1,6 +1,7 @@
 <template>
   <alchemy-panel
     :open="active === 'guide'"
+    :side="dock"
     scroll
     @close="shell.close()"
   >
@@ -111,8 +112,10 @@
 import AlchemyPanel from '@/shared/ui/alchemy-panel.vue'
 import { useGame } from '@/game/injection'
 
-const shell = useGame().session.shell
+const game = useGame()
+const shell = game.session.shell
 const active = shell.active
+const dock = game.settings.dock
 </script>
 
 <style scoped lang="scss">

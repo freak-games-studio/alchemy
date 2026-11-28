@@ -19,18 +19,25 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { useGame } from '@/game/injection'
 import { spriteUrl } from '@/assets/sprite'
-import type { AlchemyElement } from '@/game/element'
 
-defineProps<{
-  element: AlchemyElement
+const props = defineProps<{
+  element: {
+    id: string
+    name: string
+    ended?: boolean
+  }
+  size: {
+    width: number
+    height: number
+    fontSize: string
+  }
   lazy?: boolean
 }>()
 
-const elementSize = useGame().board.elementSize
-const width = computed(() => `${elementSize.value.width}px`)
-const height = computed(() => `${elementSize.value.height}px`)
+const width = computed(() => `${props.size.width}px`)
+const height = computed(() => `${props.size.height}px`)
+const fontSize = computed(() => props.size.fontSize)
 </script>
 
 <style scoped lang="scss">
@@ -58,7 +65,7 @@ const height = computed(() => `${elementSize.value.height}px`)
     width: 100%;
     min-width: 0;
     color: var(--foreground);
-    font-size: v-bind('elementSize.fontSize');
+    font-size: v-bind(fontSize);
     line-height: 1.15;
     text-align: center;
     white-space: normal;

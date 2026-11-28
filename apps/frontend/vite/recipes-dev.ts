@@ -4,15 +4,16 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { createReadStream } from 'node:fs'
 import { rename, stat, unlink, writeFile } from 'node:fs/promises'
-import type { Plugin, ViteDevServer } from 'vite'
+import type { Plugin } from 'vite'
 import type { IncomingMessage, ServerResponse } from 'node:http'
+
+import { elementIdPattern, serializeRecipes } from '../src/domain/recipe.ts'
 
 const recipesFile = fileURLToPath(new URL('../public/recipes.json', import.meta.url))
 const spritesDir = join(dirname(recipesFile), 'sprites')
 const bodyLimit = 2_000_000
 const spriteLimit = 12_000_000
 const spriteSize = 120
-const idPattern = /^[a-z0-9_]+$/
 
 function readBytes(req: IncomingMessage, limit: number): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -49,7 +50,7 @@ function requestPath(req: IncomingMessage): string {
 
 function spriteId(path: string): string {
   const id = decodeURIComponent(path.replace(/^\//, ''))
-  if (!idPattern.test(id)) throw new Error('Некорректный id')
+  if (!elementIdPattern.test(id)) throw new Error('Некорректный id')
   return id
 }
 
@@ -72,14 +73,11 @@ function fail(res: ServerResponse, cause: unknown) {
     : 'Не удалось сохранить')
 }
 
-async function writeRecipes(server: ViteDevServer, req: IncomingMessage, res: ServerResponse) {
+async function writeRecipes(req: IncomingMessage, res: ServerResponse) {
   try {
     const raw = await readBody(req)
     const parsed: unknown = JSON.parse(raw)
-    const loaded = await server.ssrLoadModule('/src/features/recipe-editor/validate.ts') as {
-      serializeRecipes: (input: unknown) => { body: string } | { error: string }
-    }
-    const result = loaded.serializeRecipes(parsed)
+    const result = serializeRecipes(parsed)
     if ('error' in result) {
       res.statusCode = 400
       res.end(result.error)
@@ -133,7 +131,7 @@ async function moveSprite(req: IncomingMessage, res: ServerResponse) {
     if (typeof record.from !== 'string' || typeof record.to !== 'string') throw new TypeError('Некорректный id')
     const from = record.from
     const to = record.to
-    if (!idPattern.test(from) || !idPattern.test(to)) throw new Error('Некорректный id')
+    if (!elementIdPattern.test(from) || !elementIdPattern.test(to)) throw new Error('Некорректный id')
     if (from !== to) {
       try {
         await rename(spriteFile(from), spriteFile(to))
@@ -152,7 +150,7 @@ function spriteRequestId(req: IncomingMessage): string | null {
   const name = requestPath(req).split('/').pop() ?? ''
   if (!name.endsWith('.webp')) return null
   const id = name.slice(0, -'.webp'.length)
-  if (!idPattern.test(id)) return null
+  if (!elementIdPattern.test(id)) return null
   return id
 }
 
@@ -219,7 +217,7 @@ export function recipesDevPlugin(): Plugin {
           next()
           return
         }
-        writeRecipes(server, req, res)
+        writeRecipes(req, res)
       })
       server.middlewares.use('/sprites', (req, res, next) => {
         readSprite(req, res, next)

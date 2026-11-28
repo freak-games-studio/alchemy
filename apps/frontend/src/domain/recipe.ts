@@ -1,36 +1,91 @@
-const idPattern = /^[a-z0-9_]+$/
+export type RecipePair = [string, string] | [string, string, true]
 
-interface RecipeRecord {
+export interface RecipeDefinition {
   id: string
   name: string
   description: string
-  recipes: RecipeTuple[]
+  recipes: RecipePair[]
   category?: string[]
-  ended?: true
+  ended?: boolean
 }
 
-type RecipeTuple = [string, string] | [string, string, true]
+export interface RecipeCategory {
+  id: string
+  label: string
+}
 
-function pairKey(left: string, right: string): string {
-  return left < right
-    ? `${left}\0${right}`
-    : `${right}\0${left}`
+export const elementIdBody = '[a-z0-9_]+'
+export const elementIdPattern = new RegExp(`^${elementIdBody}$`)
+export const STARTER_COUNT = 4
+
+export const recipeCategoryOrder: readonly string[] = [
+  'food',
+  'fauna',
+  'flora',
+  'country',
+  'traffic',
+  'figures',
+  'alcohol',
+  'people',
+  'being',
+  'space',
+  'buildings',
+  'easter',
+]
+
+const categoryLabels: Record<string, string> = {
+  food: 'Пища',
+  fauna: 'Фауна',
+  flora: 'Флора',
+  country: 'Страны',
+  traffic: 'Транспорт',
+  figures: 'Личности',
+  alcohol: 'Алкоголь',
+  people: 'Люди',
+  being: 'Существа',
+  space: 'Космос',
+  buildings: 'Постройки',
+  easter: 'Пасхалки',
+}
+
+export function categoryLabel(id: string): string {
+  return categoryLabels[id] ?? id
+}
+
+export function pairKey(leftId: string, rightId: string): string {
+  return leftId < rightId
+    ? `${leftId}\0${rightId}`
+    : `${rightId}\0${leftId}`
+}
+
+export function refreshEnded(list: RecipeDefinition[]) {
+  const used = new Set<string>()
+  for (const recipe of list) {
+    for (const pair of recipe.recipes) {
+      used.add(pair[0])
+      used.add(pair[1])
+    }
+  }
+  for (const recipe of list) {
+    if (used.has(recipe.id)) delete recipe.ended
+    else recipe.ended = true
+  }
 }
 
 function fail(error: string): { error: string } {
   return { error }
 }
 
-function parseElement(input: unknown, ids: Set<string>): { recipe: RecipeRecord } | { error: string } {
+function parseElement(input: unknown, ids: Set<string>): { recipe: RecipeDefinition } | { error: string } {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return fail('Элемент должен быть объектом')
   const record = input as Record<string, unknown>
-  if (typeof record.id !== 'string' || !idPattern.test(record.id)) return fail('Id может содержать только a-z, 0-9 и _')
+  if (typeof record.id !== 'string' || !elementIdPattern.test(record.id)) return fail('Id может содержать только a-z, 0-9 и _')
   if (ids.has(record.id)) return fail(`Id «${record.id}» повторяется`)
   if (typeof record.name !== 'string' || !record.name) return fail(`У «${record.id}» нет имени`)
   if (typeof record.description !== 'string') return fail(`У «${record.name}» нет описания`)
   if (!Array.isArray(record.recipes)) return fail(`У «${record.name}» рецепты должны быть массивом`)
 
-  const recipe: RecipeRecord = {
+  const recipe: RecipeDefinition = {
     id: record.id,
     name: record.name,
     description: record.description,
@@ -41,7 +96,7 @@ function parseElement(input: unknown, ids: Set<string>): { recipe: RecipeRecord 
     if (!Array.isArray(record.category) || !record.category.length) return fail(`У «${record.name}» пустые категории`)
     const categories: string[] = []
     for (const category of record.category) {
-      if (typeof category !== 'string' || !idPattern.test(category)) return fail(`У «${record.name}» некорректная категория`)
+      if (typeof category !== 'string' || !elementIdPattern.test(category)) return fail(`У «${record.name}» некорректная категория`)
       categories.push(category)
     }
     recipe.category = categories
@@ -61,12 +116,12 @@ function parseElement(input: unknown, ids: Set<string>): { recipe: RecipeRecord 
   return { recipe }
 }
 
-function parsePair(input: unknown, name: string): { pair: RecipeTuple } | { error: string } {
+function parsePair(input: unknown, name: string): { pair: RecipePair } | { error: string } {
   if (!Array.isArray(input) || (input.length !== 2 && input.length !== 3)) return fail(`У «${name}» пара должна быть из двух элементов`)
   const left = input[0]
   const right = input[1]
-  if (typeof left !== 'string' || !idPattern.test(left)) return fail(`У «${name}» некорректный ингредиент`)
-  if (typeof right !== 'string' || !idPattern.test(right)) return fail(`У «${name}» некорректный ингредиент`)
+  if (typeof left !== 'string' || !elementIdPattern.test(left)) return fail(`У «${name}» некорректный ингредиент`)
+  if (typeof right !== 'string' || !elementIdPattern.test(right)) return fail(`У «${name}» некорректный ингредиент`)
   if (input.length === 2) {
     return {
       pair: [left, right],
@@ -78,7 +133,7 @@ function parsePair(input: unknown, name: string): { pair: RecipeTuple } | { erro
   }
 }
 
-function validatePairs(recipe: RecipeRecord, ids: Set<string>): string | null {
+function validatePairs(recipe: RecipeDefinition, ids: Set<string>): string | null {
   const seen = new Set<string>()
   for (const pair of recipe.recipes) {
     if (!ids.has(pair[0])) return `В рецепте «${recipe.name}» нет элемента ${pair[0]}`
@@ -90,9 +145,9 @@ function validatePairs(recipe: RecipeRecord, ids: Set<string>): string | null {
   return null
 }
 
-export function parseRecipes(input: unknown): { recipes: RecipeRecord[] } | { error: string } {
+export function parseRecipes(input: unknown): { recipes: RecipeDefinition[] } | { error: string } {
   if (!Array.isArray(input)) return fail('Рецепты должны быть массивом')
-  const recipes: RecipeRecord[] = []
+  const recipes: RecipeDefinition[] = []
   const ids = new Set<string>()
   for (const item of input) {
     const parsed = parseElement(item, ids)
@@ -105,12 +160,6 @@ export function parseRecipes(input: unknown): { recipes: RecipeRecord[] } | { er
     if (error) return fail(error)
   }
   return { recipes }
-}
-
-export function validateRecipes(input: unknown): string | null {
-  const parsed = parseRecipes(input)
-  if ('error' in parsed) return parsed.error
-  return null
 }
 
 export function serializeRecipes(input: unknown): { body: string } | { error: string } {

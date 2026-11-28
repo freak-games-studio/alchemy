@@ -132,8 +132,8 @@ export function createSession(catalog: CatalogApi): SessionApi {
 
     for (const pair of recipe.recipes) {
       const [leftId, rightId] = pair
-      const left = catalog.isOpen(leftId)
-      const right = catalog.isOpen(rightId)
+      const left = catalog.findOpened(leftId)
+      const right = catalog.findOpened(rightId)
       if (left && right) openedRecipes.push([left, right])
     }
 

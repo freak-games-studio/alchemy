@@ -1,19 +1,19 @@
 import { ref, watch } from 'vue'
 
-const storageKey = 'alchemy-recipe-editor'
+import { storageKeys } from '@/shared/storage'
 
 function readOpen(): boolean {
   if (!import.meta.env.DEV) return false
-  return sessionStorage.getItem(storageKey) === '1'
+  return sessionStorage.getItem(storageKeys.recipeEditor) === '1'
 }
 
 export const recipeEditorOpen = ref(readOpen())
 
 watch(recipeEditorOpen, (open) => {
-  sessionStorage.setItem(storageKey, open ? '1' : '0')
+  sessionStorage.setItem(storageKeys.recipeEditor, open ? '1' : '0')
 })
 
 export function markRecipeEditorOpen() {
-  sessionStorage.setItem(storageKey, '1')
+  sessionStorage.setItem(storageKeys.recipeEditor, '1')
   recipeEditorOpen.value = true
 }

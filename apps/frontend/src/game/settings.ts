@@ -2,6 +2,8 @@ import { computed, watch } from 'vue'
 import { useLocalStorage, useMediaQuery } from '@vueuse/core'
 import type { ComputedRef, Ref } from 'vue'
 
+import { storageKeys } from '@/shared/storage'
+
 export type DockSide = 'bottom' | 'left' | 'right'
 export type ThemeName = 'light' | 'dark'
 
@@ -57,7 +59,7 @@ export interface SettingsApi {
 }
 
 export function createSettings(): SettingsApi {
-  const values = useLocalStorage<GameSettings>('alchemy-settings', { ...DEFAULT_SETTINGS }, {
+  const values = useLocalStorage<GameSettings>(storageKeys.settings, { ...DEFAULT_SETTINGS }, {
     mergeDefaults: true,
   })
 

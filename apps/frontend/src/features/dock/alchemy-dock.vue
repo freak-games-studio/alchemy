@@ -160,7 +160,8 @@
 import { useEventListener } from '@vueuse/core'
 
 import { useGame } from '@/game/injection'
-import { recipeEditorOpen } from '@/features/recipe-editor/open'
+import { isField } from '@/shared/is-field'
+import { recipeEditorOpen } from '@/shared/recipe-editor-open'
 
 const dev = import.meta.env.DEV
 const game = useGame()
@@ -177,13 +178,6 @@ useEventListener('keydown', (event) => {
   event.preventDefault()
   shell.toggle('elements')
 })
-
-function isField(target: EventTarget | null) {
-  return target instanceof HTMLInputElement
-    || target instanceof HTMLTextAreaElement
-    || target instanceof HTMLSelectElement
-    || (target instanceof HTMLElement && target.isContentEditable)
-}
 </script>
 
 <style scoped lang="scss">

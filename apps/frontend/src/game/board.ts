@@ -2,6 +2,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useElementBounding, useStorage } from '@vueuse/core'
 import type { ComputedRef, Ref } from 'vue'
 
+import { storageKeys } from '@/shared/storage'
 import { uniqueId } from './id'
 import { matchRecipes } from './recipe'
 import { boxesOverlap } from './collision'
@@ -45,7 +46,7 @@ export interface BoardApi {
   arrange: () => void
   settling: Ref<boolean>
   spawnBasics: () => void
-  combine: (element: AlchemyElementOnBoard) => void
+  combine: (element: AlchemyElementOnBoard) => boolean
 }
 
 export function createBoard(
@@ -61,7 +62,7 @@ export function createBoard(
   const dockRef = ref<HTMLElement>()
   const bounds = useElementBounding(boardRef)
   const dockBounds = useElementBounding(dockRef)
-  const items = useStorage<AlchemyElementOnBoard[]>('alchemy-board', [])
+  const items = useStorage<AlchemyElementOnBoard[]>(storageKeys.board, [])
   const basics = ref<AlchemyElementOnBoard[]>([])
   const births = ref<Record<string, ElementBirth>>({})
   const settling = ref(false)
@@ -122,13 +123,12 @@ export function createBoard(
     return randomPosition(boardSize.value, settings.values.value.elementSize)
   }
 
-  function markBirth(uuid: string | undefined, birth: ElementBirth) {
-    if (!uuid) return
+  function markBirth(uuid: string, birth: ElementBirth) {
     births.value = { ...births.value, [uuid]: birth }
   }
 
-  function forgetBirth(uuid: string | undefined) {
-    if (!uuid || !(uuid in births.value)) return
+  function forgetBirth(uuid: string) {
+    if (!(uuid in births.value)) return
     const next = { ...births.value }
     delete next[uuid]
     births.value = next

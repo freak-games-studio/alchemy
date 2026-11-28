@@ -106,7 +106,7 @@ export default antfu({
       {
         type: 'line-length',
         order: 'asc',
-        internalPattern: ['^(~|@mocks|@|api|fsd|app|pages|widgets|features|um-entities|entities|shared)(/|$)'],
+        internalPattern: ['^@/'],
         fallbackSort: { type: 'line-length' },
         ignoreCase: true,
         newlinesBetween: 0,
@@ -153,5 +153,155 @@ export default antfu({
     'vue/custom-event-name-casing': 'off',
     'regexp/no-super-linear-backtracking': 'off',
     'regexp/no-obscure-range': 'off',
+  },
+}, {
+  files: ['src/game/**/*.ts'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['@/features', '@/features/**'],
+            message: 'Игра не зависит от экранов.',
+          },
+        ],
+      },
+    ],
+  },
+}, {
+  files: ['src/shared/**/*.{ts,vue}'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: [
+              '@/game',
+              '@/game/**',
+              '@/features',
+              '@/features/**',
+            ],
+            message: 'Общий код не зависит от игры и экранов.',
+          },
+        ],
+      },
+    ],
+  },
+}, {
+  files: ['src/features/**/*.{ts,vue}'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: [
+              '@/features',
+              '@/features/**',
+              '../about',
+              '../about/**',
+              '../board',
+              '../board/**',
+              '../catalog',
+              '../catalog/**',
+              '../confirm',
+              '../confirm/**',
+              '../dock',
+              '../dock/**',
+              '../guide',
+              '../guide/**',
+              '../recipe-editor',
+              '../recipe-editor/**',
+              '../settings',
+              '../settings/**',
+              '../toast',
+              '../toast/**',
+            ],
+            message: 'Экраны не импортируют соседние экраны. Каталог может вкладывать справку об элементе.',
+          },
+        ],
+      },
+    ],
+  },
+}, {
+  files: ['src/features/catalog/**/*.{ts,vue}'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: [
+              '@/features/board',
+              '@/features/board/**',
+              '@/features/confirm',
+              '@/features/confirm/**',
+              '@/features/dock',
+              '@/features/dock/**',
+              '@/features/guide',
+              '@/features/guide/**',
+              '@/features/recipe-editor',
+              '@/features/recipe-editor/**',
+              '@/features/settings',
+              '@/features/settings/**',
+              '@/features/toast',
+              '@/features/toast/**',
+              '../board',
+              '../board/**',
+              '../confirm',
+              '../confirm/**',
+              '../dock',
+              '../dock/**',
+              '../guide',
+              '../guide/**',
+              '../recipe-editor',
+              '../recipe-editor/**',
+              '../settings',
+              '../settings/**',
+              '../toast',
+              '../toast/**',
+            ],
+            message: 'Каталог вкладывает только справку об элементе.',
+          },
+        ],
+      },
+    ],
+  },
+}, {
+  files: ['src/domain/**/*.ts'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: 'vue',
+            message: 'Домен рецептов не зависит от Vue.',
+          },
+          {
+            name: '@vueuse/core',
+            message: 'Домен рецептов не зависит от Vue.',
+          },
+        ],
+        patterns: [
+          {
+            group: [
+              '@/game',
+              '@/game/**',
+              '@/features',
+              '@/features/**',
+              '@vueuse/*',
+              '../game',
+              '../game/**',
+              '../features',
+              '../features/**',
+            ],
+            message: 'Домен рецептов не зависит от Vue и интерфейса.',
+          },
+        ],
+      },
+    ],
   },
 })

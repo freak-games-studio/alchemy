@@ -1,6 +1,7 @@
 <template>
   <alchemy-panel
     :open="active === 'settings'"
+    :side="dock"
     scroll
     @close="shell.close()"
   >
@@ -121,6 +122,7 @@ const game = useGame()
 const shell = game.session.shell
 const active = shell.active
 const settings = game.settings.values
+const dock = game.settings.dock
 const mobile = game.settings.mobile
 
 const elementSizes = ELEMENT_SIZE_OPTIONS

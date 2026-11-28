@@ -45,6 +45,14 @@ body {
   height: 100%;
 }
 
+.boot-error {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--foreground);
+  text-align: center;
+}
+
 .hidden {
   display: none;
 }

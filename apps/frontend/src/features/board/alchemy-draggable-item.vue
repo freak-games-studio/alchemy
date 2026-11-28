@@ -15,7 +15,10 @@
       class="draggable__show"
       :class="{ 'draggable__show--born': !!birth }"
     >
-      <alchemy-item :element="alchemyElement" />
+      <alchemy-item
+        :element="alchemyElement"
+        :size="elementSize"
+      />
       <span
         v-if="birth === 'discover'"
         class="draggable__wow"
@@ -64,6 +67,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import AlchemyItem from '@/shared/ui/alchemy-item.vue'
 import { useGame } from '@/game/injection'
+import { HOLD_CANCEL_PX, HOLD_MS } from '@/shared/hold'
 import type { AlchemyElementOnBoard, Position } from '@/game/element'
 
 const props = defineProps<{
@@ -76,19 +80,13 @@ const emit = defineEmits<{
   (event: 'context-menu', value: { x: number, y: number }): void
 }>()
 
-const HOLD_MS = 550
-const HOLD_CANCEL_PX = 8
-
 const game = useGame()
 const boardSize = game.board.boardSize
 const settling = game.board.settling
-const birth = computed(() => {
-  const uuid = props.alchemyElement.uuid
-  if (!uuid) return
-  return game.board.births.value[uuid]
-})
-const imageWidth = computed(() => `${game.board.elementSize.value.width}px`)
-const imageHeight = computed(() => `${game.board.elementSize.value.height}px`)
+const elementSize = game.board.elementSize
+const birth = computed(() => game.board.births.value[props.alchemyElement.uuid])
+const imageWidth = computed(() => `${elementSize.value.width}px`)
+const imageHeight = computed(() => `${elementSize.value.height}px`)
 const spriteX = ref('50%')
 const spriteY = ref('40%')
 const smokeX = ref('50%')

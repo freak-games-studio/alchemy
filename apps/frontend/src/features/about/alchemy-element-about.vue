@@ -30,14 +30,20 @@
           class="about__element"
           @click="about.open(recipe[0])"
         >
-          <alchemy-item :element="recipe[0]" />
+          <alchemy-item
+            :element="recipe[0]"
+            :size="elementSize"
+          />
         </div>
         <span class="about__plus">+</span>
         <div
           class="about__element"
           @click="about.open(recipe[1])"
         >
-          <alchemy-item :element="recipe[1]" />
+          <alchemy-item
+            :element="recipe[1]"
+            :size="elementSize"
+          />
         </div>
       </div>
     </div>
@@ -49,8 +55,10 @@ import AlchemyItem from '@/shared/ui/alchemy-item.vue'
 import { useGame } from '@/game/injection'
 import { spriteUrl } from '@/assets/sprite'
 
-const about = useGame().session.about
+const game = useGame()
+const about = game.session.about
 const activeElement = about.current
+const elementSize = game.board.elementSize
 </script>
 
 <style scoped lang="scss">

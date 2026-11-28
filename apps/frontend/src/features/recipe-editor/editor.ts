@@ -3,11 +3,19 @@ import { computed, inject, reactive, ref, shallowRef } from 'vue'
 import type { InjectionKey } from 'vue'
 import type { Connection, Edge, Node } from '@xyflow/vue'
 
-import { categoryLabel, loadRecipes, recipeCategoryOrder, recipeSource, refreshEnded } from '@/game/recipe'
+import { loadRecipes, recipeSource } from '@/game/recipe'
+import { markRecipeEditorOpen } from '@/shared/recipe-editor-open'
+import {
+  categoryLabel,
+  elementIdBody,
+  elementIdPattern,
+  pairKey,
+  recipeCategoryOrder,
+  refreshEnded,
+  serializeRecipes,
+} from '@/domain/recipe'
 import { layoutFocus } from './layout'
-import { markRecipeEditorOpen } from './open'
-import { serializeRecipes } from './validate'
-import type { RecipeDefinition, RecipePair } from '@/game/recipe'
+import type { RecipeDefinition, RecipePair } from '@/domain/recipe'
 import type { LayoutNode } from './layout'
 
 const PAIR_COLORS = [
@@ -112,10 +120,23 @@ function cloneRecipes(): RecipeDefinition[] {
   })
 }
 
-function pairKey(left: string, right: string): string {
-  return left < right
-    ? `${left}\0${right}`
-    : `${right}\0${left}`
+const pairEdgePattern = new RegExp(`^pair:(${elementIdBody}):(\\d+):(\\d+)$`)
+
+export function ingredientName(recipes: RecipeDefinition[], id: string): string {
+  return recipes.find(item => item.id === id)?.name || id
+}
+
+export function pairEdge(edgeId: string): { resultId: string, index: number, slot: number } | null {
+  const match = pairEdgePattern.exec(edgeId)
+  const resultId = match?.[1]
+  const index = match?.[2]
+  const slot = match?.[3]
+  if (!resultId || index === undefined || slot === undefined) return null
+  return {
+    resultId,
+    index: Number(index),
+    slot: Number(slot),
+  }
 }
 
 function hasPair(recipe: RecipeDefinition, pair: { left: string, right: string, skipIndex?: number }): boolean {
@@ -417,7 +438,7 @@ export function createRecipeEditor(): RecipeEditorApi {
     selectedEdgeId.value = id
     const resultId = id.startsWith('draft:')
       ? id.slice('draft:'.length)
-      : /^pair:([a-z0-9_]+):/.exec(id)?.[1]
+      : pairEdge(id)?.resultId
     if (resultId && findRecipe(resultId)) selectedId.value = resultId
     refreshEdges()
   }
@@ -502,11 +523,9 @@ export function createRecipeEditor(): RecipeEditorApi {
       cancelDraft(edgeId.slice('draft:'.length))
       return
     }
-    const match = /^pair:([a-z0-9_]+):(\d+):(\d+)$/.exec(edgeId)
-    if (!match) return
-    const resultId = match[1]
-    const index = Number(match[2])
-    const slot = Number(match[3])
+    const parsed = pairEdge(edgeId)
+    if (!parsed) return
+    const { resultId, index, slot } = parsed
     const recipe = findRecipe(resultId)
     const pair = recipe?.recipes[index]
     if (!recipe || !pair) return
@@ -534,7 +553,7 @@ export function createRecipeEditor(): RecipeEditorApi {
 
   function rename(from: string, to: string): string | null {
     const nextId = to.trim()
-    if (!/^[a-z0-9_]+$/.test(nextId)) return 'Id может содержать только a-z, 0-9 и _'
+    if (!elementIdPattern.test(nextId)) return 'Id может содержать только a-z, 0-9 и _'
     if (from !== nextId && recipes.value.some(recipe => recipe.id === nextId)) return 'Такой id уже есть'
     if (from === nextId) return null
     recipes.value = recipes.value.map((recipe) => {

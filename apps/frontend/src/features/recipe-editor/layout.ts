@@ -1,4 +1,5 @@
-import type { RecipeDefinition } from '@/game/recipe'
+import { STARTER_COUNT } from '@/domain/recipe'
+import type { RecipeDefinition } from '@/domain/recipe'
 
 export const ELEMENT_WIDTH = 172
 export const ELEMENT_HEIGHT = 100
@@ -6,7 +7,6 @@ export const ELEMENT_HEIGHT = 100
 const COLUMNS = 8
 const GAP_X = 28
 const GAP_Y = 96
-const STARTERS = 4
 const INNER_GAP = 10
 const PLUS_WIDTH = 28
 const PAIR_GAP = 72
@@ -30,7 +30,7 @@ interface PairSlot {
 }
 
 export function layoutFocus(recipes: RecipeDefinition[], centerId: string | null): LayoutNode[] {
-  if (!centerId) return placeRows(recipes.slice(0, STARTERS).map(recipe => recipe.id))
+  if (!centerId) return placeRows(recipes.slice(0, STARTER_COUNT).map(recipe => recipe.id))
   const known = new Set(recipes.map(recipe => recipe.id))
   const center = recipes.find(recipe => recipe.id === centerId)
   if (!center || !known.has(centerId)) return []

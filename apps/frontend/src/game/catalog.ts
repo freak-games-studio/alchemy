@@ -2,6 +2,7 @@ import { computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import type { ComputedRef, Ref } from 'vue'
 
+import { storageKeys } from '@/shared/storage'
 import { allElements, recipeCount } from './recipe'
 import type { AudioApi } from './audio'
 import type { AlchemyElement } from './element'
@@ -10,21 +11,21 @@ export interface CatalogApi {
   opened: Ref<AlchemyElement[]>
   counter: ComputedRef<string>
   reset: () => void
-  isOpen: (elementId: string) => AlchemyElement | undefined
+  findOpened: (elementId: string) => AlchemyElement | undefined
   add: (element: AlchemyElement) => boolean
   seed: (elements: AlchemyElement[]) => void
   unlockAll: () => void
 }
 
 export function createCatalog(audio: AudioApi): CatalogApi {
-  const opened = useStorage<AlchemyElement[]>('alchemy-opened-elements', [])
+  const opened = useStorage<AlchemyElement[]>(storageKeys.opened, [])
   const counter = computed(() => `${opened.value.length}/${recipeCount()}`)
 
   function reset() {
     opened.value = []
   }
 
-  function isOpen(elementId: string) {
+  function findOpened(elementId: string) {
     return opened.value.find(element => element.id === elementId)
   }
 
@@ -62,7 +63,7 @@ export function createCatalog(audio: AudioApi): CatalogApi {
     opened,
     counter,
     reset,
-    isOpen,
+    findOpened,
     add,
     seed,
     unlockAll,
