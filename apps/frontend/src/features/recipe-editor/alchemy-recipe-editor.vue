@@ -1,5 +1,9 @@
 <template>
-  <div class="editor">
+  <div
+    class="editor"
+    :class="{ 'editor--hidden': !recipeEditorOpen }"
+    :inert="!recipeEditorOpen || undefined"
+  >
     <header class="editor__toolbar">
       <div class="editor__search">
         <input
@@ -189,7 +193,7 @@
 
 <script setup lang="ts">
 import { until, useEventListener } from '@vueuse/core'
-import { computed, nextTick, onMounted, provide, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, provide, ref } from 'vue'
 import {
   Background,
   ConnectionMode,
@@ -246,10 +250,6 @@ const matches = computed(() => {
 
 onMounted(frame)
 
-watch(recipeEditorOpen, (open) => {
-  if (open) frame()
-})
-
 useEventListener('keydown', onKeydown)
 
 function hideImage(event: Event) {
@@ -277,6 +277,7 @@ function recipeQuestion(edgeId: string) {
 }
 
 async function onKeydown(event: KeyboardEvent) {
+  if (!recipeEditorOpen.value) return
   if (event.key !== 'Delete' && event.key !== 'Backspace') return
   if (isField(event.target) || game.session.confirm.isOpen.value) return
   const edgeId = editor.selectedEdgeId
@@ -370,6 +371,11 @@ async function closeEditor() {
   inset: 0;
   background: var(--background);
   color: var(--foreground);
+
+  &--hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   &__toolbar {
     display: flex;

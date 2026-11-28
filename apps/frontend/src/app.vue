@@ -8,7 +8,7 @@
   <alchemy-toast />
   <component
     :is="RecipeEditor"
-    v-show="dev && recipeEditorOpen"
+    v-if="dev"
   />
 </template>
 
@@ -24,7 +24,6 @@ import AlchemyElements from '@/features/catalog/alchemy-elements.vue'
 import AlchemySettings from '@/features/settings/alchemy-settings.vue'
 import { gameKey } from '@/game/injection'
 import { createGame } from '@/game/create-game'
-import { recipeEditorOpen } from '@/features/recipe-editor/open'
 
 const dev = import.meta.env.DEV
 const RecipeEditor = import.meta.env.DEV
